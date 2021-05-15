@@ -1,0 +1,89 @@
+// mafesh ta3lee2at fel lo8a, da lel tawdeeh bas
+
+// mafesh semicolons, bene3ref en el expression 9eles men nehayat el satr
+
+// el anwa3 al assasiah: 
+// sa7e7: i.e. -50, -10, 0, 20, 1000
+// 7a2i2i: i.e. -50.9, -10.0, 0.0, 20.1, 1000.9999
+
+// momkn te3arraf mota8ier/thabet 3alamy
+sa7e7 s = 5
+thabet 7a2i2i M = 5.0
+
+// el dawal lazem tokon met3arrafa 2abl ma tenadihom
+sa7e7 deef2(sa7e7 i) {
+    basy i + 2
+}
+
+// `bedayh` heya awl dallah betednadah fel barnameg
+// el code elly bytbasah menha howa el exit code
+sa7e7 bedayah() {
+    s = s + 1
+
+    if s == 6 {
+        // zy ma ana tawqa3t
+    } else {
+        // yasater ya rab!
+        basy 1 // wa2af kol 7aga, we basy err
+    }
+
+    // 0 le 9
+    lef sa7e7 i = 0; i < 9; i = i + 1 {
+        // e3mel 7agah
+    }
+
+    // 9 le 0
+    sa7e7 h = 0
+    lef h = 9; h >= 0; h = h - 1 {
+        // e3mel 7agah
+    }
+
+    // 10 le 1
+    sa7e7 i = 10
+    talma i != 0 {
+        // e3mel 7agah
+        i = i - 1
+    }
+
+    // 5 le 16
+    sa7e7 j = 5
+    karrar {
+        // do some thing
+        j = j + 1
+    } l7d j == 16
+
+    // ta7weel
+    s = sa7e7(M)
+    7a2i2i myfloat = 7a2i2i(s % 10)
+
+    // 3amalyat riadiah
+    sa7e7 x = 0
+    // x + 1 // 1
+    // (x + 5) / 2 // 2
+    // (x + 5) / 2.0 // 2.5
+    x = x + 5
+    // (x % 4) // 1
+    // (x * 10) // 50
+    // (x - 6) // -1
+
+    // dawal
+    sa7e7 x2 = deef2(5) // x2=7
+
+    sa7e7 y = 5
+    // y = 5
+    {
+        7a2i2i y = -99.0
+        // y = -99.0
+
+        {
+            sa7e7 mm = 10
+            // mm = 10
+        }
+        // mm barrah el ta8dyah
+    }
+    // y + 2 = 7
+    // mm barrah el ta8dyah
+
+    // keda nege7na
+    basy 0
+}
