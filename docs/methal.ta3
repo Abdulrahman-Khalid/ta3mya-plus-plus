@@ -22,6 +22,8 @@ sa7e7 bedayah() {
 
     lw s == 6 {
         // zy ma ana tawqa3t
+    } 8ero lw s == 4 {
+        // msh elly 3aizo bs sha8al
     } 8ero {
         // yasater ya rab!
         basy 1 // wa2af kol 7aga, we basy err
