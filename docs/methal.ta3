@@ -1,6 +1,6 @@
 // mafesh ta3lee2at fel lo8a, da lel tawdeeh bas
 
-// mafesh semicolons, bene3ref en el expression 9eles men nehayat el satr
+// mafesh semicolons, bene3ref en el expression 5eles men nehayat el satr
 
 // el anwa3 al assasiah: 
 // sa7e7: i.e. -50, -10, 0, 20, 1000
@@ -15,14 +15,14 @@ sa7e7 deef2(sa7e7 i) {
     basy i + 2
 }
 
-// `bedayh` heya awl dallah betednadah fel barnameg
+// `bedayh` heya awl dallah betednedeh fel barnameg
 // el code elly bytbasah menha howa el exit code
 sa7e7 bedayah() {
     s = s + 1
 
-    if s == 6 {
+    lw s == 6 {
         // zy ma ana tawqa3t
-    } else {
+    } 8ero {
         // yasater ya rab!
         basy 1 // wa2af kol 7aga, we basy err
     }
@@ -79,10 +79,10 @@ sa7e7 bedayah() {
             sa7e7 mm = 10
             // mm = 10
         }
-        // mm barrah el ta8dyah
+        // mm barrah el ta8tyah
     }
     // y + 2 = 7
-    // mm barrah el ta8dyah
+    // mm barrah el ta8tyah
 
     // keda nege7na
     basy 0
