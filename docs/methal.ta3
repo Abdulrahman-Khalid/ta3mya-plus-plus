@@ -29,15 +29,33 @@ sa7e7 bedayah() {
         basy 1 // wa2af kol 7aga, we basy err
     }
 
+    int g = 6
+    farraq g {
+    7alah 5:
+        // e3mel 7agah
+        wa2af // zay break
+    7alah 6:
+        // e3mel 7agah
+        // howa da elly ha yetnada
+        wa2af
+    assasy:
+        // e3mel 7agah low el ba2y matnafezzosh
+        wa2af // malhash lazmah hena
+    }
+
     // 0 le 9
     lef sa7e7 i = 0; i < 9; i = i + 1 {
         // e3mel 7agah
+
+        wa2af // zay break
     }
 
     // 9 le 0
     sa7e7 h = 0
     lef h = 9; h >= 0; h = h - 1 {
         // e3mel 7agah
+
+        kammel // zay continue
     }
 
     // 10 le 1
