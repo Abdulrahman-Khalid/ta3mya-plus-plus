@@ -7,24 +7,17 @@ int yylex();
 extern FILE* yyin;
 
 inline void usage(char* p) {
-    std::cerr << "Usage: " << p << " [--lex-only] [/path/to/file.ta3 | -]" << std::endl;
+    std::cerr << "Usage: " << p << " [/path/to/file.ta3]" << std::endl;
 }
 
 int main(int argc, char **argv) {
-    bool lex_only = false;
-
     if (argc == 1) {
         yyin = stdin;
     } else if (argc == 2) {
         const auto s = std::string(argv[1]);
-        std::cout << (s == "--lex-only") << std::endl;
         if (s == "-h" || s == "--help") {
             usage(argv[0]);
             return 0;
-        } else if (s == "-") {
-            yyin == stdin;
-        } else if (s == "--lex-only") {
-            lex_only = true;
         } else {
             yyin = fopen(argv[1], "r");
             if (yyin == NULL) {
@@ -37,11 +30,16 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    if (lex_only) {
-        std::cout << "enabled only-lexical-analysis mode" << std::endl;
-        do { } while (yylex());
-        return 0; // not reachable
-    } else {
-        return yyparse();
-    }
+#ifdef DEBUG_LEX
+    std::cout << "enabled only-lexical-analysis mode" << std::endl;
+    do { } while (yylex());
+    return 0; // not reachable
+#elif YYDEBUG==1
+    std::cout << "enabled parser tracing" << std::endl;
+
+    extern int yydebug;
+    yydebug = 1;
+#endif
+
+    return yyparse();
 }
