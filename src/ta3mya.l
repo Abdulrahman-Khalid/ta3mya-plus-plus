@@ -15,7 +15,7 @@ rest_chars              .
 symbol                  [a-zA-Z0-9]+
 single_cmnt             "//".*\n
 mult_cmnt               "/*"[^*/]*"*/"
-whitespace              [ \t\n]*
+whitespace              [ \t]*
 
 %%
 
@@ -23,6 +23,8 @@ whitespace              [ \t\n]*
 {single_cmnt} { }
 {mult_cmnt}   { }
 {whitespace}  { }
+
+\n            { return NEWLINE; }
 
 "lw"          { return T_LW; }
 "8ero"        { return T_8ERO; }

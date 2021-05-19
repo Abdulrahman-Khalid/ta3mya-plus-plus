@@ -12,6 +12,8 @@ int yylex(void);
 }
 
 // terminals
+%token NEWLINE
+
 %token T_LW
 %token T_8ERO
 
@@ -63,8 +65,13 @@ int yylex(void);
 %%
 
 input:
-  /* emtpy */
-  | exp	{ cout << "Result: " << $1 << endl; }
+  /* empty */
+  | input line
+  ;
+
+line:
+  NEWLINE
+  | exp NEWLINE	{ cout << "Result: " << $1 << endl; }
   ;
 
 exp:
@@ -78,7 +85,7 @@ exp:
 int yyerror(string s) {
   extern int yylineno;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
-  
+
   if (s.size() > 0) {
     s = "ERROR: " + s;
   } else {
