@@ -32,6 +32,7 @@ whitespace              [ \t]*
 "lef"         { return T_LEF; }
 "l7d"         { return T_L7D; }
 "talma"       { return T_TALMA; }
+"karrar"      { return T_KARRAR; }
 
 "msh"         { return T_MSH; }
 "we"          { return T_WE; }
@@ -46,7 +47,6 @@ whitespace              [ \t]*
 
 "farraq"      { return T_FARRAQ; }
 "7alah"       { return T_7ALAH; }
-"karrar"      { return T_KARRAR; }
 "assasy"      { return T_ASSASY; }
 
 "thabet"      { return T_THABET; }
