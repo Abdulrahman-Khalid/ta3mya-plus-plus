@@ -15,7 +15,7 @@ int yylex(void);
 }
 
 // terminals
-%token NEWLINE
+%token T_NEWLINE
 
 %token T_LW
 %token T_8ERO
@@ -49,6 +49,7 @@ int yylex(void);
 %token T_BASY
 
 %token T_COLON
+%token T_SEMICOLON
 %token T_CRULY_BR_BGN
 %token T_CRULY_BR_END
 %token T_ROUND_BR_BGN
@@ -60,23 +61,37 @@ int yylex(void);
 
 // non terminals
 %type	<int_val>	int_exp
-%type	<bool_val>	condition
+%type	<bool_val>	bool_exp
 %type	<dbl_val>	real_exp
-%start input
+%start program
 
 %%
 
-input:
-  /* empty */
-  | input line
+program: 
+  /* empty */ 
+  | program stmts
   ;
 
-line:
-  NEWLINE
-  | int_exp NEWLINE	  { cout << "= " << $1 << endl; }
-  | real_exp NEWLINE	{ cout << "= " << std::to_string($1) << endl; }
-  | condition NEWLINE { cout << "= " << BOOL_STR($1) << endl; }
-  | lw_group NEWLINE
+stmts:
+  T_NEWLINE
+  | T_SEMICOLON
+  | stmt T_NEWLINE
+  | stmt T_SEMICOLON
+  ;
+
+stmt:
+  int_exp	        { cout << "= " << $1 << endl; }
+  | real_exp	    { cout << "= " << std::to_string($1) << endl; }
+  | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
+  | lw_group
+  | talma_stmt
+  | karrar_talma_stmt
+  | block
+  ;
+
+block:
+  T_CRULY_BR_BGN T_CRULY_BR_END /* {} */
+  | T_CRULY_BR_BGN program T_CRULY_BR_END /* {<program>} */
   ;
 
 real_exp:
@@ -111,7 +126,7 @@ real_exp:
 
 int_exp:
   T_INT_LITERAL
-  | T_SA7E7 T_ROUND_BR_BGN condition T_ROUND_BR_END { $$ = int($3);     }
+  | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
   | int_exp T_PLUS int_exp	                        { $$ = $1 + $3;     }
@@ -123,10 +138,10 @@ int_exp:
   | T_ROUND_BR_BGN int_exp T_ROUND_BR_END           { $$ = $2;          }
   ;
 
-condition:
-  condition T_WE condition               { $$ = $1&&$3; }
-  | condition T_AW condition             { $$ = $1||$3; }
-  | T_MSH condition                      { $$ = !$2;    }
+bool_exp:
+  bool_exp T_WE bool_exp                { $$ = $1&&$3; }
+  | bool_exp T_AW bool_exp              { $$ = $1||$3; }
+  | T_MSH bool_exp                      { $$ = !$2;    }
 
   | int_exp T_EQUALS int_exp             { $$ = $1==$3; }
   | int_exp T_EQUALS real_exp            { $$ = $1==$3; }
@@ -161,13 +176,16 @@ lw_group:
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  T_LW condition block { cout << "lw_stmt: " << BOOL_STR($2) << endl; }
-  | lw_stmt T_8ERO T_LW condition block { cout << "8erolw_stmt: " << BOOL_STR($4) << endl; }
+  T_LW bool_exp block                  { cout << "lw_stmt: " << BOOL_STR($2) << endl;     }
+  | lw_stmt T_8ERO T_LW bool_exp block { cout << "8erolw_stmt: " << BOOL_STR($4) << endl; }
   ;
 
-block:
-  T_CRULY_BR_BGN T_CRULY_BR_END
-  | T_CRULY_BR_BGN input T_CRULY_BR_END
+talma_stmt:
+  T_TALMA bool_exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
+  ;
+
+karrar_talma_stmt:
+  T_KARRAR block T_TALMA bool_exp { cout << "karrar_talma_stmt: " << BOOL_STR($4) << endl; }
   ;
 
 %%

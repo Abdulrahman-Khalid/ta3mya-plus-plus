@@ -24,7 +24,7 @@ whitespace              [ \t]*
 {mult_cmnt}   { }
 {whitespace}  { }
 
-\n            { return NEWLINE; }
+\n            { return T_NEWLINE; }
 
 "lw"          { return T_LW; }
 "8ero"        { return T_8ERO; }
@@ -65,6 +65,7 @@ whitespace              [ \t]*
 "basy"        { return T_BASY; }
 
 ":"           { return T_COLON; }
+";"           { return T_SEMICOLON; }
 "{"           { return T_CRULY_BR_BGN; }
 "}"           { return T_CRULY_BR_END; }
 "("           { return T_ROUND_BR_BGN; }
