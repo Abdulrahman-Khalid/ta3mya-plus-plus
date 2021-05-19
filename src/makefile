@@ -9,7 +9,6 @@ BISON_FLAGS =
 # set DEBUG_LEX=1 to enable lex debugging
 ifeq ($(DEBUG_LEX),1)
 	FLEX_FLAGS+=-d
-	CFLAGS+=-DDEBUG_LEX
 endif
 
 # set DEBUG_YACC=1 to enable yacc debugging
