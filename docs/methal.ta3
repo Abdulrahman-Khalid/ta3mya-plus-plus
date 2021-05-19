@@ -22,11 +22,25 @@ sa7e7 bedayah() {
 
     lw s == 6 {
         // zy ma ana tawqa3t
-    } 8ero lw s == 4 {
-        // msh elly 3aizo bs sha8al
+    } 8ero lw s >= 4 {
+        // sa7 bardo
     } 8ero {
         // yasater ya rab!
         basy 1 // wa2af kol 7aga, we basy err
+    }
+
+    lw s > 5 aw s < 5 {
+        // kol 7agah ella 5
+    }
+
+    lw mesh s == 6 {
+        // yasater ya rab!
+        basy 1
+    }
+
+    lw s == 6 we s == 7 {
+        // ezay mesh fahem :O
+        basy 2
     }
 
     sa7e7 g = 6
@@ -40,14 +54,15 @@ sa7e7 bedayah() {
         // e3mel 7agah low el ba2y matnafezzosh
     }
 
-    // 0 le 9
-    lef sa7e7 i = 0; i < 9; i = i + 1 {
+    // 0 le 10
+    lef sa7e7 i = 0; i <= 9; i = i + 1 {
         // e3mel 7agah
     }
 
     // 9 le 0
     sa7e7 h = 0
-    lef h = 9; h >= 0; h = h - 1 {
+    // momken aqwas
+    lef (h = 9; h >= 0; h = h - 1) {
         // e3mel 7agah
     }
 
