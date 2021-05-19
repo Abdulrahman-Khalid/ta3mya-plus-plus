@@ -3,6 +3,8 @@
 
 int yyerror(char *s);
 int yylex(void);
+
+#define BOOL_STR(b) ((b)? "sa7":"8alat")
 %}
 
 %union{
@@ -73,7 +75,7 @@ line:
   NEWLINE
   | int_exp NEWLINE	  { cout << "= " << $1 << endl; }
   | real_exp NEWLINE	{ cout << "= " << std::to_string($1) << endl; }
-  | condition NEWLINE { cout << "= " << (($1)? "sa7":"8alat") << endl; }
+  | condition NEWLINE { cout << "= " << BOOL_STR($1) << endl; }
   | lw_stmt NEWLINE
   ;
 
@@ -152,7 +154,7 @@ condition:
   ;
 
 lw_stmt:
-  T_LW condition block { cout << "lw_stmt: " << $2 << endl; }
+  T_LW condition block { cout << "lw_stmt: " << BOOL_STR($2) << endl; }
   ;
 
 block:
