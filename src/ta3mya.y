@@ -87,6 +87,7 @@ stmt:
   | ta3reef_mota8ier
   | ta3reef_thabet
   | ta3reef_dallah
+  | assignment
   | block
   ;
 
@@ -216,6 +217,10 @@ args_decl: /* empty */ | arg_decl | args_decl T_COMMA arg_decl;
 
 ta3reef_dallah:
   type T_SYMBOL T_ROUND_BR_BGN args_decl T_ROUND_BR_END block { cout << "ta3reef_dallah: " << *($2) << endl; }
+  ;
+
+assignment:
+  T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
   ;
 
 %%
