@@ -60,7 +60,8 @@ int yylex(void);
 %token <str_val>  T_SYMBOL
 
 // non terminals
-%type	<int_val>	exp
+%type	<int_val>	int_exp
+%type	<dbl_val>	real_exp
 %start input
 
 %%
@@ -72,18 +73,51 @@ input:
 
 line:
   NEWLINE
-  | exp NEWLINE	{ cout << "Result: " << $1 << endl; }
+  | int_exp NEWLINE	  { cout << "Result: " << $1 << endl; }
+  | real_exp NEWLINE	{ cout << "Result: " << std::to_string($1) << endl; }
   ;
 
-exp:
+real_exp:
+  T_REAL_LITERAL
+  | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = $3;             }
+  | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = double($3);     }
+
+  | real_exp T_PLUS real_exp	                      { $$ = $1 + $3;        }
+  | real_exp T_PLUS int_exp	                        { $$ = $1 + double($3);}
+  | int_exp T_PLUS real_exp	                        { $$ = double($1) + $3;}
+
+  | real_exp T_NEG real_exp                         { $$ = $1 - $3;        }
+  | real_exp T_NEG int_exp                          { $$ = $1 - double($3);}
+  | int_exp T_NEG real_exp                          { $$ = double($1) - $3;}
+
+  | real_exp T_MULT real_exp	                      { $$ = $1 * $3;        }
+  | real_exp T_MULT int_exp	                        { $$ = $1 * double($3);}
+  | int_exp T_MULT real_exp	                        { $$ = double($1) * $3;}
+
+  | real_exp T_DIV real_exp                         { $$ = $1 / $3;        }
+  | real_exp T_DIV int_exp                          { $$ = $1 / double($3);}
+  | int_exp T_DIV real_exp                          { $$ = double($1) / $3;}
+
+  | T_NEG real_exp %prec T_NEG                      { $$ = -$2;            }
+
+  | real_exp T_EXPONENT real_exp                    { $$ = pow($1, $3);    }
+  | real_exp T_EXPONENT int_exp                     {$$=pow($1,double($3));}
+  | int_exp T_EXPONENT real_exp                     {$$=pow(double($1),$3);}
+
+  | T_ROUND_BR_BGN real_exp T_ROUND_BR_END          { $$ = $2;             }
+  ;
+
+int_exp:
   T_INT_LITERAL
-  | exp T_PLUS exp	                  { $$ = $1 + $3;     }
-  | exp T_NEG exp                     { $$ = $1 - $3;     }
-  | exp T_MULT exp	                  { $$ = $1 * $3;     }
-  | exp T_DIV exp                     { $$ = $1 / $3;     }
-  | T_NEG exp %prec NEG               { $$ = -$2;         }
-  | exp T_EXPONENT exp                { $$ = pow($1, $3); }
-  | T_ROUND_BR_BGN exp T_ROUND_BR_END { $$ = $2;          }
+  | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = int($3);     }
+  | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = $3;          }
+  | int_exp T_PLUS int_exp	                       { $$ = $1 + $3;     }
+  | int_exp T_NEG int_exp                          { $$ = $1 - $3;     }
+  | int_exp T_MULT int_exp	                       { $$ = $1 * $3;     }
+  | int_exp T_DIV int_exp                          { $$ = $1 / $3;     }
+  | T_NEG int_exp %prec T_NEG                      { $$ = -$2;         }
+  | int_exp T_EXPONENT int_exp                     { $$ = pow($1, $3); }
+  | T_ROUND_BR_BGN int_exp T_ROUND_BR_END          { $$ = $2;          }
   ;
 
 %%
