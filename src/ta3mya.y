@@ -8,6 +8,7 @@ int yylex(void);
 %union{
   int int_val;
   double dbl_val;
+  bool bool_val;
   string* str_val;
 }
 
@@ -25,12 +26,6 @@ int yylex(void);
 %token T_WE
 %token T_AW
 
-%token T_DOESNT_EQUAL
-%token T_EQUALS
-%token T_GREATER
-%token T_GREATER_EQUAL
-%token T_LESS
-%token T_LESS_EQUAL
 
 %token T_FARRAQ
 %token T_7ALAH
@@ -42,6 +37,8 @@ int yylex(void);
 %token T_7A2I2I
 
 %token T_ASSIGNMENT
+
+%left T_DOESNT_EQUAL T_EQUALS T_GREATER T_GREATER_EQUAL T_LESS T_LESS_EQUAL
 %left	T_PLUS T_NEG
 %left	T_MULT T_DIV T_MODULO
 %right T_EXPONENT
@@ -61,6 +58,7 @@ int yylex(void);
 
 // non terminals
 %type	<int_val>	int_exp
+%type	<bool_val>	condition
 %type	<dbl_val>	real_exp
 %start input
 
@@ -73,8 +71,9 @@ input:
 
 line:
   NEWLINE
-  | int_exp NEWLINE	  { cout << "Result: " << $1 << endl; }
-  | real_exp NEWLINE	{ cout << "Result: " << std::to_string($1) << endl; }
+  | int_exp NEWLINE	  { cout << "= " << $1 << endl; }
+  | real_exp NEWLINE	{ cout << "= " << std::to_string($1) << endl; }
+  | condition NEWLINE { cout << "= " << (($1)? "sa7":"8alat") << endl; }
   ;
 
 real_exp:
@@ -109,15 +108,46 @@ real_exp:
 
 int_exp:
   T_INT_LITERAL
-  | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = int($3);     }
-  | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = $3;          }
-  | int_exp T_PLUS int_exp	                       { $$ = $1 + $3;     }
-  | int_exp T_NEG int_exp                          { $$ = $1 - $3;     }
-  | int_exp T_MULT int_exp	                       { $$ = $1 * $3;     }
-  | int_exp T_DIV int_exp                          { $$ = $1 / $3;     }
-  | T_NEG int_exp %prec T_NEG                      { $$ = -$2;         }
-  | int_exp T_EXPONENT int_exp                     { $$ = pow($1, $3); }
-  | T_ROUND_BR_BGN int_exp T_ROUND_BR_END          { $$ = $2;          }
+  | T_SA7E7 T_ROUND_BR_BGN condition T_ROUND_BR_END { $$ = int($3);     }
+  | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
+  | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
+  | int_exp T_PLUS int_exp	                        { $$ = $1 + $3;     }
+  | int_exp T_NEG int_exp                           { $$ = $1 - $3;     }
+  | int_exp T_MULT int_exp	                        { $$ = $1 * $3;     }
+  | int_exp T_DIV int_exp                           { $$ = $1 / $3;     }
+  | T_NEG int_exp %prec T_NEG                       { $$ = -$2;         }
+  | int_exp T_EXPONENT int_exp                      { $$ = pow($1, $3); }
+  | T_ROUND_BR_BGN int_exp T_ROUND_BR_END           { $$ = $2;          }
+  ;
+
+condition:
+  condition T_WE condition               { $$ = $1&&$3; }
+  | condition T_AW condition             { $$ = $1||$3; }
+  | T_MSH condition                      { $$ = !$2;    }
+
+  | int_exp T_EQUALS int_exp             { $$ = $1==$3; }
+  | int_exp T_EQUALS real_exp            { $$ = $1==$3; }
+  | real_exp T_EQUALS int_exp            { $$ = $1==$3; }
+
+  | int_exp T_DOESNT_EQUAL int_exp       { $$ = $1!=$3; }
+  | int_exp T_DOESNT_EQUAL real_exp      { $$ = $1!=$3; }
+  | real_exp T_DOESNT_EQUAL int_exp      { $$ = $1!=$3; }
+
+  | int_exp T_GREATER int_exp            { $$ = $1>$3;  }
+  | int_exp T_GREATER real_exp           { $$ = $1>$3;  }
+  | real_exp T_GREATER int_exp           { $$ = $1>$3;  }
+
+  | int_exp T_LESS int_exp               { $$ = $1<$3;  }
+  | int_exp T_LESS real_exp              { $$ = $1<$3;  }
+  | real_exp T_LESS int_exp              { $$ = $1<$3;  }
+
+  | int_exp T_GREATER_EQUAL int_exp      { $$ = $1>=$3; }
+  | int_exp T_GREATER_EQUAL real_exp     { $$ = $1>=$3; }
+  | real_exp T_GREATER_EQUAL int_exp     { $$ = $1>=$3; }
+
+  | int_exp T_LESS_EQUAL int_exp         { $$ = $1<=$3; }
+  | int_exp T_LESS_EQUAL real_exp        { $$ = $1<=$3; }
+  | real_exp T_LESS_EQUAL int_exp        { $$ = $1<=$3; }
   ;
 
 %%
