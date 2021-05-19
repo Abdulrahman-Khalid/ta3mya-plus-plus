@@ -139,9 +139,9 @@ int_exp:
   ;
 
 bool_exp:
-  bool_exp T_WE bool_exp                { $$ = $1&&$3; }
-  | bool_exp T_AW bool_exp              { $$ = $1||$3; }
-  | T_MSH bool_exp                      { $$ = !$2;    }
+  bool_exp T_WE bool_exp                 { $$ = $1&&$3; }
+  | bool_exp T_AW bool_exp               { $$ = $1||$3; }
+  | T_MSH bool_exp                       { $$ = !$2;    }
 
   | int_exp T_EQUALS int_exp             { $$ = $1==$3; }
   | int_exp T_EQUALS real_exp            { $$ = $1==$3; }
