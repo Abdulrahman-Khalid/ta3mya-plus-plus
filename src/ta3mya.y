@@ -79,9 +79,16 @@ int yyerror(string s) {
   extern int yylineno;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
   
-  cerr << "ERROR: " << s << " at symbol \"" << yytext;
-  cerr << "\" on line " << yylineno << endl;
-  exit(1);
+  if (s.size() > 0) {
+    s = "ERROR: " + s;
+  } else {
+    s = "ERROR";
+  }
+  
+  cerr << s << " at symbol \"" << yytext
+      << "\" on line " << yylineno << endl;
+
+  return 1;
 }
 
 int yyerror(char *s) {
