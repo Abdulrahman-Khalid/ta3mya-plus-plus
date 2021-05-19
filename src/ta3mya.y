@@ -44,11 +44,11 @@ int yylex(void);
 %left	T_MULT T_DIV T_MODULO
 %right T_EXPONENT
 
-%token T_BEDAYAH
 %token T_BASY
 
 %token T_COLON
 %token T_SEMICOLON
+%token T_COMMA
 %token T_CRULY_BR_BGN
 %token T_CRULY_BR_END
 %token T_ROUND_BR_BGN
@@ -86,6 +86,7 @@ stmt:
   | karrar_l7d_stmt
   | ta3reef_mota8ier
   | ta3reef_thabet
+  | ta3reef_dallah
   | block
   ;
 
@@ -208,6 +209,13 @@ ta3reef_mota8ier:
 ta3reef_thabet:
   T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); } 
   | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_thabet: " << *($3) << endl; }
+  ;
+
+arg_decl: type T_SYMBOL;
+args_decl: /* empty */ | arg_decl | args_decl T_COMMA arg_decl;
+
+ta3reef_dallah:
+  type T_SYMBOL T_ROUND_BR_BGN args_decl T_ROUND_BR_END block { cout << "ta3reef_dallah: " << *($2) << endl; }
   ;
 
 %%

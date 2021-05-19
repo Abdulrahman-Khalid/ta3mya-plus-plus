@@ -61,11 +61,11 @@ whitespace              [ \t]*
 "%"           { return T_MODULO; }
 "**"          { return T_EXPONENT; }
 
-"bedayah"     { return T_BEDAYAH; }
 "basy"        { return T_BASY; }
 
 ":"           { return T_COLON; }
 ";"           { return T_SEMICOLON; }
+","           { return T_COMMA; }
 "{"           { return T_CRULY_BR_BGN; }
 "}"           { return T_CRULY_BR_END; }
 "("           { return T_ROUND_BR_BGN; }
