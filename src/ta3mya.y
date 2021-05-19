@@ -80,9 +80,8 @@ stmts:
   ;
 
 stmt:
-  int_exp	        { cout << "= " << $1 << endl; }
-  | real_exp	    { cout << "= " << std::to_string($1) << endl; }
-  | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
+  exp
+  | basy_stmt
   | lw_group
   | talma_stmt
   | karrar_talma_stmt
@@ -92,6 +91,12 @@ stmt:
 block:
   T_CRULY_BR_BGN T_CRULY_BR_END /* {} */
   | T_CRULY_BR_BGN program T_CRULY_BR_END /* {<program>} */
+  ;
+
+exp:
+  int_exp	        { cout << "= " << $1 << endl; }
+  | real_exp	    { cout << "= " << std::to_string($1) << endl; }
+  | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
   ;
 
 real_exp:
@@ -186,6 +191,10 @@ talma_stmt:
 
 karrar_talma_stmt:
   T_KARRAR block T_TALMA bool_exp { cout << "karrar_talma_stmt: " << BOOL_STR($4) << endl; }
+  ;
+
+basy_stmt: 
+  T_BASY exp { cout << "basy" << endl; }
   ;
 
 %%
