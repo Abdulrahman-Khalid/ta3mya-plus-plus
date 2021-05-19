@@ -84,6 +84,8 @@ stmt:
   | lw_group
   | talma_stmt
   | karrar_l7d_stmt
+  | ta3reef_mota8ier
+  | ta3reef_thabet
   | block
   ;
 
@@ -194,6 +196,18 @@ karrar_l7d_stmt:
 
 basy_stmt: 
   T_BASY exp { cout << "basy" << endl; }
+  ;
+
+type: T_7A2I2I | T_SA7E7;
+
+ta3reef_mota8ier:
+  type T_SYMBOL                     { cout << "ta3reef_mota8ier: " << *($2) << endl; } 
+  | type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_mota8ier: " << *($2) << endl; }
+  ;
+
+ta3reef_thabet:
+  T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); } 
+  | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_thabet: " << *($3) << endl; }
   ;
 
 %%
