@@ -44,6 +44,7 @@ int yylex(void);
 %token T_ASSIGNMENT
 %left	T_PLUS T_NEG
 %left	T_MULT T_DIV T_MODULO
+%right T_EXPONENT
 
 %token T_BEDAYAH
 %token T_BASY
@@ -76,8 +77,13 @@ line:
 
 exp:
   T_INT_LITERAL
-  | exp T_PLUS exp	{ $$ = $1 + $3; }
-  | exp T_MULT exp	{ $$ = $1 * $3; }
+  | exp T_PLUS exp	                  { $$ = $1 + $3;     }
+  | exp T_NEG exp                     { $$ = $1 - $3;     }
+  | exp T_MULT exp	                  { $$ = $1 * $3;     }
+  | exp T_DIV exp                     { $$ = $1 / $3;     }
+  | T_NEG exp %prec NEG               { $$ = -$2;         }
+  | exp T_EXPONENT exp                { $$ = pow($1, $3); }
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END { $$ = $2;          }
   ;
 
 %%

@@ -59,6 +59,7 @@ whitespace              [ \t]*
 "*"           { return T_MULT; }
 "/"           { return T_DIV; }
 "%"           { return T_MODULO; }
+"**"          { return T_EXPONENT; }
 
 "bedayah"     { return T_BEDAYAH; }
 "basy"        { return T_BASY; }
