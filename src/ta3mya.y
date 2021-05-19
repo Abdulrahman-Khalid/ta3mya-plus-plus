@@ -83,7 +83,7 @@ stmt:
   | basy_stmt
   | lw_group
   | talma_stmt
-  | karrar_talma_stmt
+  | karrar_l7d_stmt
   | block
   ;
 
@@ -188,8 +188,8 @@ talma_stmt:
   T_TALMA bool_exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
   ;
 
-karrar_talma_stmt:
-  T_KARRAR block T_TALMA bool_exp { cout << "karrar_talma_stmt: " << BOOL_STR($4) << endl; }
+karrar_l7d_stmt:
+  T_KARRAR block T_L7D bool_exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
   ;
 
 basy_stmt: 
