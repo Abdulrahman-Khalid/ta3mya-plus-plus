@@ -29,7 +29,7 @@ sa7e7 bedayah() {
         basy 1 // wa2af kol 7aga, we basy err
     }
 
-    int g = 6
+    sa7e7 g = 6
     farraq g {
     7alah 5:
         // e3mel 7agah
