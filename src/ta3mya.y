@@ -28,7 +28,6 @@ int yylex(void);
 %token T_WE
 %token T_AW
 
-
 %token T_FARRAQ
 %token T_7ALAH
 %token T_KARRAR
