@@ -74,6 +74,7 @@ line:
   | int_exp NEWLINE	  { cout << "= " << $1 << endl; }
   | real_exp NEWLINE	{ cout << "= " << std::to_string($1) << endl; }
   | condition NEWLINE { cout << "= " << (($1)? "sa7":"8alat") << endl; }
+  | lw_stmt NEWLINE
   ;
 
 real_exp:
@@ -148,6 +149,15 @@ condition:
   | int_exp T_LESS_EQUAL int_exp         { $$ = $1<=$3; }
   | int_exp T_LESS_EQUAL real_exp        { $$ = $1<=$3; }
   | real_exp T_LESS_EQUAL int_exp        { $$ = $1<=$3; }
+  ;
+
+lw_stmt:
+  T_LW condition block { cout << "lw_stmt: " << $2 << endl; }
+  ;
+
+block:
+  T_CRULY_BR_BGN T_CRULY_BR_END
+  | T_CRULY_BR_BGN input T_CRULY_BR_END
   ;
 
 %%
