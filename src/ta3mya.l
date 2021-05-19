@@ -45,9 +45,8 @@ whitespace              [ \t]*
 "<"           { return T_LESS; }
 "<="          { return T_LESS_EQUAL; }
 
-"farraq"      { return T_FARRAQ; }
-"7alah"       { return T_7ALAH; }
-"assasy"      { return T_ASSASY; }
+"fe"          { return T_FE; }
+"7alet"       { return T_7ALET; }
 
 "thabet"      { return T_THABET; }
 "sa7e7"       { return T_SA7E7; }

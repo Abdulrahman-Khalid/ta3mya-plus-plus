@@ -28,10 +28,9 @@ int yylex(void);
 %token T_WE
 %token T_AW
 
-%token T_FARRAQ
-%token T_7ALAH
+%token T_FE
+%token T_7ALET
 %token T_KARRAR
-%token T_ASSASY
 
 %token T_THABET
 %token T_SA7E7
@@ -88,6 +87,7 @@ stmt:
   | ta3reef_thabet
   | ta3reef_dallah
   | assignment
+  | fe7alet_stmt
   | block
   ;
 
@@ -221,6 +221,16 @@ ta3reef_dallah:
 
 assignment:
   T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
+  ;
+
+fe7alet_stmt:
+  T_SYMBOL T_FE halet_stmt                { cout << "fe7alet_stmt: " << *($1) << endl;      }
+  | T_SYMBOL T_FE halet_stmt T_8ERO block { cout << "fe7alet_stmt+8ero: " << *($1) << endl; }
+  ;
+
+halet_stmt:
+  T_7ALET exp block
+  | halet_stmt T_7ALET exp block
   ;
 
 %%
