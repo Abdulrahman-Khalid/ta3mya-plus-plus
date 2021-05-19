@@ -76,7 +76,7 @@ line:
   | int_exp NEWLINE	  { cout << "= " << $1 << endl; }
   | real_exp NEWLINE	{ cout << "= " << std::to_string($1) << endl; }
   | condition NEWLINE { cout << "= " << BOOL_STR($1) << endl; }
-  | lw_stmt NEWLINE
+  | lw_group NEWLINE
   ;
 
 real_exp:
@@ -153,8 +153,16 @@ condition:
   | real_exp T_LESS_EQUAL int_exp        { $$ = $1<=$3; }
   ;
 
+  /* ensure one or zoro 8ero stmt at end */
+lw_group: 
+  lw_stmt 
+  | lw_stmt T_8ERO block { cout << "8ero_stmt" << endl; }
+  ;
+
+  /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
   T_LW condition block { cout << "lw_stmt: " << BOOL_STR($2) << endl; }
+  | lw_stmt T_8ERO T_LW condition block { cout << "8erolw_stmt: " << BOOL_STR($4) << endl; }
   ;
 
 block:
