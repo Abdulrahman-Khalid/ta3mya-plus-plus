@@ -66,8 +66,7 @@ sa7e7 bedayah() {
 
     // 9 le 0
     sa7e7 h = 0
-    // momken aqwas
-    lef (h = 9; h >= 0; h = h - 1) {
+    lef h = 9; h >= 0; h = h - 1 {
         // e3mel 7agah
     }
 

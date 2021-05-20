@@ -88,6 +88,7 @@ stmt:
   | ta3reef_dallah
   | assignment
   | fe7alet_stmt
+  | lef_stmt
   | block
   ;
 
@@ -104,6 +105,7 @@ exp:
 
 real_exp:
   T_REAL_LITERAL
+  | T_SYMBOL                                        { $$ = 0;              }
   | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = $3;             }
   | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = double($3);     }
 
@@ -134,6 +136,7 @@ real_exp:
 
 int_exp:
   T_INT_LITERAL
+  | T_SYMBOL                                        { $$ = 0;           }
   | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
@@ -231,6 +234,12 @@ fe7alet_stmt:
 halet_stmt:
   T_7ALET exp block
   | halet_stmt T_7ALET exp block
+  ;
+
+lef_init: assignment | ta3reef_mota8ier;
+lef_stmt:
+  T_LEF lef_init T_SEMICOLON bool_exp T_SEMICOLON assignment block
+    { cout << "lef_stmt" << endl; }
   ;
 
 %%
