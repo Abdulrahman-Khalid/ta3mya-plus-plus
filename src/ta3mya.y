@@ -125,6 +125,7 @@ real_exp:
   | real_exp T_DIV int_exp                          { $$ = $1 / double($3);}
   | int_exp T_DIV real_exp                          { $$ = double($1) / $3;}
 
+  | real_exp T_MODULO int_exp                       { $$ = fmod($1, $3);   }
   | T_NEG real_exp %prec T_NEG                      { $$ = -$2;            }
 
   | real_exp T_EXPONENT real_exp                    { $$ = pow($1, $3);    }
@@ -144,6 +145,7 @@ int_exp:
   | int_exp T_NEG int_exp                           { $$ = $1 - $3;     }
   | int_exp T_MULT int_exp	                        { $$ = $1 * $3;     }
   | int_exp T_DIV int_exp                           { $$ = $1 / $3;     }
+  | int_exp T_MODULO int_exp                        { $$ = $1 % $3;     }
   | T_NEG int_exp %prec T_NEG                       { $$ = -$2;         }
   | int_exp T_EXPONENT int_exp                      { $$ = pow($1, $3); }
   | T_ROUND_BR_BGN int_exp T_ROUND_BR_END           { $$ = $2;          }

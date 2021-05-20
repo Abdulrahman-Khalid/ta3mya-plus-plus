@@ -39,7 +39,7 @@ sa7e7 bedayah() {
         // kol 7agah ella 5
     }
 
-    lw mesh s == 6 {
+    lw msh s == 6 {
         // yasater ya rab!
         basy 1
     }

@@ -13,7 +13,7 @@ int_literal	            {digit}+
 real_literal            {digit}+\.{digit}+
 rest_chars              .
 symbol                  [a-zA-Z0-9]+
-single_cmnt             "//".*\n
+single_cmnt             "//".*
 mult_cmnt               "/*"[^*/]*"*/"
 whitespace              [ \t]*
 
