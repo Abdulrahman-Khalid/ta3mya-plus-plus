@@ -101,6 +101,7 @@ exp:
   int_exp	        { cout << "= " << $1 << endl; }
   | real_exp	    { cout << "= " << std::to_string($1) << endl; }
   | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
+  | call_dallah
   ;
 
 real_exp:
@@ -242,6 +243,16 @@ lef_init: assignment | ta3reef_mota8ier;
 lef_stmt:
   T_LEF lef_init T_SEMICOLON bool_exp T_SEMICOLON assignment block
     { cout << "lef_stmt" << endl; }
+  ;
+
+args:
+  /* empty  */
+  | exp
+  | args T_COMMA exp
+  ;
+
+call_dallah:
+  T_SYMBOL T_ROUND_BR_BGN args T_ROUND_BR_END { cout << "call_dallah: " << *($1) << endl; }
   ;
 
 %%
