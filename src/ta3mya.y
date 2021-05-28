@@ -2,7 +2,7 @@
 #include "heading.h"
 
 int yyerror(char *s);
-int yylex(void);
+extern "C" int yylex(void);
 
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
 %}

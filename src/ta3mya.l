@@ -3,6 +3,7 @@
 #include "ta3mya.tab.h"
 
 int yyerror(char *s);
+extern "C" int yylex(void);
 %}
 
     // increment yylineno automatically

@@ -8,7 +8,11 @@ See [methal.ta3](./docs/methal.ta3) for all language features.
 - g++
 - gnu-make
 - bison
-- flex-old
+- flex
+
+```sh
+$ sudo apt update && sudo apt install -y g++ make bison flex
+```
 
 # Build Compiler
 ```sh
