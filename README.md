@@ -1,6 +1,8 @@
 # ta3mya-plus-plus
 ta3mya plus plus is an implementation of a programming language using the Lex and Yacc compiler generating package.
 
+It's the first egyptian arabic programming language.
+
 # Language
 See [methal.ta3](./docs/methal.ta3) for all language features.
 
