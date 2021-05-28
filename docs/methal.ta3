@@ -6,8 +6,6 @@
     satr
 */
 
-// mafesh semicolons, bene3ref en el expression 5eles men nehayat el satr
-
 // el anwa3 al assasiah: 
 // sa7e7: i.e. -50, -10, 0, 20, 1000
 // 7a2i2i: i.e. -50.9, -10.0, 0.0, 20.1, 1000.9999
@@ -34,6 +32,11 @@ sa7e7 bedayah() {
         // yasater ya rab!
         basy 1 // wa2af kol 7aga, we basy err
     }
+
+    // mesh lazem semicolons, bene3ref en el expression 5eles men nehayat el satr
+    // ella low fe aktar men statement fee nafs el satr
+    // aw } fe nafs el satr
+    { sa7e7 x = 5; x = x + 5; }
 
     lw s > 5 aw s < 5 {
         // kol 7agah ella 5
