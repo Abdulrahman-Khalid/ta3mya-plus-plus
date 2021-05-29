@@ -19,6 +19,14 @@ sa7e7 deef2(sa7e7 i) {
     basy i + 2
 }
 
+// enum = tarqeem
+// kol elle feeh unique lel tarqeem bas
+// ya3ne low 3arraft X marrah gowa Tarqeem1 we Tarqeem2, keda 3andak Tarqeem1::X,Tarqeem2::X
+tarqeem IPVersion {
+    V4, //=0
+    V6  //=1
+}
+
 // `bedayh` heya awl dallah betednedeh fel barnameg
 // el code elly bytbasah menha howa el exit code
 sa7e7 bedayah() {
@@ -120,6 +128,8 @@ sa7e7 bedayah() {
     }
     // y + 2 = 7
     // mm barrah el ta8tyah
+
+    IPVersion v = IPVersion::V6
 
     // keda nege7na
     basy 0

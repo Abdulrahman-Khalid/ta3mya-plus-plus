@@ -35,6 +35,7 @@ extern "C" int yylex(void);
 %token T_THABET
 %token T_SA7E7
 %token T_7A2I2I
+%token T_TARQEEM
 
 %token T_ASSIGNMENT
 
@@ -56,6 +57,7 @@ extern "C" int yylex(void);
 %token <int_val>	T_INT_LITERAL
 %token <dbl_val>  T_REAL_LITERAL
 %token <str_val>  T_SYMBOL
+%token <str_val>  T_TARQEEM_INSTANCE
 
 // non terminals
 %type	<int_val>	int_exp
@@ -86,6 +88,7 @@ stmt:
   | ta3reef_mota8ier
   | ta3reef_thabet
   | ta3reef_dallah
+  | ta3reef_tarqeem
   | assignment
   | fe7alet_stmt
   | lef_stmt
@@ -139,6 +142,7 @@ real_exp:
 int_exp:
   T_INT_LITERAL
   | T_SYMBOL                                        { $$ = 0;           }
+  | T_TARQEEM_INSTANCE                              { $$ = 0;           }
   | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
@@ -206,7 +210,7 @@ basy_stmt:
   T_BASY exp { cout << "basy" << endl; }
   ;
 
-type: T_7A2I2I | T_SA7E7;
+type: T_7A2I2I | T_SA7E7 | T_SYMBOL;
 
 ta3reef_mota8ier:
   type T_SYMBOL                     { cout << "ta3reef_mota8ier: " << *($2) << endl; } 
@@ -253,6 +257,20 @@ args:
 
 call_dallah:
   T_SYMBOL T_ROUND_BR_BGN args T_ROUND_BR_END { cout << "call_dallah: " << *($1) << endl; }
+  ;
+
+ta3reef_tarqeem:
+  T_TARQEEM T_SYMBOL T_CRULY_BR_BGN tarqeem_list T_CRULY_BR_END { cout << "ta3reef_tarqeem: " << *($2) << endl; }
+  ;
+
+emtpyness:
+  /* empty */
+  | emtpyness T_NEWLINE
+  ;
+
+tarqeem_list:
+  emtpyness T_SYMBOL emtpyness
+  | tarqeem_list T_COMMA tarqeem_list
   ;
 
 %%

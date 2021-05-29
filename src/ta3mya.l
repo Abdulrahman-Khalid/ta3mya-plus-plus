@@ -14,6 +14,7 @@ int_literal	            {digit}+
 real_literal            {digit}+\.{digit}+
 rest_chars              .
 symbol                  [a-zA-Z0-9]+
+tarqeem_instance        {symbol}::{symbol}
 single_cmnt             "//".*
 mult_cmnt               "/*"[^*/]*"*/"
 whitespace              [ \t]*
@@ -52,6 +53,7 @@ whitespace              [ \t]*
 "thabet"      { return T_THABET; }
 "sa7e7"       { return T_SA7E7; }
 "7a2i2i"      { return T_7A2I2I; }
+"tarqeem"     { return T_TARQEEM; }
 
 "="           { return T_ASSIGNMENT; }
 "+"           { return T_PLUS; }
@@ -79,6 +81,11 @@ whitespace              [ \t]*
 {real_literal} { 
     yylval.dbl_val = strtod(yytext, NULL); 
     return T_REAL_LITERAL;
+}
+
+{tarqeem_instance} {
+    yylval.str_val = new std::string(yytext, yyleng);
+    return T_TARQEEM_INSTANCE;
 }
 
 {symbol} {
