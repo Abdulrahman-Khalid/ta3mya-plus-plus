@@ -3,7 +3,7 @@
 // prototype of bison-generated parser function
 int yyparse();
 
-int yylex();
+extern "C" int yylex();
 extern FILE* yyin;
 
 inline void usage(char* p) {
