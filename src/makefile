@@ -23,7 +23,7 @@ endif
 all: ta3myac
 
 clean:
-	-rm -f *.o *~ lex.yy.c ta3mya.tab.c ta3mya.tab.h ta3mya.output ta3myac
+	$(RM) *.o *~ lex.yy.c ta3mya.tab.c ta3mya.tab.h ta3mya.output ta3myac $(DEPENDS)
 
 ta3myac: $(OBJECTS)
 	$(CC) $(CXXFLAGS) $(OBJECTS) -o ta3myac -lfl
