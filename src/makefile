@@ -1,25 +1,32 @@
-OBJS=ta3mya.tab.o lex.yy.o main.o
+SOURCES := $(wildcard *.cpp)
+OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES)) ta3mya.tab.o lex.yy.o
+DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 
 CC=g++
-CXXFLAGS=-g -Wall -ansi -pedantic -std=c++11
+CXX=g++
+CXXFLAGS=-g -Wall -Wextra -ansi -pedantic -std=c++11
 
-FLEX_FLAGS = 
-BISON_FLAGS = 
-
-# set DEBUG_LEX=1 to enable lex debugging
+# pass DEBUG_LEX=1 to enable lex debugging
 ifeq ($(DEBUG_LEX),1)
 	FLEX_FLAGS+=-d
 	CXXFLAGS+=-DDEBUG_LEX
 endif
 
-# set DEBUG_YACC=1 to enable yacc debugging
+# pass DEBUG_YACC=1 to enable yacc debugging
 ifeq ($(DEBUG_YACC),1)
 	BISON_FLAGS+=--debug
 	CXXFLAGS+=-DYYDEBUG=1
 endif
 
-ta3myac: $(OBJS)
-	$(CC) $(CXXFLAGS) $(OBJS) -o ta3myac -lfl
+.PHONY: all clean
+
+all: ta3myac
+
+clean:
+	-rm -f *.o *~ lex.yy.c ta3mya.tab.c ta3mya.tab.h ta3mya.output ta3myac
+
+ta3myac: $(OBJECTS)
+	$(CC) $(CXXFLAGS) $(OBJECTS) -o ta3myac -lfl
 
 lex.yy.c: ta3mya.l
 	flex $(FLEX_FLAGS) ta3mya.l
@@ -27,8 +34,7 @@ lex.yy.c: ta3mya.l
 ta3mya.tab.c: ta3mya.y
 	bison $(BISON_FLAGS) -d -v ta3mya.y
 
-lex.yy.o yac.o main.o: heading.h
-lex.yy.o main.o: ta3mya.tab.h
+-include $(DEPENDS)
 
-clean:
-	-rm -f *.o *~ lex.yy.c ta3mya.tab.c ta3mya.tab.h ta3mya.output ta3myac
+%.o: %.cpp makefile
+	$(CXX) $(CXXFLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
