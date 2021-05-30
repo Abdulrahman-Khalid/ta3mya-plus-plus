@@ -39,7 +39,7 @@ To declare `infLoop` as label:
 ```
 infLoop:
     ADD 1 x x ; x++
-    GOTO infLoop
+    JMP infLoop
 ```
 
 ## Quadruples
