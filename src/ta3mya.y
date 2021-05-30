@@ -68,16 +68,14 @@ extern "C" int yylex(void);
 %%
 
 program: 
-  /* empty */ 
-  | program stmts
+  /* empty */
+  | program stmt
+  | program stmt T_NEWLINE
+  | program T_NEWLINE
   ;
 
-stmts:
-  T_NEWLINE
-  | T_SEMICOLON
-  | stmt T_NEWLINE
-  | stmt T_SEMICOLON
-  ;
+  /* {<program>} */
+block: T_CRULY_BR_BGN program T_CRULY_BR_END;
 
 stmt:
   basy_stmt
@@ -92,11 +90,6 @@ stmt:
   | fe7alet_stmt
   | lef_stmt
   | block
-  ;
-
-block:
-  T_CRULY_BR_BGN T_CRULY_BR_END /* {} */
-  | T_CRULY_BR_BGN program T_CRULY_BR_END /* {<program>} */
   ;
 
 exp:
