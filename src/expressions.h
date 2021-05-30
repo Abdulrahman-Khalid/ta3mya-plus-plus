@@ -22,3 +22,9 @@ public:
     virtual Program compile() const override;
     virtual string toString() const override;
 };
+
+class CallDallahExpression : public Expression {
+public:
+    virtual Program compile() const override;
+    virtual string toString() const override;
+};
