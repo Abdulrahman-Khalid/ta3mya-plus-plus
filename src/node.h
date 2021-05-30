@@ -1,3 +1,4 @@
+#pragma once
 #include "program.h"
 
 using std::string;

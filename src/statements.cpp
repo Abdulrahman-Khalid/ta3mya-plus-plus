@@ -10,12 +10,21 @@ string BlockStatement::toString() const {
 }
 
 Program ProgramNode::compile() const {
-    // TODO
-    return Program();
+    Program program;
+    for (auto stmt : _stmts) {
+        auto newProgram = stmt->compile();
+        program.reserve(program.size() + newProgram.size());
+        program.insert(program.end(), newProgram.begin(), newProgram.end());
+    }
+    return program;
 }
 
 string ProgramNode::toString() const {
-    return "<ProgramNode>";
+    string out = "<ProgramNode>{";
+    for (auto stmt : _stmts) {
+        out += stmt->toString();
+    }
+    return out + "}";
 }
 
 Program BasyStatement::compile() const {
@@ -24,7 +33,7 @@ Program BasyStatement::compile() const {
 }
 
 string BasyStatement::toString() const {
-    return "<BasyStatement>";
+    return "<BasyStatement>{exp: " + _toBasy->toString() + "}";
 }
 
 Program LWGroupStatement::compile() const {
