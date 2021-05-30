@@ -46,7 +46,7 @@ infLoop:
 All `x` and `y` can be either a reference to variable, constant or literal integer.
 For example, this is valid: `MUL 1 0 V` but this is not `CPY x 0` as you can't put value of x at variable named 0.
 
-`b` denotes a label, see [Labels](##Labels).
+`b` denotes a label, see [Labels](#labels).
 You can jump to previosly declared label, or a label that is declared later in the same file.
 
 | Quadruple  | Description                  |
