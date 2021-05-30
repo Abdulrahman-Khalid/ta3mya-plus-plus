@@ -13,7 +13,7 @@ digit		            [0-9]
 int_literal	            {digit}+
 real_literal            {digit}+\.{digit}+
 rest_chars              .
-symbol                  [a-zA-Z0-9]+
+symbol                  [a-zA-Z0-9_]+
 tarqeem_instance        {symbol}::{symbol}
 single_cmnt             "//".*
 mult_cmnt               "/*"[^*/]*"*/"
