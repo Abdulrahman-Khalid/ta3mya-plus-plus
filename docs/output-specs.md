@@ -67,7 +67,11 @@ You can jump to previosly declared label, or a label that is declared later in t
 | RNEG x z   | z = -x        (real numbers) |
 | RPOW x y z | z = pow(x, y) (real numbers) |
 | JMP b      | goto b                       |
-| JMPT x b   | if x != 0 { goto b }         |
-| JMPF x b   | if x == 0 { goto b }         |
+| JMPZ x b   | if x == 0 { goto b }         |
+| JMPNZ x b  | if x != 0 { goto b }         |
+| JMPP x b   | if x > 0  { goto b }         |
+| JMPN x b   | if x < 0  { goto b }         |
+| JMPGEZ x b | if x >= 0 { goto b }         |
+| JMPLEZ x b | if x <= 0 { goto b }         |
 | AND x y z  | z = x & y                    |
 | OR x y z   | z = x \| y                   |
