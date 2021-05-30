@@ -1,21 +1,37 @@
 #include "node.h"
+#include "expressions.h"
 
 class Statement : public Node {};
 
-class BlockStatement : public Statement {
+class ProgramNode : public Node {
+private:
+    std::vector<Statement*> _stmts;
+
 public:
     virtual Program compile() const override;
     virtual string toString() const override;
+
+    inline void addStatement(Statement* stmt) {
+        _stmts.push_back(stmt);
+    }
 };
 
-class ProgramNode : public Node {
+class BlockStatement : public Statement {
+private:
+    ProgramNode* _programNode;
 public:
+    inline BlockStatement(ProgramNode* programNode):_programNode(programNode) {}
+
     virtual Program compile() const override;
     virtual string toString() const override;
 };
 
 class BasyStatement : public Statement {
+private:
+    Expression* _toBasy;
 public:
+    inline BasyStatement(Expression* toBasy):_toBasy(toBasy) {}
+
     virtual Program compile() const override;
     virtual string toString() const override;
 };
