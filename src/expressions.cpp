@@ -6,7 +6,7 @@ Program IntExpression::compile() const {
 }
 
 string IntExpression::toString() const {
-    return "";
+    return "<IntExpression>";
 }
 
 Program RealExpression::compile() const {
@@ -15,7 +15,7 @@ Program RealExpression::compile() const {
 }
 
 string RealExpression::toString() const {
-    return "";
+    return "<RealExpression>";
 }
 
 Program BoolExpression::compile() const {
@@ -24,5 +24,5 @@ Program BoolExpression::compile() const {
 }
 
 string BoolExpression::toString() const {
-    return "";
+    return "<BoolExpression>";
 }

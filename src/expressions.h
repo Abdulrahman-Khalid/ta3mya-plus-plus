@@ -1,14 +1,8 @@
-#include "program.h"
+#include "node.h"
 
-using std::string;
-
-class Expression {
+class Expression : public Node {
 public:
-    virtual Program compile() const = 0;
-
-    // toString returns a string representation 
-    // of the object for debugging
-    virtual string toString() const = 0;
+    Expression() = delete;
 };
 
 class IntExpression : public Expression {
