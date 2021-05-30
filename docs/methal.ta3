@@ -19,6 +19,10 @@ sa7e7 deef2(sa7e7 i) {
     basy i + 2
 }
 
+sa7e7 hatThabet() {
+    basy 5
+}
+
 // enum = tarqeem
 // kol elle feeh unique lel tarqeem bas
 // ya3ne low 3arraft X marrah gowa Tarqeem1 we Tarqeem2, keda 3andak Tarqeem1::X,Tarqeem2::X
@@ -125,6 +129,9 @@ sa7e7 bedayah() {
     // mm barrah el ta8tyah
 
     IPVersion v = IPVersion::V6
+    lw v == IPVersion::V5 {
+        basy hatThabet()
+    }
 
     // keda nege7na
     basy 0
