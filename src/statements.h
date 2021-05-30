@@ -1,9 +1,6 @@
 #include "node.h"
 
-class Statement : public Node {
-public:
-    Statement() = delete;
-};
+class Statement : public Node {};
 
 class BlockStatement : public Statement {
 public:

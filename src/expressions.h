@@ -1,9 +1,6 @@
 #include "node.h"
 
-class Expression : public Node {
-public:
-    Expression() = delete;
-};
+class Expression : public Node {};
 
 class IntExpression : public Expression {
 public:
