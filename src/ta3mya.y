@@ -80,8 +80,7 @@ stmts:
   ;
 
 stmt:
-  exp
-  | basy_stmt
+  basy_stmt
   | lw_group
   | talma_stmt
   | karrar_l7d_stmt
