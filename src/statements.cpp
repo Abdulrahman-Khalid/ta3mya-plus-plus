@@ -20,11 +20,11 @@ Program ProgramNode::compile() const {
 }
 
 string ProgramNode::toString() const {
-    string out = "<ProgramNode>{";
+    string out = "<ProgramNode>{stmts: [";
     for (auto stmt : _stmts) {
         out += stmt->toString();
     }
-    return out + "}";
+    return out + "]}";
 }
 
 Program BasyStatement::compile() const {
