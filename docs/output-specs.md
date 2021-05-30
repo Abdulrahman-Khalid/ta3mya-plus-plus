@@ -66,6 +66,7 @@ You can jump to previosly declared label, or a label that is declared later in t
 | RMOD x y z | z = x % y     (real numbers) |
 | RNEG x z   | z = -x        (real numbers) |
 | RPOW x y z | z = pow(x, y) (real numbers) |
+| RTN        | return                       |
 | JMP b      | goto b                       |
 | JMPZ x b   | if x == 0 { goto b }         |
 | JMPNZ x b  | if x != 0 { goto b }         |
