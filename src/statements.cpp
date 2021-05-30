@@ -6,7 +6,7 @@ Program BlockStatement::compile() const {
 }
 
 string BlockStatement::toString() const {
-    return "<BlockStatement>";
+    return "BlockStatement";
 }
 
 Program ProgramNode::compile() const {
@@ -20,9 +20,12 @@ Program ProgramNode::compile() const {
 }
 
 string ProgramNode::toString() const {
-    string out = "<ProgramNode>{stmts: [";
-    for (auto stmt : _stmts) {
-        out += stmt->toString();
+    string out = "ProgramNode{stmts: [";
+    for (auto i = 0; i < _stmts.size(); i++) {
+        out += _stmts[i]->toString();
+        if (i+1 < _stmts.size()) {
+            out += ", ";
+        }
     }
     return out + "]}";
 }
@@ -33,7 +36,7 @@ Program BasyStatement::compile() const {
 }
 
 string BasyStatement::toString() const {
-    return "<BasyStatement>{exp: " + _toBasy->toString() + "}";
+    return "BasyStatement{exp: " + _toBasy->toString() + "}";
 }
 
 Program LWGroupStatement::compile() const {
@@ -42,7 +45,7 @@ Program LWGroupStatement::compile() const {
 }
 
 string LWGroupStatement::toString() const {
-    return "<LWGroupStatement>";
+    return "LWGroupStatement";
 }
 
 Program KarrarL7dStatement::compile() const {
@@ -51,7 +54,7 @@ Program KarrarL7dStatement::compile() const {
 }
 
 string KarrarL7dStatement::toString() const {
-    return "<KarrarL7dStatement>";
+    return "KarrarL7dStatement";
 }
 
 Program Ta3reefMota8ierStatement::compile() const {
@@ -60,7 +63,7 @@ Program Ta3reefMota8ierStatement::compile() const {
 }
 
 string Ta3reefMota8ierStatement::toString() const {
-    return "<Ta3reefMota8ierStatement>";
+    return "Ta3reefMota8ierStatement";
 }
 
 Program Ta3reefThabetStatement::compile() const {
@@ -69,7 +72,7 @@ Program Ta3reefThabetStatement::compile() const {
 }
 
 string Ta3reefThabetStatement::toString() const {
-    return "<Ta3reefThabetStatement>";
+    return "Ta3reefThabetStatement";
 }
 
 Program Ta3reefDallahStatement::compile() const {
@@ -78,7 +81,7 @@ Program Ta3reefDallahStatement::compile() const {
 }
 
 string Ta3reefDallahStatement::toString() const {
-    return "<Ta3reefDallahStatement>";
+    return "Ta3reefDallahStatement";
 }
 
 Program Ta3reefTarqeemStatement::compile() const {
@@ -87,7 +90,7 @@ Program Ta3reefTarqeemStatement::compile() const {
 }
 
 string Ta3reefTarqeemStatement::toString() const {
-    return "<Ta3reefTarqeemStatement>";
+    return "Ta3reefTarqeemStatement";
 }
 
 Program AssignmentStatement::compile() const {
@@ -96,7 +99,7 @@ Program AssignmentStatement::compile() const {
 }
 
 string AssignmentStatement::toString() const {
-    return "<AssignmentStatement>";
+    return "AssignmentStatement";
 }
 
 Program Fe7aletStatement::compile() const {
@@ -105,7 +108,7 @@ Program Fe7aletStatement::compile() const {
 }
 
 string Fe7aletStatement::toString() const {
-    return "<Fe7aletStatement>";
+    return "Fe7aletStatement";
 }
 
 Program LefStatement::compile() const {
@@ -114,5 +117,5 @@ Program LefStatement::compile() const {
 }
 
 string LefStatement::toString() const {
-    return "<LefStatement>";
+    return "LefStatement";
 }
