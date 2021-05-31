@@ -1,7 +1,7 @@
 #include "symbols.h"
 #include <iostream>
 
-int testSymbolTable() {
+void testSymbolTable() {
     Symbol *s =new Symbol {"aa"};
     SymbolTable table;
 
@@ -10,6 +10,4 @@ int testSymbolTable() {
     Symbol* a ;
     a = table.get((*s).name);
     std::cout<<(*a).name<<std::endl;
-
-    return 0;
 }
