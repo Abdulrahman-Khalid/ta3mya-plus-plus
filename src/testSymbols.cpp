@@ -1,6 +1,7 @@
 #include "symbols.h"
 #include <iostream>
-int main()
+#ifdef TEST_SYMBOLS
+int main() 
 {
 Symbol *s =new Symbol {"aa"};
 SymbolTable table;
@@ -16,3 +17,4 @@ std::cout<<(*a).name<<std::endl;
 
   return 0;
 }
+#endif
