@@ -1,8 +1,7 @@
 #include "symbols.h"
 #include <iostream>
 
-#ifdef TEST_SYMBOLS
-int main() {
+int testSymbolTable() {
     Symbol *s =new Symbol {"aa"};
     SymbolTable table;
 
@@ -14,4 +13,3 @@ int main() {
 
     return 0;
 }
-#endif
