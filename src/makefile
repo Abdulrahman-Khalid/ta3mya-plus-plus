@@ -4,7 +4,7 @@ DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 
 CC=g++
 CXX=g++
-CXXFLAGS=-g -Wall -Wextra -ansi -pedantic -std=c++11
+CXXFLAGS=-g -Wall -Wextra -ansi -std=c++11
 
 # pass DEBUG_LEX=1 to enable lex debugging
 ifeq ($(DEBUG_LEX),1)
