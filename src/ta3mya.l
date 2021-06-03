@@ -9,8 +9,8 @@ extern "C" int yylex(void);
     // increment yylineno automatically
 %option yylineno
 
-digit		            [0-9]
-int_literal	            {digit}+
+digit                   [0-9]
+int_literal             {digit}+
 real_literal            {digit}+\.{digit}+
 rest_chars              .
 symbol                  [a-zA-Z0-9_]+

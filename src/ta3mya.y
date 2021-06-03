@@ -43,8 +43,8 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_ASSIGNMENT
 
 %left T_DOESNT_EQUAL T_EQUALS T_GREATER T_GREATER_EQUAL T_LESS T_LESS_EQUAL
-%left	T_PLUS T_NEG
-%left	T_MULT T_DIV T_MODULO
+%left T_PLUS T_NEG
+%left T_MULT T_DIV T_MODULO
 %right T_EXPONENT
 
 %token T_BASY
@@ -57,15 +57,15 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_ROUND_BR_BGN
 %token T_ROUND_BR_END
 
-%token <int_val>	T_INT_LITERAL
+%token <int_val>  T_INT_LITERAL
 %token <dbl_val>  T_REAL_LITERAL
 %token <str_val>  T_SYMBOL
 %token <str_val>  T_TARQEEM_INSTANCE
 
 // non terminals
-%type	<int_val>	        int_exp
-%type	<bool_val>	      bool_exp
-%type	<dbl_val>         real_exp
+%type <int_val>         int_exp
+%type <bool_val>        bool_exp
+%type <dbl_val>         real_exp
 %type <prgnodeptr_val>  program
 
 %start                  program
@@ -102,8 +102,8 @@ stmt:
   ;
 
 exp:
-  int_exp	        { cout << "= " << $1 << endl; }
-  | real_exp	    { cout << "= " << std::to_string($1) << endl; }
+  int_exp         { cout << "= " << $1 << endl; }
+  | real_exp      { cout << "= " << std::to_string($1) << endl; }
   | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
   | call_dallah
   ;
@@ -114,17 +114,17 @@ real_exp:
   | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = $3;             }
   | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = double($3);     }
 
-  | real_exp T_PLUS real_exp	                      { $$ = $1 + $3;        }
-  | real_exp T_PLUS int_exp	                        { $$ = $1 + double($3);}
-  | int_exp T_PLUS real_exp	                        { $$ = double($1) + $3;}
+  | real_exp T_PLUS real_exp                        { $$ = $1 + $3;        }
+  | real_exp T_PLUS int_exp                         { $$ = $1 + double($3);}
+  | int_exp T_PLUS real_exp                         { $$ = double($1) + $3;}
 
   | real_exp T_NEG real_exp                         { $$ = $1 - $3;        }
   | real_exp T_NEG int_exp                          { $$ = $1 - double($3);}
   | int_exp T_NEG real_exp                          { $$ = double($1) - $3;}
 
-  | real_exp T_MULT real_exp	                      { $$ = $1 * $3;        }
-  | real_exp T_MULT int_exp	                        { $$ = $1 * double($3);}
-  | int_exp T_MULT real_exp	                        { $$ = double($1) * $3;}
+  | real_exp T_MULT real_exp                        { $$ = $1 * $3;        }
+  | real_exp T_MULT int_exp                         { $$ = $1 * double($3);}
+  | int_exp T_MULT real_exp                         { $$ = double($1) * $3;}
 
   | real_exp T_DIV real_exp                         { $$ = $1 / $3;        }
   | real_exp T_DIV int_exp                          { $$ = $1 / double($3);}
@@ -147,9 +147,9 @@ int_exp:
   | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
   | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
-  | int_exp T_PLUS int_exp	                        { $$ = $1 + $3;     }
+  | int_exp T_PLUS int_exp                          { $$ = $1 + $3;     }
   | int_exp T_NEG int_exp                           { $$ = $1 - $3;     }
-  | int_exp T_MULT int_exp	                        { $$ = $1 * $3;     }
+  | int_exp T_MULT int_exp                          { $$ = $1 * $3;     }
   | int_exp T_DIV int_exp                           { $$ = $1 / $3;     }
   | int_exp T_MODULO int_exp                        { $$ = $1 % $3;     }
   | T_NEG int_exp %prec T_NEG                       { $$ = -$2;         }
@@ -277,8 +277,8 @@ tarqeem_list:
 %%
 
 int yyerror(string s) {
-  extern int yylineno;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
+  extern int yylineno;    // defined and maintained in lex.c
+  extern char *yytext;    // defined and maintained in lex.c
 
   if (s.size() > 0) {
     s = "ERROR: " + s;
