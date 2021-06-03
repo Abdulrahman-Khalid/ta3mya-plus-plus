@@ -63,11 +63,12 @@ ProgramNode * prgnodeptr = nullptr;
 %token <str_val>  T_TARQEEM_INSTANCE
 
 // non terminals
-%type	<int_val>	int_exp
-%type	<bool_val>	bool_exp
-%type	<dbl_val>	real_exp
-%type <prgnodeptr_val> program
-%start program
+%type	<int_val>	        int_exp
+%type	<bool_val>	      bool_exp
+%type	<dbl_val>         real_exp
+%type <prgnodeptr_val>  program
+
+%start                  program
 
 %%
 
