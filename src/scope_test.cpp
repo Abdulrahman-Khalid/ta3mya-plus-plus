@@ -34,4 +34,9 @@ void testScope() {
     assert(s != s2);
     assert(s.pop() == 5);
     assert(s == s2);
+
+    assert(s.includes(s2));
+    assert(s.includes(Scope(vector<int>({1,2,3,4,5}))));
+    assert(s.includes(Scope(vector<int>({1,2,3,4}))));
+    assert(!s.includes(Scope(vector<int>({1}))));
 }

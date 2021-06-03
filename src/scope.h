@@ -16,7 +16,12 @@ public:
     bool operator==(Scope const& s2) const;
     bool operator!=(Scope const& s2) const;
 
+    // whether this includes s2 in scope
+    // [0,1] includes [0,1,1,2] but no the other way around
+    bool includes(Scope const& s2) const;
+
     string toString() const;
+    int depth() const;
 
     void push(Level l);
     Level pop();

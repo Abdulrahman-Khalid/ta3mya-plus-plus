@@ -1,8 +1,9 @@
-#include "symbols.h"
-#include <cassert>
+#include <algorithm>
 
-Symbol* SymbolTable::get(string name) const {
-    std::unordered_map<string, Symbol *>::const_iterator got = Symbol_Table.find(name);
+#include "symbols.h"
+
+Symbol* SymbolTable::get(string name, Scope scope) const {
+    std::unordered_map<string, vector<Symbol *>>::const_iterator got = Symbol_Table.find(name);
     if ( got == Symbol_Table.end() )
     {
       // std::cout << "not found\n";
@@ -12,13 +13,38 @@ Symbol* SymbolTable::get(string name) const {
     else
     {
       // std::cout << got->first << " is " << got->second<<std::endl;
-      return got->second;
+      Symbol* tmp = nullptr;
+      for (auto s : got->second) {
+        if (s->scope.includes(scope)) {
+          if (tmp == nullptr || s->scope.depth() >= tmp->scope.depth()) {
+            tmp = s;
+          }
+        }
+      }
+      return tmp;
     }
 
 }
 
-void SymbolTable::add(Symbol* s ) {
+bool SymbolTable::add(Symbol* s ) {
   std::string name = (*s).name;
-  assert(get(name) != nullptr && "name already exists");
-  Symbol_Table.insert({{name,s}});
+
+  // if name exists
+  auto got = Symbol_Table.find(name);
+  if (got != Symbol_Table.end()) {
+    auto symbols = got->second;
+
+    // if same symbol, don't add
+    if (std::find(symbols.begin(), symbols.end(), s) != symbols.end()) {
+      return false;
+    }
+
+    // append
+    symbols.push_back(s);
+    Symbol_Table[name] = symbols;
+    return true;
+  }
+
+  // crete new vector
+  Symbol_Table.insert({name, vector<Symbol*>({s})});
 }
