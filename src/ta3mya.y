@@ -1,5 +1,6 @@
 %{
 #include "heading.h"
+#include "statements.h"//////////////
 
 int yyerror(char *s);
 extern "C" int yylex(void);
@@ -7,6 +8,7 @@ extern "C" int yylex(void);
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
 
 // TODO @amira: declare a global null pointer to ProgramNode, first include its header file
+ProgramNode * prgnodeptr = nullptr;
 %}
 
 %union{
@@ -15,6 +17,7 @@ extern "C" int yylex(void);
   bool bool_val;
   string* str_val;
   // TODO @amira: declare a pointer to ProgramNode, this will be the type of <program> non-terminal
+  ProgramNode * prgnodeptr_val;
 }
 
 // terminals
@@ -66,17 +69,21 @@ extern "C" int yylex(void);
 %type	<int_val>	int_exp
 %type	<bool_val>	bool_exp
 %type	<dbl_val>	real_exp
+%type <prgnodeptr_val> prgnodeptr_exp
 %start program // TODO @amira: change this non-terminal to have the type of program node that was declared in the previous union
 
 %%
 
-program: 
+program:
   /* empty */ {
     // TODO @amira: assign a new ProgramNode to this non-terminal
     // see real_exp how it assigned a value to the non-terminal
+    ProgramNode * programnode = new ProgramNode();
 
     // TODO @amira: if the global ProgramNode is null, assign to it the newly created programnode
     // so that it becomes the root ProgramNode
+    if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
+
   }
   | program stmt
   | program stmt T_NEWLINE
@@ -188,8 +195,8 @@ bool_exp:
   ;
 
   /* ensure one or zoro 8ero stmt at end */
-lw_group: 
-  lw_stmt 
+lw_group:
+  lw_stmt
   | lw_stmt T_8ERO block { cout << "8ero_stmt" << endl; }
   ;
 
@@ -207,19 +214,19 @@ karrar_l7d_stmt:
   T_KARRAR block T_L7D bool_exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
   ;
 
-basy_stmt: 
+basy_stmt:
   T_BASY exp { cout << "basy" << endl; }
   ;
 
 type: T_7A2I2I | T_SA7E7 | T_SYMBOL;
 
 ta3reef_mota8ier:
-  type T_SYMBOL                     { cout << "ta3reef_mota8ier: " << *($2) << endl; } 
+  type T_SYMBOL                     { cout << "ta3reef_mota8ier: " << *($2) << endl; }
   | type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_mota8ier: " << *($2) << endl; }
   ;
 
 ta3reef_thabet:
-  T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); } 
+  T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); }
   | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_thabet: " << *($3) << endl; }
   ;
 
@@ -285,7 +292,7 @@ int yyerror(string s) {
   } else {
     s = "ERROR";
   }
-  
+
   cerr << s << " at symbol \"" << yytext
       << "\" on line " << yylineno << endl;
 
