@@ -6,7 +6,6 @@ extern "C" int yylex(void);
 
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
 
-// TODO @amira: declare a global null pointer to ProgramNode, first include its header file
 ProgramNode * prgnodeptr = nullptr;
 %}
 
@@ -15,7 +14,6 @@ ProgramNode * prgnodeptr = nullptr;
   double dbl_val;
   bool bool_val;
   string* str_val;
-  // TODO @amira: declare a pointer to ProgramNode, this will be the type of <program> non-terminal
   ProgramNode * prgnodeptr_val;
 }
 
@@ -68,21 +66,16 @@ ProgramNode * prgnodeptr = nullptr;
 %type	<int_val>	int_exp
 %type	<bool_val>	bool_exp
 %type	<dbl_val>	real_exp
-%type <prgnodeptr_val> prgnodeptr_exp
-%start program // TODO @amira: change this non-terminal to have the type of program node that was declared in the previous union
+%type <prgnodeptr_val> program
+%start program
 
 %%
 
 program:
   /* empty */ {
-    // TODO @amira: assign a new ProgramNode to this non-terminal
-    // see real_exp how it assigned a value to the non-terminal
     ProgramNode * programnode = new ProgramNode();
-
-    // TODO @amira: if the global ProgramNode is null, assign to it the newly created programnode
-    // so that it becomes the root ProgramNode
     if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
-
+    $$ = programnode;
   }
   | program stmt
   | program stmt T_NEWLINE
