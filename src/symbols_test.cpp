@@ -50,3 +50,8 @@ void testSymbolTable() {
         assert(a == s);
     }
 }
+
+void testSymbol() {
+    auto s = new Symbol {name: "aa", scope: Scope(vector<Level>({1, 1}))};
+    assert(s->toString() == ":1:1:aa");
+}

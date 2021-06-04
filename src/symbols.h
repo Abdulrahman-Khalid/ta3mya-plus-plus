@@ -13,6 +13,12 @@ using std::vector;
 struct Symbol {
     string name;
     Scope scope;
+    
+
+    // {name: "a", scope: [0,1,1]}.toString() == ":0:1:1:a"
+    inline string toString() const {
+        return scope.toString() + name;
+    }
 };
 
 struct DataSymbol : public Symbol {
