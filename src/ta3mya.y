@@ -10,10 +10,8 @@ ProgramNode * prgnodeptr = nullptr;
 %}
 
 %union{
-  int int_val;
-  double dbl_val;
-  bool bool_val;
   string* str_val;
+  Expression * expr_val;
   ProgramNode * prgnodeptr_val;
 }
 
@@ -57,18 +55,14 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_ROUND_BR_BGN
 %token T_ROUND_BR_END
 
-%token <int_val>  T_INT_LITERAL
-%token <dbl_val>  T_REAL_LITERAL
-%token <str_val>  T_SYMBOL
-%token <str_val>  T_TARQEEM_INSTANCE
+%token <str_val>  T_INT_LITERAL T_REAL_LITERAL T_SYMBOL T_TARQEEM_INSTANCE
 
 // non terminals
-%type <int_val>         int_exp
-%type <bool_val>        bool_exp
-%type <dbl_val>         real_exp
-%type <prgnodeptr_val>  program
+%type <expr_val>  int_str real_str int_exp real_exp bool_exp exp
 
-%start                  program
+%type <prgnodeptr_val>    program
+
+%start                    program
 
 %%
 
@@ -102,89 +96,115 @@ stmt:
   ;
 
 exp:
-  int_exp         { cout << "= " << $1 << endl; }
-  | real_exp      { cout << "= " << std::to_string($1) << endl; }
-  | bool_exp      { cout << "= " << BOOL_STR($1) << endl; }
+  int_exp         { $$ = $1; cout << $$->toString() << endl; }
+  | real_exp      { $$ = $1; cout << $$->toString() << endl; }
+  | bool_exp      { $$ = $1; cout << $$->toString() << endl; }
   | call_dallah
   ;
 
+real_str:
+  T_REAL_LITERAL                                    { $$ = new Literal(*$1);   }  
+  ;
+
 real_exp:
-  T_REAL_LITERAL
-  | T_SYMBOL                                        { $$ = 0;              }
-  | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = $3;             }
-  | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = double($3);     }
+  real_str   
+  | T_SYMBOL                                        { $$ = 0;                                   }
 
-  | real_exp T_PLUS real_exp                        { $$ = $1 + $3;        }
-  | real_exp T_PLUS int_exp                         { $$ = $1 + double($3);}
-  | int_exp T_PLUS real_exp                         { $$ = double($1) + $3;}
+  | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = new To7a2i2i($3);                      }
+  | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = new To7a2i2i($3);                     }
 
-  | real_exp T_NEG real_exp                         { $$ = $1 - $3;        }
-  | real_exp T_NEG int_exp                          { $$ = $1 - double($3);}
-  | int_exp T_NEG real_exp                          { $$ = double($1) - $3;}
+  | real_exp T_PLUS real_exp                        { $$ = new RealExpression($1, "+" ,$3);     }
+  | real_exp T_PLUS int_exp                         { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "+" ,to7a2i2i); }
+  | int_exp T_PLUS real_exp                         { Expression * to7a2i2i = new To7a2i2i($1);
+                                                      $$ = new RealExpression(to7a2i2i, "+" ,$3); }
 
-  | real_exp T_MULT real_exp                        { $$ = $1 * $3;        }
-  | real_exp T_MULT int_exp                         { $$ = $1 * double($3);}
-  | int_exp T_MULT real_exp                         { $$ = double($1) * $3;}
+  | real_exp T_NEG real_exp                         { $$ = new RealExpression($1, "-" ,$3);     }
+  | real_exp T_NEG int_exp                          { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "-" ,to7a2i2i); }
+  | int_exp T_NEG real_exp                          { Expression * to7a2i2i = new To7a2i2i($1);
+                                                      $$ = new RealExpression(to7a2i2i, "-" ,$3); }
 
-  | real_exp T_DIV real_exp                         { $$ = $1 / $3;        }
-  | real_exp T_DIV int_exp                          { $$ = $1 / double($3);}
-  | int_exp T_DIV real_exp                          { $$ = double($1) / $3;}
+  | real_exp T_MULT real_exp                        { $$ = new RealExpression($1, "*" ,$3);     }
+  | real_exp T_MULT int_exp                         { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "*" ,to7a2i2i); }
+  | int_exp T_MULT real_exp                         { Expression * to7a2i2i = new To7a2i2i($1);
+                                                      $$ = new RealExpression(to7a2i2i, "*" ,$3); }
 
-  | real_exp T_MODULO int_exp                       { $$ = fmod($1, $3);   }
-  | T_NEG real_exp %prec T_NEG                      { $$ = -$2;            }
+  | real_exp T_DIV real_exp                         { $$ = new RealExpression($1, "/" ,$3);     }
+  | real_exp T_DIV int_exp                          { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "/" ,to7a2i2i); }
+  | int_exp T_DIV real_exp                          { Expression * to7a2i2i = new To7a2i2i($1);
+                                                      $$ = new RealExpression(to7a2i2i, "/" ,$3); }
 
-  | real_exp T_EXPONENT real_exp                    { $$ = pow($1, $3);    }
-  | real_exp T_EXPONENT int_exp                     {$$=pow($1,double($3));}
-  | int_exp T_EXPONENT real_exp                     {$$=pow(double($1),$3);}
+  | real_exp T_MODULO int_exp                       { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "%" ,to7a2i2i); }
+  | T_NEG real_exp %prec T_NEG                      { $$ = new Salb7a2i2i($2);                     }
+
+  | real_exp T_EXPONENT real_exp                    { $$ = new RealExpression($1, "**" ,$3);     }
+  | real_exp T_EXPONENT int_exp                     { Expression * to7a2i2i = new To7a2i2i($3);
+                                                      $$ = new RealExpression($1, "**" ,to7a2i2i);}
+  | int_exp T_EXPONENT real_exp                     { Expression * to7a2i2i = new To7a2i2i($1);
+                                                      $$ = new RealExpression(to7a2i2i, "**" ,$3);}
 
   | T_ROUND_BR_BGN real_exp T_ROUND_BR_END          { $$ = $2;             }
   ;
 
+int_str:
+  T_INT_LITERAL                                     { $$ = new Literal(*$1);               }
+  ;
+
 int_exp:
-  T_INT_LITERAL
-  | T_SYMBOL                                        { $$ = 0;           }
-  | T_TARQEEM_INSTANCE                              { $$ = 0;           }
-  | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = int($3);     }
-  | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = int($3);     }
-  | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = $3;          }
-  | int_exp T_PLUS int_exp                          { $$ = $1 + $3;     }
-  | int_exp T_NEG int_exp                           { $$ = $1 - $3;     }
-  | int_exp T_MULT int_exp                          { $$ = $1 * $3;     }
-  | int_exp T_DIV int_exp                           { $$ = $1 / $3;     }
-  | int_exp T_MODULO int_exp                        { $$ = $1 % $3;     }
-  | T_NEG int_exp %prec T_NEG                       { $$ = -$2;         }
-  | int_exp T_EXPONENT int_exp                      { $$ = pow($1, $3); }
+  int_str
+  | T_SYMBOL                                        { $$ = 0;                              } 
+  | T_TARQEEM_INSTANCE                              { $$ = 0;                              }
+  | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = new ToSa7e7($3);                }
+  | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = new ToSa7e7($3);                }
+  | T_SA7E7 T_ROUND_BR_BGN int_exp T_ROUND_BR_END   { $$ = new ToSa7e7($3);                }
+  | int_exp T_PLUS int_exp                          { $$ = new IntExpression($1, "+" ,$3); }
+  | int_exp T_NEG int_exp                           { $$ = new IntExpression($1, "-" ,$3); }
+  | int_exp T_MULT int_exp                          { $$ = new IntExpression($1, "*" ,$3); }
+  | int_exp T_DIV int_exp                           { $$ = new IntExpression($1, "/" ,$3); }
+  | int_exp T_MODULO int_exp                        { $$ = new IntExpression($1, "%" ,$3); }
+  | T_NEG int_exp %prec T_NEG                       { $$ = new SalbS7e7($2);                 }
+  | int_exp T_EXPONENT int_exp                      { $$ = new IntExpression($1, "**" ,$3);}
   | T_ROUND_BR_BGN int_exp T_ROUND_BR_END           { $$ = $2;          }
   ;
 
 bool_exp:
-  bool_exp T_WE bool_exp                 { $$ = $1&&$3; }
-  | bool_exp T_AW bool_exp               { $$ = $1||$3; }
-  | T_MSH bool_exp                       { $$ = !$2;    }
+  bool_exp T_WE bool_exp                 { $$ = new BoolExpression($1, "&&" ,$3); }
+  | bool_exp T_AW bool_exp               { $$ = new BoolExpression($1, "||" ,$3); }
+  | T_MSH bool_exp                       { $$ = new Msh($2);                      }
 
-  | int_exp T_EQUALS int_exp             { $$ = $1==$3; }
-  | int_exp T_EQUALS real_exp            { $$ = $1==$3; }
-  | real_exp T_EQUALS int_exp            { $$ = $1==$3; }
+  | int_exp T_EQUALS int_exp             { $$ = new BoolExpression($1, "==" ,$3); }
+  | int_exp T_EQUALS real_exp            { $$ = new BoolExpression($1, "==" ,$3); }
+  | real_exp T_EQUALS int_exp            { $$ = new BoolExpression($1, "==" ,$3); }
+  | real_exp T_EQUALS real_exp           { $$ = new BoolExpression($1, "==" ,$3); }
 
-  | int_exp T_DOESNT_EQUAL int_exp       { $$ = $1!=$3; }
-  | int_exp T_DOESNT_EQUAL real_exp      { $$ = $1!=$3; }
-  | real_exp T_DOESNT_EQUAL int_exp      { $$ = $1!=$3; }
+  | int_exp T_DOESNT_EQUAL int_exp       { $$ = new BoolExpression($1, "!=" ,$3); }
+  | int_exp T_DOESNT_EQUAL real_exp      { $$ = new BoolExpression($1, "!=" ,$3); }
+  | real_exp T_DOESNT_EQUAL int_exp      { $$ = new BoolExpression($1, "!=" ,$3); }
+  | real_exp T_DOESNT_EQUAL real_exp     { $$ = new BoolExpression($1, "!=" ,$3); }
 
-  | int_exp T_GREATER int_exp            { $$ = $1>$3;  }
-  | int_exp T_GREATER real_exp           { $$ = $1>$3;  }
-  | real_exp T_GREATER int_exp           { $$ = $1>$3;  }
+  | int_exp T_GREATER int_exp            { $$ = new BoolExpression($1, ">" ,$3); }
+  | int_exp T_GREATER real_exp           { $$ = new BoolExpression($1, ">" ,$3); }
+  | real_exp T_GREATER int_exp           { $$ = new BoolExpression($1, ">" ,$3); }
+  | real_exp T_GREATER real_exp          { $$ = new BoolExpression($1, ">" ,$3); }
 
-  | int_exp T_LESS int_exp               { $$ = $1<$3;  }
-  | int_exp T_LESS real_exp              { $$ = $1<$3;  }
-  | real_exp T_LESS int_exp              { $$ = $1<$3;  }
+  | int_exp T_LESS int_exp               { $$ = new BoolExpression($1, "<" ,$3); }
+  | int_exp T_LESS real_exp              { $$ = new BoolExpression($1, "<" ,$3); }
+  | real_exp T_LESS int_exp              { $$ = new BoolExpression($1, "<" ,$3); }
+  | real_exp T_LESS real_exp             { $$ = new BoolExpression($1, "<" ,$3); }
 
-  | int_exp T_GREATER_EQUAL int_exp      { $$ = $1>=$3; }
-  | int_exp T_GREATER_EQUAL real_exp     { $$ = $1>=$3; }
-  | real_exp T_GREATER_EQUAL int_exp     { $$ = $1>=$3; }
+  | int_exp T_GREATER_EQUAL int_exp      { $$ = new BoolExpression($1, ">=" ,$3); }
+  | int_exp T_GREATER_EQUAL real_exp     { $$ = new BoolExpression($1, ">=" ,$3); }
+  | real_exp T_GREATER_EQUAL int_exp     { $$ = new BoolExpression($1, ">=" ,$3); }
+  | real_exp T_GREATER_EQUAL real_exp    { $$ = new BoolExpression($1, ">=" ,$3); }
 
-  | int_exp T_LESS_EQUAL int_exp         { $$ = $1<=$3; }
-  | int_exp T_LESS_EQUAL real_exp        { $$ = $1<=$3; }
-  | real_exp T_LESS_EQUAL int_exp        { $$ = $1<=$3; }
+  | int_exp T_LESS_EQUAL int_exp         { $$ = new BoolExpression($1, "<=" ,$3); }
+  | int_exp T_LESS_EQUAL real_exp        { $$ = new BoolExpression($1, "<=" ,$3); }
+  | real_exp T_LESS_EQUAL int_exp        { $$ = new BoolExpression($1, "<=" ,$3); }
+  | real_exp T_LESS_EQUAL real_exp       { $$ = new BoolExpression($1, "<=" ,$3); }
   ;
 
   /* ensure one or zoro 8ero stmt at end */

@@ -74,12 +74,12 @@ whitespace              [ \t]*
 ")"           { return T_ROUND_BR_END; }
 
 {int_literal} { 
-    yylval.int_val = atoi(yytext); 
+    yylval.str_val =new std::string(yytext, yyleng);
     return T_INT_LITERAL; 
 }
 
 {real_literal} { 
-    yylval.dbl_val = strtod(yytext, NULL); 
+    yylval.str_val = new std::string(yytext, yyleng);
     return T_REAL_LITERAL;
 }
 
