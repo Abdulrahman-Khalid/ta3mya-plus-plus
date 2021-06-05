@@ -10,7 +10,7 @@ struct CompileContext
 };
 class Node {
 public:
-    virtual Program compile(CompileContext & compile_context ) const = 0;
+    virtual void compile(CompileContext & compile_context ) const = 0;
 
     // toString returns a string representation
     // of the object for debugging

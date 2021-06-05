@@ -10,7 +10,7 @@ public:
     string literal;
     Literal(string literal) : 
         literal(literal) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -20,7 +20,7 @@ public:
     string symbol;
     Symbol(string symbol) : 
         symbol(symbol) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -31,7 +31,7 @@ public:
     string operation;
     IntExpression(Expression* lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -42,7 +42,7 @@ public:
     string operation;
     RealExpression(Expression* lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -53,7 +53,7 @@ public:
     string operation;
     BoolExpression(Expression*  lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -62,7 +62,7 @@ public:
     Expression* toBeConverted;
     ToSa7e7(Expression*  toBeConverted) : 
         toBeConverted(toBeConverted) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -71,7 +71,7 @@ public:
     Expression* toBeConverted;
     To7a2i2i(Expression*  toBeConverted) : 
         toBeConverted(toBeConverted) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -80,7 +80,7 @@ public:
     Expression* toBeNegated;
     SalbS7e7(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -89,7 +89,7 @@ public:
     Expression* toBeNegated;
     Salb7a2i2i(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
@@ -98,12 +98,12 @@ public:
     Expression* toBeNegated;
     Msh(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
 class CallDallahExpression : public Expression {
 public:
-    virtual Program compile(CompileContext & compile_context ) const override;
+    virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
