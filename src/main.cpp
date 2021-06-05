@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 #endif
 
   int  yyparse_return = yyparse();
-  if (! (yyparse_return ==0))
+  if (yyparse_return !=0)
   {
     return yyparse_return;
   }
@@ -53,10 +53,11 @@ int main(int argc, char **argv) {
   // compile return  Program :std::vector<AssemblyLine> string
   Program p = prgnodeptr->compile(compile_context);
 
-  for (std::vector<AssemblyLine> ::const_iterator i = p.begin(); i != p.end(); ++i)
+  for (const auto& line : p)
   {
-    std::cout << *i << ' ';
+     std::cout << line << std::endl;
   }
+  
   std::cout<<endl;
 
   return 0;
