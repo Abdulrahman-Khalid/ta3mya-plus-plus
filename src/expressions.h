@@ -14,6 +14,16 @@ public:
     virtual string toString() const override;
 };
 
+
+class Symbol : public Expression {
+public:
+    string symbol;
+    Symbol(string symbol) : 
+        symbol(symbol) { }
+    virtual Program compile() const override;
+    virtual string toString() const override;
+};
+
 class IntExpression : public Expression {
 public:
     Expression* lhs;
@@ -73,7 +83,6 @@ public:
     virtual Program compile() const override;
     virtual string toString() const override;
 };
-
 
 class Salb7a2i2i : public Expression {
 public:

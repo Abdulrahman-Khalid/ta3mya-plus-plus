@@ -9,6 +9,14 @@ string Literal::toString() const {
     return "Literal: " + this->literal;
 }
 
+Program Symbol::compile() const {
+    // TODO
+    return Program();
+}
+
+string Symbol::toString() const {
+    return "Symbol: " + this->symbol;
+}
 
 Program IntExpression::compile() const {
     // TODO

@@ -70,18 +70,18 @@ program:
   /* empty */ {
     ProgramNode * programnode = new ProgramNode();
     if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
-    $$ = programnode;
+    $$ = programnode;    
   }
-  | program stmt
+  | program stmt 
   | program stmt T_NEWLINE
   | program T_NEWLINE
   ;
 
   /* {<program>} */
-block: T_CRULY_BR_BGN program T_CRULY_BR_END;
+block: T_CRULY_BR_BGN program T_CRULY_BR_END ;
 
 stmt:
-  basy_stmt
+  basy_stmt 
   | lw_group
   | talma_stmt
   | karrar_l7d_stmt
@@ -92,24 +92,23 @@ stmt:
   | assignment
   | fe7alet_stmt
   | lef_stmt
-  | block
+  | block 
   ;
 
 exp:
-  int_exp         { $$ = $1; cout << $$->toString() << endl; }
-  | real_exp      { $$ = $1; cout << $$->toString() << endl; }
-  | bool_exp      { $$ = $1; cout << $$->toString() << endl; }
+  int_exp         { $$ = $1; /*cout << $$->toString() << endl;*/ }
+  | real_exp      { $$ = $1; /*cout << $$->toString() << endl;*/ }
+  | bool_exp      { $$ = $1; /*cout << $$->toString() << endl;*/ }
   | call_dallah
   ;
 
 real_str:
-  T_REAL_LITERAL                                    { $$ = new Literal(*$1);   }  
+  T_REAL_LITERAL                                    { $$ = new Literal(*$1);   } 
+  | T_SYMBOL                                        { $$ = new Symbol(*$1);     } 
   ;
 
 real_exp:
   real_str   
-  | T_SYMBOL                                        { $$ = 0;                                   }
-
   | T_7A2I2I T_ROUND_BR_BGN int_exp T_ROUND_BR_END  { $$ = new To7a2i2i($3);                      }
   | T_7A2I2I T_ROUND_BR_BGN real_exp T_ROUND_BR_END { $$ = new To7a2i2i($3);                     }
 
@@ -152,11 +151,11 @@ real_exp:
 
 int_str:
   T_INT_LITERAL                                     { $$ = new Literal(*$1);               }
+  | T_SYMBOL                                        { $$ = new Symbol(*$1);                } 
   ;
 
 int_exp:
   int_str
-  | T_SYMBOL                                        { $$ = 0;                              } 
   | T_TARQEEM_INSTANCE                              { $$ = 0;                              }
   | T_SA7E7 T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = new ToSa7e7($3);                }
   | T_SA7E7 T_ROUND_BR_BGN real_exp T_ROUND_BR_END  { $$ = new ToSa7e7($3);                }
