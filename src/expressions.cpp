@@ -1,26 +1,23 @@
 #include "expressions.h"
 
-Program Literal::compile(CompileContext & compile_context ) const {
+void Literal::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string Literal::toString() const {
     return "Literal: " + this->literal;
 }
 
-Program SymbolExpression::compile(CompileContext & compile_context ) const {
+void SymbolExpression::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string SymbolExpression::toString() const {
     return "Symbol: " + this->symbol;
 }
 
-Program IntExpression::compile(CompileContext & compile_context ) const {
+void IntExpression::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string IntExpression::toString() const {
@@ -31,9 +28,8 @@ string IntExpression::toString() const {
     return s ;
 }
 
-Program RealExpression::compile(CompileContext & compile_context ) const {
+void RealExpression::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string RealExpression::toString() const {
@@ -44,9 +40,8 @@ string RealExpression::toString() const {
     return s ;
 }
 
-Program BoolExpression::compile(CompileContext & compile_context ) const {
+void BoolExpression::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string BoolExpression::toString() const {
@@ -57,9 +52,8 @@ string BoolExpression::toString() const {
     return s;
 }
 
-Program ToSa7e7::compile(CompileContext & compile_context ) const {
+void ToSa7e7::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string ToSa7e7::toString() const {
@@ -68,9 +62,8 @@ string ToSa7e7::toString() const {
     return s;
 }
 
-Program To7a2i2i::compile(CompileContext & compile_context ) const {
+void To7a2i2i::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string To7a2i2i::toString() const {
@@ -79,9 +72,8 @@ string To7a2i2i::toString() const {
     return s;
 }
 
-Program SalbS7e7::compile(CompileContext & compile_context ) const {
+void SalbS7e7::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string SalbS7e7::toString() const {
@@ -90,9 +82,8 @@ string SalbS7e7::toString() const {
     return s;
 }
 
-Program Salb7a2i2i::compile(CompileContext & compile_context ) const {
+void Salb7a2i2i::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string Salb7a2i2i::toString() const {
@@ -101,9 +92,8 @@ string Salb7a2i2i::toString() const {
     return s;
 }
 
-Program Msh::compile(CompileContext & compile_context ) const {
+void Msh::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string Msh::toString() const {
@@ -112,9 +102,8 @@ string Msh::toString() const {
     return s;
 }
 
-Program CallDallahExpression::compile(CompileContext & compile_context ) const {
+void CallDallahExpression::compile(CompileContext & compile_context ) const {
     // TODO
-    return Program();
 }
 
 string CallDallahExpression::toString() const {

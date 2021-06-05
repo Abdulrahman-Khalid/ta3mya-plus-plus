@@ -51,8 +51,9 @@ int main(int argc, char **argv) {
   CompileContext compile_context;// = new CompileContext() ;
 
   // compile return  Program :std::vector<AssemblyLine> string
-  Program p = prgnodeptr->compile(compile_context);
+  prgnodeptr->compile(compile_context);
 
+    Program p; // TODO: fill it from context
   for (const auto& line : p)
   {
      std::cout << line << std::endl;
