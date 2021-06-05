@@ -9,12 +9,12 @@ string Literal::toString() const {
     return "Literal: " + this->literal;
 }
 
-Program Symbol::compile() const {
+Program SymbolExpression::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
 
-string Symbol::toString() const {
+string SymbolExpression::toString() const {
     return "Symbol: " + this->symbol;
 }
 

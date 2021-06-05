@@ -15,10 +15,10 @@ public:
 };
 
 
-class Symbol : public Expression {
+class SymbolExpression : public Expression {
 public:
     string symbol;
-    Symbol(string symbol) : 
+    SymbolExpression(string symbol) : 
         symbol(symbol) { }
     virtual Program compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
