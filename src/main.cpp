@@ -42,26 +42,25 @@ int main(int argc, char **argv) {
     yydebug = 1;
 #endif
 
-  int  yyparse_return = yyparse();
-  if (yyparse_return !=0)
-  {
+    int yyparse_return = yyparse();
+    if (yyparse_return !=0)
+    {
     return yyparse_return;
-  }
+    }
 
-  CompileContext compile_context;// = new CompileContext() ;
+    CompileContext compile_context;// = new CompileContext() ;
 
-  // compile return  Program :std::vector<AssemblyLine> string
-  prgnodeptr->compile(compile_context);
+    // compile return  Program :std::vector<AssemblyLine> string
+    prgnodeptr->compile(compile_context);
 
     Program p; // TODO: fill it from context
-  for (const auto& line : p)
-  {
-     std::cout << line << std::endl;
-  }
-  
-  std::cout<<endl;
+    for (const auto& line : p)
+    {
+        std::cout << line << std::endl;
+    }
 
-  return 0;
+    std::cout<<endl;
 
+    return 0;
 
 }
