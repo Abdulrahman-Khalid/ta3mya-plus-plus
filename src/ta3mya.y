@@ -126,14 +126,14 @@ binary_exp:
   ;
 
 unary_exp: 
-  T_MSH exp               { $$ = new MshExpression($2); } 
-  | T_NEG exp %prec T_NEG { $$ = new NegExpression($2); } 
-  | T_PLUS exp %prec T_PLUS { $$ = $2; } 
+  T_NEG exp %prec T_NEG { $$ = new NegExpression($2); } 
+  | T_PLUS exp %prec T_PLUS { $$ = $2; }
   ;
 
 comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
 bool_exp: 
-  exp comparator exp { $$ = new BoolExpression($1, *($2), $3); }
+  T_MSH exp            { $$ = new MshExpression($2);             } 
+  | exp comparator exp { $$ = new BoolExpression($1, *($2), $3); }
   ;
 
   /* ensure one or zoro 8ero stmt at end */
