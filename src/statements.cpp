@@ -78,7 +78,16 @@ void Ta3reefTarqeemStatement::compile(CompileContext & compile_context ) const {
 }
 
 string Ta3reefTarqeemStatement::toString() const {
-    return "Ta3reefTarqeemStatement";
+    string listString;
+    for (int i = 0; i < _list.size(); i++) {
+        if (i+1 == _list.size()) {
+            listString += _list[i];
+        } else {
+            listString += _list[i] + ", ";
+        }
+    }
+    
+    return "Ta3reefTarqeemStatement{name: " + _name + ", list: [" + listString +"]}";
 }
 
 void AssignmentStatement::compile(CompileContext & compile_context ) const {

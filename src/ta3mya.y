@@ -13,6 +13,8 @@ ProgramNode * prgnodeptr = nullptr;
   string* str_val;
   Expression * expr_val;
   ProgramNode * prgnodeptr_val;
+  TarqeemList * tarqeemlist_val;
+  Statement * stmt_val;
 }
 
 // terminals
@@ -73,6 +75,9 @@ ProgramNode * prgnodeptr = nullptr;
 %type <str_val>  type
 %type <str_val>  binary_operator
 %type <str_val>  comparator
+
+%type <tarqeemlist_val> tarqeem_list
+%type <stmt_val>        ta3reef_tarqeem
 
 %%
 
@@ -205,7 +210,7 @@ call_dallah:
   ;
 
 ta3reef_tarqeem:
-  T_TARQEEM T_SYMBOL T_CRULY_BR_BGN tarqeem_list T_CRULY_BR_END { cout << "ta3reef_tarqeem: " << *($2) << endl; }
+  T_TARQEEM T_SYMBOL T_CRULY_BR_BGN tarqeem_list T_CRULY_BR_END { $$ = new Ta3reefTarqeemStatement(*$2, *$4); }
   ;
 
 emtpyness:
@@ -214,8 +219,11 @@ emtpyness:
   ;
 
 tarqeem_list:
-  emtpyness T_SYMBOL emtpyness
-  | tarqeem_list T_COMMA tarqeem_list
+  emtpyness T_SYMBOL emtpyness        { $$ = new TarqeemList({*$2}); }
+  | tarqeem_list T_COMMA tarqeem_list {
+    $1->insert($1->end(), $3->begin(), $3->end()); 
+    delete $3;
+  }
   ;
 
 %%
