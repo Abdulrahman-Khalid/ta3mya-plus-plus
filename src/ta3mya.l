@@ -5,11 +5,7 @@
 int yyerror(char *s);
 extern "C" int yylex(void);
 
-#define RETURN_STR(t) do {\
-        yylval.str_val = new std::string(yytext, yyleng);\
-        return (t); \
-    } \
-    while(0)
+#define RETURN_STR(t) do { yylval.str_val = new std::string(yytext, yyleng); return (t); } while(0)
 
 %}
 
