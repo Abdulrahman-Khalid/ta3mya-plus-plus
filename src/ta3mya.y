@@ -9,12 +9,6 @@ extern "C" int yylex(void);
 ProgramNode * prgnodeptr = nullptr;
 %}
 
-%union{
-  string* str_val;
-  Expression * expr_val;
-  ProgramNode * prgnodeptr_val;
-}
-
 // terminals
 %token T_NEWLINE
 
@@ -62,6 +56,21 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <prgnodeptr_val>    program
 
+%type <stmt_val> stmt
+
+%type <block_stmt_val> block
+
+%type <basy_stmt_val> basy_stmt
+
+%union{
+  string* str_val;
+  Expression* expr_val;
+  ProgramNode* prgnodeptr_val;
+  BasyStatement* basy_stmt_val;
+  BlockStatement* block_stmt_val;
+  Statement* stmt_val;
+}
+
 %start                    program
 
 %%
@@ -72,16 +81,21 @@ program:
     if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
     $$ = programnode;    
   }
-  | program stmt 
-  | program stmt T_NEWLINE
-  | program T_NEWLINE
+  | program stmt              { $1->addStatement($2); }
+  | program stmt T_NEWLINE    { $1->addStatement($2); }
+  | program T_NEWLINE         { $$ = $1; /*cout << $$->toString() << endl;*/ }
   ;
 
   /* {<program>} */
-block: T_CRULY_BR_BGN program T_CRULY_BR_END ;
+block: 
+  T_CRULY_BR_BGN program T_CRULY_BR_END {
+    $$ = new BlockStatement($2);
+    /*cout << $$->toString() << endl;*/
+  }
+  ;
 
 stmt:
-  basy_stmt 
+  basy_stmt           { $$ = $1; }
   | lw_group
   | talma_stmt
   | karrar_l7d_stmt
@@ -92,7 +106,7 @@ stmt:
   | assignment
   | fe7alet_stmt
   | lef_stmt
-  | block 
+  | block             { $$ = $1; }
   ;
 
 exp:
@@ -227,7 +241,7 @@ karrar_l7d_stmt:
   ;
 
 basy_stmt:
-  T_BASY exp { cout << "basy" << endl; }
+  T_BASY exp { $$ = new BasyStatement($2); /*cout << $$->toString() << endl;*/ }
   ;
 
 type: T_7A2I2I | T_SA7E7 | T_SYMBOL;

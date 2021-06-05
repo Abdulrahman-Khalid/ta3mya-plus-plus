@@ -5,7 +5,7 @@ void BlockStatement::compile(CompileContext & compile_context ) const {
 }
 
 string BlockStatement::toString() const {
-    return "BlockStatement";
+    return "BlockStatement{program: " + _programNode->toString() + "}";
 }
 
 void ProgramNode::compile(CompileContext & compile_context ) const {
