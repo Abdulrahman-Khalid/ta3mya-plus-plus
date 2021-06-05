@@ -5,7 +5,7 @@
 int yyerror(char *s);
 extern "C" int yylex(void);
 
-#define STR() yylval.str_val = new std::string(yytext, yyleng)
+#define RETURN_STR(t) do { yylval.str_val = new std::string(yytext, yyleng); return (t); } while(0)
 %}
 
     // increment yylineno automatically
@@ -39,31 +39,31 @@ whitespace              [ \t]*
 "karrar"      { return T_KARRAR; }
 
 "msh"         { return T_MSH; }
-"we"          { STR(); return T_WE; }
-"aw"          { STR(); return T_AW; }
+"we"          { RETURN_STR(T_WE); }
+"aw"          { RETURN_STR(T_AW); }
 
-"!="          { STR(); return T_DOESNT_EQUAL; }
-"=="          { STR(); return T_EQUALS; }
-">"           { STR(); return T_GREATER; }
-">="          { STR(); return T_GREATER_EQUAL; }
-"<"           { STR(); return T_LESS; }
-"<="          { STR(); return T_LESS_EQUAL; }
+"!="          { RETURN_STR(T_DOESNT_EQUAL); }
+"=="          { RETURN_STR(T_EQUALS); }
+">"           { RETURN_STR(T_GREATER); }
+">="          { RETURN_STR(T_GREATER_EQUAL); }
+"<"           { RETURN_STR(T_LESS); }
+"<="          { RETURN_STR(T_LESS_EQUAL); }
 
 "fe"          { return T_FE; }
 "7alet"       { return T_7ALET; }
 
 "thabet"      { return T_THABET; }
-"sa7e7"       { STR(); return T_SA7E7; }
-"7a2i2i"      { STR(); return T_7A2I2I; }
+"sa7e7"       { RETURN_STR(T_SA7E7); }
+"7a2i2i"      { RETURN_STR(T_7A2I2I); }
 "tarqeem"     { return T_TARQEEM; }
 
 "="           { return T_ASSIGNMENT; }
-"+"           { STR(); return T_PLUS; }
-"-"           { STR(); return T_NEG; }
-"*"           { STR(); return T_MULT; }
-"/"           { STR(); return T_DIV; }
-"%"           { STR(); return T_MODULO; }
-"**"          { STR(); return T_EXPONENT; }
+"+"           { RETURN_STR(T_PLUS); }
+"-"           { RETURN_STR(T_NEG); }
+"*"           { RETURN_STR(T_MULT); }
+"/"           { RETURN_STR(T_DIV); }
+"%"           { RETURN_STR(T_MODULO); }
+"**"          { RETURN_STR(T_EXPONENT); }
 
 "basy"        { return T_BASY; }
 
@@ -75,10 +75,10 @@ whitespace              [ \t]*
 "("           { return T_ROUND_BR_BGN; }
 ")"           { return T_ROUND_BR_END; }
 
-{int_literal}       { STR(); return T_INT_LITERAL; }
-{real_literal}      { STR(); return T_REAL_LITERAL; }
-{tarqeem_instance}  { STR(); return T_TARQEEM_INSTANCE; }
-{symbol}            { STR(); return T_SYMBOL; }
+{int_literal}       { RETURN_STR(T_INT_LITERAL); }
+{real_literal}      { RETURN_STR(T_REAL_LITERAL); }
+{tarqeem_instance}  { RETURN_STR(T_TARQEEM_INSTANCE); }
+{symbol}            { RETURN_STR(T_SYMBOL); }
 
     /* invalid */
 {rest_chars} {
