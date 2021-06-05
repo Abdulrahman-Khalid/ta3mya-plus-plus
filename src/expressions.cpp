@@ -65,5 +65,14 @@ void CallDallahExpression::compile(CompileContext & compile_context ) const {
 }
 
 string CallDallahExpression::toString() const {
-    return "CallDallahExpression";
+    string argsString;
+    for (int i = 0; i < _args.size(); i++) {
+        if (i+1 == _args.size()) {
+            argsString += _args[i]->toString();
+        } else {
+            argsString += _args[i]->toString() + ",";
+        }
+    }
+
+    return "CallDallahExpression{name: "+_name+", args: [" + argsString +  "]}";
 }

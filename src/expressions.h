@@ -63,8 +63,15 @@ public:
     virtual string toString() const override;
 };
 
+typedef std::vector<Expression*> CallDallahArgs;
+
 class CallDallahExpression : public Expression {
+    string _name;
+    CallDallahArgs _args;
+    
 public:
+    inline CallDallahExpression(string dallahName, CallDallahArgs args):_name(dallahName), _args(args) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

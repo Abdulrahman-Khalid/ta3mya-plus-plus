@@ -14,6 +14,7 @@ ProgramNode * prgnodeptr = nullptr;
   Expression * expr_val;
   ProgramNode * prgnodeptr_val;
   TarqeemList * tarqeemlist_val;
+  CallDallahArgs * args_val;
   Statement * stmt_val;
 }
 
@@ -57,10 +58,11 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_ROUND_BR_BGN
 %token T_ROUND_BR_END
 
-%token <str_val> T_INT_LITERAL 
-%token <str_val> T_REAL_LITERAL 
-%token <str_val> T_SYMBOL 
+%token <str_val> T_SYMBOL
 %token <str_val> T_TARQEEM_INSTANCE
+
+%token <str_val> T_INT_LITERAL
+%token <str_val> T_REAL_LITERAL
 
 // non terminals
 %start                    program
@@ -78,6 +80,8 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <tarqeemlist_val> tarqeem_list
 %type <stmt_val>        ta3reef_tarqeem
+
+%type <args_val>  args
 
 %%
 
@@ -134,6 +138,16 @@ comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T
 bool_exp: 
   T_MSH exp            { $$ = new MshExpression($2);             } 
   | exp comparator exp { $$ = new BoolExpression($1, *($2), $3); }
+  ;
+
+args:
+  /* empty  */         { $$ = new CallDallahArgs();     }
+  | exp                { $$ = new CallDallahArgs({$1}); }
+  | args T_COMMA exp   { $1->push_back($3); $$ = $1;    }
+  ;
+
+call_dallah:
+  T_SYMBOL T_ROUND_BR_BGN args T_ROUND_BR_END { $$ = new CallDallahExpression(*$1, *$3); }
   ;
 
   /* ensure one or zoro 8ero stmt at end */
@@ -197,16 +211,6 @@ lef_init: assignment | ta3reef_mota8ier;
 lef_stmt:
   T_LEF lef_init T_SEMICOLON bool_exp T_SEMICOLON assignment block
     { cout << "lef_stmt" << endl; }
-  ;
-
-args:
-  /* empty  */
-  | exp
-  | args T_COMMA exp
-  ;
-
-call_dallah:
-  T_SYMBOL T_ROUND_BR_BGN args T_ROUND_BR_END { cout << "call_dallah: " << *($1) << endl; }
   ;
 
 ta3reef_tarqeem:
