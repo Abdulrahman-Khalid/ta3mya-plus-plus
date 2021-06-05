@@ -9,12 +9,6 @@ extern "C" int yylex(void);
 ProgramNode * prgnodeptr = nullptr;
 %}
 
-%union{
-  string* str_val;
-  Expression * expr_val;
-  ProgramNode * prgnodeptr_val;
-}
-
 // terminals
 %token T_NEWLINE
 
@@ -61,6 +55,12 @@ ProgramNode * prgnodeptr = nullptr;
 %type <expr_val>  int_str real_str int_exp real_exp bool_exp exp
 
 %type <prgnodeptr_val>    program
+
+%union{
+  string* str_val;
+  Expression * expr_val;
+  ProgramNode * prgnodeptr_val;
+}
 
 %start                    program
 
