@@ -104,7 +104,7 @@ exp:
 
 real_str:
   T_REAL_LITERAL                                    { $$ = new Literal(*$1);   } 
-  | T_SYMBOL                                        { $$ = new Symbol(*$1);     } 
+  | T_SYMBOL                                        { $$ = new SymbolExpression(*$1);     } 
   ;
 
 real_exp:
@@ -151,7 +151,7 @@ real_exp:
 
 int_str:
   T_INT_LITERAL                                     { $$ = new Literal(*$1);               }
-  | T_SYMBOL                                        { $$ = new Symbol(*$1);                } 
+  | T_SYMBOL                                        { $$ = new SymbolExpression(*$1);                } 
   ;
 
 int_exp:
