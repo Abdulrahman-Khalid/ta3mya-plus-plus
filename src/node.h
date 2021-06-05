@@ -2,11 +2,13 @@
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
+#include "quadraples.h"
 using std::string;
 struct CompileContext
 {
   ScopeTracker scope_tracker;
   SymbolTable  symbol_table;
+  QuadruplesTable quadruples_table;
 };
 class Node {
 public:
