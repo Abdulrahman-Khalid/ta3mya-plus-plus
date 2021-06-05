@@ -96,7 +96,7 @@ block:
 
 stmt:
   basy_stmt           { $$ = $1; }
-  | lw_group
+  | lw_group          { $$ = $1; }
   | talma_stmt
   | karrar_l7d_stmt
   | ta3reef_mota8ier
