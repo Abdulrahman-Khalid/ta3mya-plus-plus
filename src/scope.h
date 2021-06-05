@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <string>
 
@@ -12,7 +14,7 @@ class Scope {
 public:
     inline Scope(vector<Level> levels):_levels(levels) {}
     inline Scope(): _levels({}) {}
-    
+
     bool operator==(Scope const& s2) const;
     bool operator!=(Scope const& s2) const;
 

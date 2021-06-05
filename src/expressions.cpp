@@ -1,6 +1,6 @@
 #include "expressions.h"
 
-Program Literal::compile() const {
+Program Literal::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -10,7 +10,7 @@ string Literal::toString() const {
 }
 
 
-Program IntExpression::compile() const {
+Program IntExpression::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -23,7 +23,7 @@ string IntExpression::toString() const {
     return s ;
 }
 
-Program RealExpression::compile() const {
+Program RealExpression::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -36,7 +36,7 @@ string RealExpression::toString() const {
     return s ;
 }
 
-Program BoolExpression::compile() const {
+Program BoolExpression::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -49,7 +49,7 @@ string BoolExpression::toString() const {
     return s;
 }
 
-Program ToSa7e7::compile() const {
+Program ToSa7e7::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -60,7 +60,7 @@ string ToSa7e7::toString() const {
     return s;
 }
 
-Program To7a2i2i::compile() const {
+Program To7a2i2i::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -71,7 +71,7 @@ string To7a2i2i::toString() const {
     return s;
 }
 
-Program SalbS7e7::compile() const {
+Program SalbS7e7::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -82,7 +82,7 @@ string SalbS7e7::toString() const {
     return s;
 }
 
-Program Salb7a2i2i::compile() const {
+Program Salb7a2i2i::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -93,7 +93,7 @@ string Salb7a2i2i::toString() const {
     return s;
 }
 
-Program Msh::compile() const {
+Program Msh::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }
@@ -104,7 +104,7 @@ string Msh::toString() const {
     return s;
 }
 
-Program CallDallahExpression::compile() const {
+Program CallDallahExpression::compile(CompileContext & compile_context ) const {
     // TODO
     return Program();
 }

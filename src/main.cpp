@@ -5,6 +5,7 @@ int yyparse();
 
 extern "C" int yylex();
 extern FILE* yyin;
+extern ProgramNode* prgnodeptr;
 
 inline void usage(char* p) {
     std::cerr << "Usage: " << p << " [/path/to/file.ta3]" << std::endl;
@@ -41,5 +42,24 @@ int main(int argc, char **argv) {
     yydebug = 1;
 #endif
 
-    return yyparse();
+  int  yyparse_return = yyparse();
+  if (! (yyparse_return ==0))
+  {
+    return yyparse_return;
+  }
+
+  CompileContext compile_context;// = new CompileContext() ;
+
+  // compile return  Program :std::vector<AssemblyLine> string
+  Program p = prgnodeptr->compile(compile_context);
+
+  for (std::vector<AssemblyLine> ::const_iterator i = p.begin(); i != p.end(); ++i)
+  {
+    std::cout << *i << ' ';
+  }
+  std::cout<<endl;
+
+  return 0;
+
+
 }
