@@ -4,6 +4,13 @@
 
 int yyerror(char *s);
 extern "C" int yylex(void);
+
+#define RETURN_STR(t) do {\
+        yylval.str_val = new std::string(yytext, yyleng);\
+        return (t); \
+    } \
+    while(0)
+
 %}
 
     // increment yylineno automatically
@@ -37,31 +44,31 @@ whitespace              [ \t]*
 "karrar"      { return T_KARRAR; }
 
 "msh"         { return T_MSH; }
-"we"          { return T_WE; }
-"aw"          { return T_AW; }
+"we"          { RETURN_STR(T_WE); }
+"aw"          { RETURN_STR(T_AW); }
 
-"!="          { return T_DOESNT_EQUAL; }
-"=="          { return T_EQUALS; }
-">"           { return T_GREATER; }
-">="          { return T_GREATER_EQUAL; }
-"<"           { return T_LESS; }
-"<="          { return T_LESS_EQUAL; }
+"!="          { RETURN_STR(T_DOESNT_EQUAL); }
+"=="          { RETURN_STR(T_EQUALS); }
+">"           { RETURN_STR(T_GREATER); }
+">="          { RETURN_STR(T_GREATER_EQUAL); }
+"<"           { RETURN_STR(T_LESS); }
+"<="          { RETURN_STR(T_LESS_EQUAL); }
 
 "fe"          { return T_FE; }
 "7alet"       { return T_7ALET; }
 
 "thabet"      { return T_THABET; }
-"sa7e7"       { return T_SA7E7; }
-"7a2i2i"      { return T_7A2I2I; }
+"sa7e7"       { RETURN_STR(T_SA7E7); }
+"7a2i2i"      { RETURN_STR(T_7A2I2I); }
 "tarqeem"     { return T_TARQEEM; }
 
 "="           { return T_ASSIGNMENT; }
-"+"           { return T_PLUS; }
-"-"           { return T_NEG; }
-"*"           { return T_MULT; }
-"/"           { return T_DIV; }
-"%"           { return T_MODULO; }
-"**"          { return T_EXPONENT; }
+"+"           { RETURN_STR(T_PLUS); }
+"-"           { RETURN_STR(T_NEG); }
+"*"           { RETURN_STR(T_MULT); }
+"/"           { RETURN_STR(T_DIV); }
+"%"           { RETURN_STR(T_MODULO); }
+"**"          { RETURN_STR(T_EXPONENT); }
 
 "basy"        { return T_BASY; }
 
@@ -73,25 +80,10 @@ whitespace              [ \t]*
 "("           { return T_ROUND_BR_BGN; }
 ")"           { return T_ROUND_BR_END; }
 
-{int_literal} { 
-    yylval.str_val =new std::string(yytext, yyleng);
-    return T_INT_LITERAL; 
-}
-
-{real_literal} { 
-    yylval.str_val = new std::string(yytext, yyleng);
-    return T_REAL_LITERAL;
-}
-
-{tarqeem_instance} {
-    yylval.str_val = new std::string(yytext, yyleng);
-    return T_TARQEEM_INSTANCE;
-}
-
-{symbol} {
-    yylval.str_val = new std::string(yytext, yyleng);
-    return T_SYMBOL;
-}
+{int_literal}       { RETURN_STR(T_INT_LITERAL); }
+{real_literal}      { RETURN_STR(T_REAL_LITERAL); }
+{tarqeem_instance}  { RETURN_STR(T_TARQEEM_INSTANCE); }
+{symbol}            { RETURN_STR(T_SYMBOL); }
 
     /* invalid */
 {rest_chars} {
