@@ -37,8 +37,32 @@ public:
     virtual string toString() const override;
 };
 
-class LWGroupStatement : public Statement {
+class LwStatement : public Statement {
+private:
+    struct ConditionalBlock {
+        BoolExpression* condition;
+        BlockStatement* block;
+    };
+    vector<ConditionalBlock> _conditionalBlocks;
 public:
+    virtual void compile(CompileContext & compile_context ) const override;
+    virtual string toString() const override;
+
+    inline void addConditionalBlock(BoolExpression* condition, BlockStatement* block) {
+        _conditionalBlocks.push_back({ condition, block });
+    }
+};
+
+class LwGroupStatement : public Statement {
+private:
+    LwStatement* _lwStatement;
+    BlockStatement* _8eroBlock;
+public:
+    inline LwGroupStatement(LwStatement* lwStatement) :
+        _lwStatement(lwStatement), _8eroBlock(nullptr) {}
+    inline LwGroupStatement(LwStatement* lwStatement, BlockStatement* __8eroBlock) :
+        _lwStatement(lwStatement), _8eroBlock(__8eroBlock) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

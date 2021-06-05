@@ -33,12 +33,34 @@ string BasyStatement::toString() const {
     return "BasyStatement{exp: " + _toBasy->toString() + "}";
 }
 
-void LWGroupStatement::compile(CompileContext & compile_context ) const {
+void LwStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }
 
-string LWGroupStatement::toString() const {
-    return "LWGroupStatement";
+string LwStatement::toString() const {
+    string out = "LwStatement{conditional_stmts: [";
+     for (auto i = 0; i < _conditionalBlocks.size(); i++) {
+        out += "ConditionalBlock{condition: " + _conditionalBlocks[i].condition->toString();
+        out += ", block:" + _conditionalBlocks[i].block->toString();
+        out += "}";
+        if (i+1 < _conditionalBlocks.size()) {
+            out += ", ";
+        }
+    }
+    return out + "]}";
+}
+
+void LwGroupStatement::compile(CompileContext & compile_context ) const {
+    // TODO
+}
+
+string LwGroupStatement::toString() const {
+    string out =  "LwGroupStatement{lw_stmt: " + _lwStatement->toString();
+    if (_8eroBlock) {
+        return out + ", 8ero_block: " + _8eroBlock->toString() + "}";
+    } else {
+        return out + "}";
+    }
 }
 
 void KarrarL7dStatement::compile(CompileContext & compile_context ) const {

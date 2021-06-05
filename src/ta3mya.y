@@ -52,15 +52,13 @@ ProgramNode * prgnodeptr = nullptr;
 %token <str_val>  T_INT_LITERAL T_REAL_LITERAL T_SYMBOL T_TARQEEM_INSTANCE
 
 // non terminals
-%type <expr_val>  int_str real_str int_exp real_exp bool_exp exp
-
-%type <prgnodeptr_val>    program
-
+%type <expr_val> int_str real_str int_exp real_exp bool_exp exp
+%type <prgnodeptr_val> program
 %type <stmt_val> stmt
-
 %type <block_stmt_val> block
-
 %type <basy_stmt_val> basy_stmt
+%type <lw_stmt_val> lw_stmt
+%type <lw_group_val> lw_group
 
 %union{
   string* str_val;
@@ -69,6 +67,8 @@ ProgramNode * prgnodeptr = nullptr;
   BasyStatement* basy_stmt_val;
   BlockStatement* block_stmt_val;
   Statement* stmt_val;
+  LwStatement* lw_stmt_val;
+  LwGroupStatement* lw_group_val;
 }
 
 %start                    program
@@ -220,16 +220,25 @@ bool_exp:
   | real_exp T_LESS_EQUAL real_exp       { $$ = new BoolExpression($1, "<=" ,$3); }
   ;
 
-  /* ensure one or zoro 8ero stmt at end */
+  /* ensure one or zero 8ero stmt at end */
 lw_group:
-  lw_stmt
-  | lw_stmt T_8ERO block { cout << "8ero_stmt" << endl; }
+  lw_stmt                 { $$ = new LwGroupStatement($1); /*cout << $$->toString() << endl;*/ }
+  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); /*cout << $$->toString() << endl;*/ }
   ;
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  T_LW bool_exp block                  { cout << "lw_stmt: " << BOOL_STR($2) << endl;     }
-  | lw_stmt T_8ERO T_LW bool_exp block { cout << "8erolw_stmt: " << BOOL_STR($4) << endl; }
+  // TODO: When bool_exp has type BoolExpression remove dynamic_cast
+  T_LW bool_exp block {
+    $$ = new LwStatement();
+    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($2);
+    if (!boolExp) yyerror("An Expression* passed to a Lw statement must be a BooleanExpression*");
+    $$->addConditionalBlock(boolExp, $3);
+  }
+  | lw_stmt T_8ERO T_LW bool_exp block {
+    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($4);
+    $1->addConditionalBlock(boolExp, $5);
+  }
   ;
 
 talma_stmt:
