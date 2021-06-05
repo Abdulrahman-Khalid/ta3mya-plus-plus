@@ -20,7 +20,7 @@ public:
     string symbol;
     Symbol(string symbol) : 
         symbol(symbol) { }
-    virtual Program compile() const override;
+    virtual Program compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
