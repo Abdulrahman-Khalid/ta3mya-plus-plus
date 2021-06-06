@@ -69,10 +69,5 @@ You can jump to previosly declared label, or a label that is declared later in t
 | RTN        | return                       |
 | JMP b      | goto b                       |
 | JMPZ x b   | if x == 0 { goto b }         |
-| JMPNZ x b  | if x != 0 { goto b }         |
-| JMPGZ x b  | if x > 0  { goto b }         |
-| JMPLZ x b  | if x < 0  { goto b }         |
-| JMPGEZ x b | if x >= 0 { goto b }         |
-| JMPLEZ x b | if x <= 0 { goto b }         |
 | AND x y z  | z = x & y                    |
 | OR x y z   | z = x \| y                   |
