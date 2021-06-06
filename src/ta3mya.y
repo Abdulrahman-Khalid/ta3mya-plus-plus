@@ -119,7 +119,7 @@ ProgramNode * prgnodeptr = nullptr;
 
 program:
   /* empty */ {
-    ProgramNode * programnode = new ProgramNode();
+    auto programnode = new ProgramNode();
     if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
     $$ = programnode;    
   }
@@ -137,42 +137,42 @@ block:
   ;
 
 stmt:
-  basy_stmt           { $$ = $1; }
-  | lw_group          { $$ = $1; }
-  | talma_stmt        { $$ = $1; }
-  | karrar_l7d_stmt   { $$ = $1; }
-  | ta3reef_mota8ier  { $$ = $1; }
-  | ta3reef_thabet    { $$ = $1; }
-  | ta3reef_dallah    { $$ = $1; }
-  | ta3reef_tarqeem   { $$ = $1; }
-  | assignment        { $$ = $1; }
-  | fe7alet_stmt      { $$ = $1; }
-  | lef_stmt          { $$ = $1; }
-  | block             { $$ = $1; }
+  basy_stmt
+  | lw_group
+  | talma_stmt
+  | karrar_l7d_stmt
+  | ta3reef_mota8ier
+  | ta3reef_thabet
+  | ta3reef_dallah
+  | ta3reef_tarqeem
+  | assignment
+  | fe7alet_stmt
+  | lef_stmt
+  | block
   ;
 
 exp: 
-  T_SYMBOL                                      { $$ = new SymbolExpression(*($1)); }
-  | T_INT_LITERAL                               { $$ = new Literal(*($1));          }
-  | T_REAL_LITERAL                              { $$ = new Literal(*($1));          }
-  | binary_exp                                  { $$ = $1;/*DEBUG($$->toString());*/}
-  | unary_exp                                   { $$ = $1;                          }
-  | bool_exp                                    { $$ = $1;                          }
-  | call_dallah                                 { $$ = $1;                          }
-  | T_ROUND_BR_BGN exp T_ROUND_BR_END           { $$ = $2;                          }
+  T_SYMBOL                                 { $$ = new SymbolExpression(*$1); }
+  | T_INT_LITERAL                          { $$ = new Literal(*$1);          }
+  | T_REAL_LITERAL                         { $$ = new Literal(*$1);          }
+  | binary_exp
+  | unary_exp
+  | bool_exp
+  | call_dallah
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
 binary_exp: 
-  exp binary_operator exp { $$ = new BinaryExpression($1, *($2), $3); }
+  exp binary_operator exp { $$ = new BinaryExpression($1, *$2, $3); }
   ;
 
 bool_compinator: T_WE | T_AW;
 bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
 bool_exp:
-  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, *($2), $3); }
-  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, *($2), $3); }
-  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                                  }
+  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, *$2, $3); }
+  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, *$2, $3); }
+  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                                }
   ;
 
 unary_exp: 
@@ -180,7 +180,7 @@ unary_exp:
   | T_MSH exp               { $$ = new MshExpression($2); }
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
   ;
-
+  // TODO add cast expression
 args:
   /* empty  */         { $$ = new CallDallahArgs();     }
   | exp                { $$ = new CallDallahArgs({$1}); }
@@ -205,13 +205,13 @@ lw_stmt:
 
 fe7alet_stmt:
   T_SYMBOL T_FE halet_stmt {
-    auto symbol = new SymbolExpression(*($1));
-    ($3)->attachSymbol(symbol);
+    auto symbol = new SymbolExpression(*$1);
+    $3->attachSymbol(symbol);
     $$ = new LwGroupStatement($3);
   }
   | T_SYMBOL T_FE halet_stmt T_8ERO block {
-    auto symbol = new SymbolExpression(*($1));
-    ($3)->attachSymbol(symbol);
+    auto symbol = new SymbolExpression(*$1);
+    $3->attachSymbol(symbol);
     $$ = new LwGroupStatement($3, $5);
   }
   ;
@@ -240,17 +240,17 @@ type:
   ;
 
 ta3reef_mota8ier:
-  type T_SYMBOL                     { $$ = new Ta3reefMota8ierStatement($1, *($2)); }
-  | type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefMota8ierStatement($1, *($2), $4); }
+  type T_SYMBOL                     { $$ = new Ta3reefMota8ierStatement($1, *$2); }
+  | type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefMota8ierStatement($1, *$2, $4); }
   ;
 
 ta3reef_thabet:
   T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); }
-  | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefThabetStatement($2, *($3), $5); }
+  | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefThabetStatement($2, *$3, $5); }
   ;
 
 arg_decl:
-  type T_SYMBOL { $$ = new Ta3reefMota8ierStatement($1, *($2)); }
+  type T_SYMBOL { $$ = new Ta3reefMota8ierStatement($1, *$2); }
   ;
 
 args_decl:
@@ -261,12 +261,12 @@ args_decl:
 
 ta3reef_dallah:
   type T_SYMBOL T_ROUND_BR_BGN args_decl T_ROUND_BR_END block {
-    $$ = new Ta3reefDallahStatement($1, *($2), $4, $6);
+    $$ = new Ta3reefDallahStatement($1, *$2, $4, $6);
   }
   ;
 
 assignment:
-  T_SYMBOL T_ASSIGNMENT exp { $$ = new AssignmentStatement(*($1), $3); }
+  T_SYMBOL T_ASSIGNMENT exp { $$ = new AssignmentStatement(*$1, $3); }
   ;
 
 lef_stmt:
