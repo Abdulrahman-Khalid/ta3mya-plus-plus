@@ -129,7 +129,13 @@ public:
 };
 
 class AssignmentStatement : public Statement {
+private:
+    SymbolExpression* _symbol;
+    Expression* _exp;
 public:
+    inline AssignmentStatement(SymbolExpression* symbol, Expression* exp) :
+        _symbol(symbol), _exp(exp) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

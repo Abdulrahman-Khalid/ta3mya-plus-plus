@@ -138,7 +138,7 @@ stmt:
   | ta3reef_thabet
   | ta3reef_dallah
   | ta3reef_tarqeem   { $$ = $1; }
-  | assignment
+  | assignment        { $$ = $1; }
   | fe7alet_stmt      { $$ = $1; }
   | lef_stmt          { $$ = $1; }
   | block             { $$ = $1; }
@@ -246,7 +246,10 @@ ta3reef_dallah:
   ;
 
 assignment:
-  T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
+  T_SYMBOL T_ASSIGNMENT exp {
+    auto symbol = new SymbolExpression(*($1));
+    $$ = new AssignmentStatement(symbol, $3);
+  }
   ;
 
 lef_stmt:
