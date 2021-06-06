@@ -11,6 +11,13 @@ inline void usage(char* p) {
     std::cerr << "Usage: " << p << " [/path/to/file.ta3]" << std::endl;
 }
 
+inline void printProgram(const Program& p) {
+	for (const auto& line : p) {
+		std::cout << line << std::endl;
+	}
+	std::cout<<endl;
+}
+
 int main(int argc, char **argv) {
 	if (argc == 1) {
 		yyin = stdin;
@@ -43,26 +50,15 @@ int main(int argc, char **argv) {
 #endif
 
 	int yyparse_return = yyparse();
-	if (yyparse_return !=0)
-	{
+	if (yyparse_return != 0) {
 		return yyparse_return;
 	}
 
 	DEBUG("finished parsing, will compile");
 
-	CompileContext compile_context;// = new CompileContext() ;
-
-	// compile return  Program :std::vector<AssemblyLine> string
+	CompileContext compile_context;
 	prgnodeptr->compile(compile_context);
-
-	Program p = compile_context.toProgram();
-	for (const auto& line : p)
-	{
-		std::cout << line << std::endl;
-	}
-
-	std::cout<<endl;
+	printProgram(compile_context.toProgram());
 
 	return 0;
-
 }
