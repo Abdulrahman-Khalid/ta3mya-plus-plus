@@ -73,8 +73,10 @@ ProgramNode * prgnodeptr = nullptr;
 %type <lef_val> lef_stmt
 
 %type <assignment_val> assignment
-%type <ta3reef_mota8ier_val> ta3reef_mota8ier
+%type <ta3reef_mota8ier_val> ta3reef_mota8ier arg_decl
 %type <ta3reef_thabet_val> ta3reef_thabet
+%type <ta3reef_dallah_val> ta3reef_dallah
+%type <ta3reef_dallah_args_val> args_decl
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -88,7 +90,7 @@ ProgramNode * prgnodeptr = nullptr;
 %type <tarqeemlist_val> tarqeem_list
 %type <stmt_val>        ta3reef_tarqeem
 
-%type <args_val>  args
+%type <call_args_val>  args
 
 %union{
   string* str_val;
@@ -101,13 +103,15 @@ ProgramNode * prgnodeptr = nullptr;
   HaletStatement* halet_stmt_val;
   LwGroupStatement* lw_group_val;
   TarqeemList* tarqeemlist_val;
-  CallDallahArgs* args_val;
+  CallDallahArgs* call_args_val;
   KarrarL7dStatement* karrar_l7d_val;
   TalmaStatement* talma_val;
   LefStatement* lef_val;
   AssignmentStatement* assignment_val;
   Ta3reefMota8ierStatement* ta3reef_mota8ier_val;
   Ta3reefThabetStatement* ta3reef_thabet_val;
+  Ta3reefDallahStatement* ta3reef_dallah_val;
+  ArgsDeclarationStatement* ta3reef_dallah_args_val;
   Type type_val;
 }
 
@@ -139,7 +143,7 @@ stmt:
   | karrar_l7d_stmt   { $$ = $1; }
   | ta3reef_mota8ier  { $$ = $1; }
   | ta3reef_thabet    { $$ = $1; }
-  | ta3reef_dallah
+  | ta3reef_dallah    { $$ = $1; }
   | ta3reef_tarqeem   { $$ = $1; }
   | assignment        { $$ = $1; }
   | fe7alet_stmt      { $$ = $1; }
@@ -245,11 +249,20 @@ ta3reef_thabet:
   | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefThabetStatement($2, *($3), $5); }
   ;
 
-arg_decl: type T_SYMBOL;
-args_decl: /* empty */ | arg_decl | args_decl T_COMMA arg_decl;
+arg_decl:
+  type T_SYMBOL { $$ = new Ta3reefMota8ierStatement($1, *($2)); }
+  ;
+
+args_decl:
+  /* empty */                   { $$ = new ArgsDeclarationStatement(); }
+  | arg_decl                    { $$ = new ArgsDeclarationStatement(); $$->addArgDeclaration($1); }
+  | args_decl T_COMMA arg_decl  { $1->addArgDeclaration($3); }
+  ;
 
 ta3reef_dallah:
-  type T_SYMBOL T_ROUND_BR_BGN args_decl T_ROUND_BR_END block { cout << "ta3reef_dallah: " << *($2) << endl; }
+  type T_SYMBOL T_ROUND_BR_BGN args_decl T_ROUND_BR_END block {
+    $$ = new Ta3reefDallahStatement($1, *($2), $4, $6);
+  }
   ;
 
 assignment:

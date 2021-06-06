@@ -122,8 +122,29 @@ public:
     virtual string toString() const override;
 };
 
-class Ta3reefDallahStatement : public Statement {
+class ArgsDeclarationStatement :  public Statement {
+private:
+    vector<Ta3reefMota8ierStatement*> _declarations;
 public:
+    inline void addArgDeclaration(Ta3reefMota8ierStatement* declaration) {
+        _declarations.push_back(declaration);
+    }
+
+    virtual void compile(CompileContext & compile_context ) const override;
+    virtual string toString() const override;
+};
+
+class Ta3reefDallahStatement : public Statement {
+private:
+    Type _type;
+    std::string _name;
+    ArgsDeclarationStatement* _args;
+    BlockStatement* _block;
+public:
+    inline Ta3reefDallahStatement(Type type, std::string name, ArgsDeclarationStatement* args,
+                                  BlockStatement* block) :
+        _type(type), _name(name), _args(args), _block(block) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

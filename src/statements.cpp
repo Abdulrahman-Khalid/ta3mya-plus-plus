@@ -39,7 +39,7 @@ void LwStatement::compile(CompileContext & compile_context ) const {
 
 string LwStatement::toString() const {
     string out = "LwStatement{conditional_stmts: [";
-     for (auto i = 0; i < _conditionalBlocks.size(); i++) {
+    for (auto i = 0; i < _conditionalBlocks.size(); i++) {
         out += "ConditionalBlock{condition: " + _conditionalBlocks[i].condition->toString()
             + ", block:" + _conditionalBlocks[i].block->toString() + "}";
         if (i+1 < _conditionalBlocks.size()) {
@@ -92,7 +92,7 @@ void Ta3reefMota8ierStatement::compile(CompileContext & compile_context ) const 
 
 string Ta3reefMota8ierStatement::toString() const {
     std::string out = "Ta3reefMota8ierStatement{symbol: " + _symbol + ", type: " + typeToString(_type);
-    return _init ? out + ", init_exp: " + _init->toString() + "}" : "}";
+    return _init ? out + ", init_exp: " + _init->toString() + "}" : out + "}";
 }
 
 void Ta3reefThabetStatement::compile(CompileContext & compile_context ) const {
@@ -104,12 +104,28 @@ string Ta3reefThabetStatement::toString() const {
         + ", init_exp: " + _init->toString() + "}";
 }
 
+void ArgsDeclarationStatement::compile(CompileContext & compile_context ) const {
+    // TODO
+}
+
+string ArgsDeclarationStatement::toString() const {
+    string out = "ArgsDeclarationStatement{decls: [";
+    for (auto i = 0; i < _declarations.size(); i++) {
+        out += _declarations[i]->toString();
+        if (i+1 < _declarations.size()) {
+            out += ", ";
+        }
+    }
+    return out + "]}";
+}
+
 void Ta3reefDallahStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }
 
 string Ta3reefDallahStatement::toString() const {
-    return "Ta3reefDallahStatement";
+    return "Ta3reefDallahStatement{type: " + typeToString(_type) + ", name: " + _name
+        + ", args_declaration: " + _args->toString() + ", block: " + _block->toString();
 }
 
 void Ta3reefTarqeemStatement::compile(CompileContext & compile_context ) const {
