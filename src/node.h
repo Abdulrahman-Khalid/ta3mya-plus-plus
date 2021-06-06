@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
@@ -20,12 +22,23 @@ struct Error {
 	}
 };
 
+class LabelsCreator {
+	int _i = 0;
+	char buffer[1024];
+public:
+	inline std::string next() {
+		sprintf(buffer, "LBL#%03X", _i++);
+		return std::string(buffer);
+	}
+};
+
 struct CompileContext {
 	ScopeTracker scope_tracker;
 	SymbolTable  symbol_table;
 	QuadruplesTable quadruples_table;
 	TempVarsRegistry tempVarsRegistry;
 	vector<Error> errors;
+	LabelsCreator labelsCreator;
 
 	inline Program toProgram() const {
 		Program p;
