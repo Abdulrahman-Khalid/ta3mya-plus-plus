@@ -27,11 +27,9 @@ To declare a constant, use `%const`:
 
 You can't store any values at constants, but you can read them.
 
-## Special Registers
-### `$R`
-A special 64bit register.
-Functions can put their return value in it.
-When the program exits, the value in `$R` is the exit code.
+## Registers
+### `$0` to `$7`
+The machine has 8 64bit registers.
 
 ## Labels
 Labels are places you can jump to.
