@@ -114,30 +114,23 @@ string Ta3reefThabetStatement::toString() const {
         + ", init_exp: " + _init->toString() + "}";
 }
 
-Optional<Result> ArgsDeclarationStatement::compile(CompileContext& compile_context) const {
-    // TODO
-    return {};
-}
-
-string ArgsDeclarationStatement::toString() const {
-    string out = "ArgsDeclarationStatement{decls: [";
-    for (auto i = 0; i < _declarations.size(); i++) {
-        out += _declarations[i]->toString();
-        if (i+1 < _declarations.size()) {
-            out += ", ";
-        }
-    }
-    return out + "]}";
-}
-
 Optional<Result> Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
 
 string Ta3reefDallahStatement::toString() const {
+    string argsStr = "";
+    for (int i = 0; i < _args->size(); i++) {
+        if (i+1 == _args->size()) {
+            argsStr += (*_args)[i]->toString();
+        } else {
+            argsStr += (*_args)[i]->toString() + ", ";
+        }
+    }
+
     return "Ta3reefDallahStatement{type: " + typeToString(_type) + ", name: " + _name
-        + ", args_declaration: " + _args->toString() + ", block: " + _block->toString();
+        + ", args_declaration: [" + argsStr + "], block: " + _block->toString();
 }
 
 Optional<Result> Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {

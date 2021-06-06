@@ -80,7 +80,7 @@ ProgramNode * prgnodeptr = nullptr;
 %type <ta3reef_mota8ier_val> ta3reef_mota8ier arg_decl
 %type <ta3reef_thabet_val> ta3reef_thabet
 %type <ta3reef_dallah_val> ta3reef_dallah
-%type <ta3reef_dallah_args_val> args_decl
+%type <args_decl_val> args_decl
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -116,7 +116,7 @@ ProgramNode * prgnodeptr = nullptr;
   Ta3reefMota8ierStatement* ta3reef_mota8ier_val;
   Ta3reefThabetStatement* ta3reef_thabet_val;
   Ta3reefDallahStatement* ta3reef_dallah_val;
-  ArgsDeclarationStatement* ta3reef_dallah_args_val;
+  ArgsDeclarationsList* args_decl_val;
   Type type_val;
 }
 
@@ -263,9 +263,9 @@ arg_decl:
   ;
 
 args_decl:
-  /* empty */                   { $$ = new ArgsDeclarationStatement(); }
-  | arg_decl                    { $$ = new ArgsDeclarationStatement(); $$->addArgDeclaration($1); }
-  | args_decl T_COMMA arg_decl  { $1->addArgDeclaration($3); }
+  /* empty */                   { $$ = new ArgsDeclarationsList(); }
+  | arg_decl                    { $$ = new ArgsDeclarationsList(); $$->push_back($1); }
+  | args_decl T_COMMA arg_decl  { $1->push_back($3); }
   ;
 
 ta3reef_dallah:
