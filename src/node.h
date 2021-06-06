@@ -33,16 +33,16 @@ public:
 };
 
 struct CompileContext {
-	ScopeTracker scope_tracker;
-	SymbolTable  symbol_table;
-	QuadruplesTable quadruples_table;
+	ScopeTracker scopeTracker;
+	SymbolTable  symbolTable;
+	QuadruplesTable quadruplesTable;
 	TempVarsRegistry tempVarsRegistry;
 	vector<Error> errors;
 	LabelsCreator labelsCreator;
 
 	inline Program toProgram() const {
 		Program p;
-		for (const auto& quadrauple : quadruples_table) {
+		for (const auto& quadrauple : quadruplesTable) {
 			p.push_back(quadrauple.toString());
 		}
 		return p;
