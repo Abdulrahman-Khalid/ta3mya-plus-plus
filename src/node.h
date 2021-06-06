@@ -19,9 +19,11 @@ class CompileContext
 				for (uint8_t i = 0; i < quadrauple.size(); i++)
 				{
 					if (quadrauple[i].size() > 0)
+					{
+						if (i > 0)
+							line += " ";
 						line += quadrauple[i];
-					if (quadrauple[i].size()-1 != i)
-						line += " ";
+					}
 				}
 				p.push_back(line);
 			}
