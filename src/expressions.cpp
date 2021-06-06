@@ -16,6 +16,14 @@ string SymbolExpression::toString() const {
     return "Symbol: " + this->symbol;
 }
 
+void TarqeemInstanceExpression::compile(CompileContext& compile_context) const {
+    // TODO
+}
+
+string TarqeemInstanceExpression::toString() const {
+    return "TarqeemInstance: " + _instance;
+}
+
 void BinaryExpression::compile(CompileContext& compile_context) const {
     // TODO
 }

@@ -24,6 +24,15 @@ public:
     virtual string toString() const override;
 };
 
+class TarqeemInstanceExpression : public Expression {
+    string _instance;
+public:
+    inline TarqeemInstanceExpression(string instance): _instance(instance) { }
+
+    virtual void compile(CompileContext& compile_context) const override;
+    virtual string toString() const override;
+};
+
 class BinaryExpression : public Expression {
 public:
     Expression* lhs;

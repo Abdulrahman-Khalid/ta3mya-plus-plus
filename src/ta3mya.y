@@ -153,9 +153,10 @@ stmt:
   ;
 
 exp: 
-  T_SYMBOL                                 { $$ = new SymbolExpression(*$1); }
-  | T_INT_LITERAL                          { $$ = new Literal(*$1);          }
-  | T_REAL_LITERAL                         { $$ = new Literal(*$1);          }
+  T_SYMBOL                                 { $$ = new SymbolExpression(*$1);          }
+  | T_TARQEEM_INSTANCE                     { $$ = new TarqeemInstanceExpression(*$1); }
+  | T_INT_LITERAL                          { $$ = new Literal(*$1);                   }
+  | T_REAL_LITERAL                         { $$ = new Literal(*$1);                   }
   | binary_exp
   | unary_exp
   | cast_exp
