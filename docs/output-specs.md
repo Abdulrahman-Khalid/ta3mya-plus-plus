@@ -27,7 +27,10 @@ To declare a constant, use `%const`:
 
 You can't store any values at constants, but you can read them.
 
-## Special Registers
+## Registers
+### `$0` to `$7`
+The machine has 8 64bit registers.
+
 ### `$R`
 A special 64bit register.
 Functions can put their return value in it.
