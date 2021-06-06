@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "type.h"
 #include "scope.h"
 
 using std::string;
@@ -23,7 +24,7 @@ struct Symbol {
 
 struct DataSymbol : public Symbol {
     bool isVar;
-    string type;
+    Type type;
 };
 struct FuncSymbol : public Symbol {};
 
