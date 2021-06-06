@@ -246,10 +246,7 @@ ta3reef_dallah:
   ;
 
 assignment:
-  T_SYMBOL T_ASSIGNMENT exp {
-    auto symbol = new SymbolExpression(*($1));
-    $$ = new AssignmentStatement(symbol, $3);
-  }
+  T_SYMBOL T_ASSIGNMENT exp { $$ = new AssignmentStatement(*($1), $3); }
   ;
 
 lef_stmt:

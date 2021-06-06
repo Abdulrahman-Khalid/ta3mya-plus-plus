@@ -132,7 +132,7 @@ void AssignmentStatement::compile(CompileContext & compile_context ) const {
 }
 
 string AssignmentStatement::toString() const {
-    return "AssignmentStatement{symbol: " + _symbol->toString() + ", exp: " + _exp->toString() + "}";
+    return "AssignmentStatement{symbol: " + _symbol + ", exp: " + _exp->toString() + "}";
 }
 
 LefStatement::LefStatement(Statement* init, Expression* condition,
