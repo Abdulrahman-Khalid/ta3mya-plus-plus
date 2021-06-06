@@ -19,10 +19,6 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_L7D
 %token T_TALMA
 
-%token T_MSH
-%token <str_val> T_WE
-%token <str_val> T_AW
-
 %token T_FE
 %token T_7ALET
 %token T_KARRAR
@@ -35,6 +31,9 @@ ProgramNode * prgnodeptr = nullptr;
 %token T_ASSIGNMENT
 
 %left <str_val> T_DOESNT_EQUAL T_EQUALS T_GREATER T_GREATER_EQUAL T_LESS T_LESS_EQUAL
+%left <str_val> T_MSH
+%left <str_val> T_WE T_AW
+
 %left <str_val> T_PLUS T_NEG
 %left <str_val> T_MULT T_DIV T_MODULO
 %right <str_val> T_EXPONENT
@@ -69,11 +68,12 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
+%type <expr_val> bool_exp
 %type <expr_val> call_dallah
 
 %type <str_val>  type
 %type <str_val>  binary_operator
-%type <str_val>  comparator
+%type <str_val>  bool_comparator bool_compinator
 
 %type <tarqeemlist_val> tarqeem_list
 %type <stmt_val>        ta3reef_tarqeem
@@ -135,15 +135,20 @@ exp:
   | T_REAL_LITERAL { $$ = new Literal(*($1)); }
   | binary_exp
   | unary_exp
+  | bool_exp
   | call_dallah
   ;
 
-binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT | T_WE | T_AW;
-comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
-
+binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
 binary_exp: 
   exp binary_operator exp { $$ = new BinaryExpression($1, *($2), $3); }
-  | exp comparator exp    { $$ = new BinaryExpression($1, *($2), $3); }
+  ;
+
+bool_compinator: T_WE | T_AW;
+bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
+bool_exp:
+  bool_exp bool_compinator bool_exp  { $$ = new BinaryExpression($1, *($2), $3); }
+  | exp bool_comparator exp          { $$ = new BinaryExpression($1, *($2), $3); }
   ;
 
 unary_exp: 
