@@ -15,7 +15,9 @@ inline void printProgram(const Program& p) {
 	for (const auto& line : p) {
 		std::cout << line << std::endl;
 	}
-	std::cout<<endl;
+	if (p.size() > 0) {
+		std::cout<<endl;
+	}
 }
 
 int main(int argc, char **argv) {
@@ -49,6 +51,8 @@ int main(int argc, char **argv) {
     yydebug = 1;
 #endif
 
+	DEBUG("started parsing");
+
 	int yyparse_return = yyparse();
 	if (yyparse_return != 0) {
 		return yyparse_return;
@@ -58,7 +62,12 @@ int main(int argc, char **argv) {
 
 	CompileContext compile_context;
 	prgnodeptr->compile(compile_context);
+
+	DEBUG("finished compile, will print assembly");
+
 	printProgram(compile_context.toProgram());
+
+	DEBUG("finished printing assembly");
 
 	return 0;
 }
