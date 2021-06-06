@@ -34,17 +34,6 @@ public:
     virtual string toString() const override;
 };
 
-class BoolExpression : public Expression {
-public:
-    Expression* lhs;
-    Expression* rhs;
-    string operation;
-    BoolExpression(Expression*  lhs, string operation, Expression* rhs) : 
-        lhs(lhs), rhs(rhs), operation(operation) { }
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
-
 class NegExpression : public Expression {
 public:
     Expression* toBeNegated;

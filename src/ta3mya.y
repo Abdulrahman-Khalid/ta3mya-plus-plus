@@ -81,7 +81,6 @@ ProgramNode * prgnodeptr = nullptr;
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
 %type <expr_val> call_dallah
-%type <expr_val> bool_exp
 
 %type <str_val>  type
 %type <str_val>  binary_operator
@@ -134,24 +133,21 @@ exp:
   | T_REAL_LITERAL { $$ = new Literal(*($1)); }
   | binary_exp
   | unary_exp
-  | bool_exp
   | call_dallah
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT | T_WE | T_AW;
+comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
+
 binary_exp: 
   exp binary_operator exp { $$ = new BinaryExpression($1, *($2), $3); }
+  | exp comparator exp    { $$ = new BinaryExpression($1, *($2), $3); }
   ;
 
 unary_exp: 
-  T_NEG exp %prec T_NEG { $$ = new NegExpression($2); } 
+  T_NEG exp %prec T_NEG  { $$ = new NegExpression($2); } 
+  | T_MSH exp            { $$ = new MshExpression($2);             } 
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
-  ;
-
-comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
-bool_exp: 
-  T_MSH exp            { $$ = new MshExpression($2);             } 
-  | exp comparator exp { $$ = new BoolExpression($1, *($2), $3); }
   ;
 
 args:
