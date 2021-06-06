@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     // compile return  Program :std::vector<AssemblyLine> string
     prgnodeptr->compile(compile_context);
 
-    Program p; // TODO: fill it from context
+    Program p = compile_context.toProgram();
     for (const auto& line : p)
     {
         std::cout << line << std::endl;
