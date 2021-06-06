@@ -8,7 +8,18 @@
 #include "quadraples.h"
 #include "tmpvars.h"
 
-using Error = std::string;
+#define EMPTY(s) s.find_first_not_of(" \n\t") == std::string::npos
+
+struct Error {
+	string line_number = "";
+	string msg = "";
+	string symbol = "";
+
+	void display() const {
+		std::cerr << "ERROR" << (EMPTY(line_number) ? ":" : " (near line " + line_number) + "):"
+			<< msg << (EMPTY(symbol) ? "" : " at symbol \"" + symbol + "\"") << std::endl;
+	}
+};
 
 struct CompileContext {
 	ScopeTracker scope_tracker;

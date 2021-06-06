@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 	int yyparse_return = yyparse();
 	if (yyparse_return != 0 || !compile_context.errors.empty()) {
 		for(const auto& error: compile_context.errors) {
-			cout << error << endl;
+			error.display();
 		}
 		return yyparse_return;
 	}

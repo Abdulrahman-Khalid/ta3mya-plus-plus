@@ -6,7 +6,6 @@ int yyerror(const char* s);
 extern "C" int yylex(void);
 
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
-#define EMPTY(s) s.find_first_not_of(" \n\t") == std::string::npos
 
 ProgramNode * prgnodeptr = nullptr;
 %}
@@ -309,14 +308,7 @@ int yyerror(string s) {
   extern char *yytext;    // defined and maintained in lex.c
 
   extern CompileContext compile_context;
-
-  string symbol = string(yytext);
-  string msg = "ERROR (near line " + std::to_string(yylineno) + ")";
-  if (s.size() > 0) {
-    msg += ": " + s;
-  }
-  msg += EMPTY(symbol) ? "" : " at symbol \"" + string(yytext) + "\"";
-  compile_context.errors.push_back(msg);
+  compile_context.errors.push_back(Error{std::to_string(yylineno), s, string(yytext)});
   return 1;
 }
 
