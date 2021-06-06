@@ -149,10 +149,10 @@ exp:
   | T_INT_LITERAL                               { $$ = new Literal(*($1));          }
   | T_REAL_LITERAL                              { $$ = new Literal(*($1));          }
   | binary_exp                                  { $$ = $1;/*DEBUG($$->toString());*/}
-  | unary_exp
-  | bool_exp
-  | call_dallah
-  | T_ROUND_BR_BGN exp T_ROUND_BR_END           {  $$ = $2;                         }
+  | unary_exp                                   { $$ = $1;                          }
+  | bool_exp                                    { $$ = $1;                          }
+  | call_dallah                                 { $$ = $1;                          }
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END           { $$ = $2;                          }
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
@@ -165,12 +165,12 @@ bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LES
 bool_exp:
   bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, *($2), $3); }
   | exp bool_comparator exp                 { $$ = new BinaryExpression($1, *($2), $3); }
-  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  {  $$ = $2;                                 }
+  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                                  }
   ;
 
 unary_exp: 
-  T_NEG exp %prec T_NEG  { $$ = new NegExpression($2); } 
-  | T_MSH exp            { $$ = new MshExpression($2); } 
+  T_NEG exp %prec T_NEG     { $$ = new NegExpression($2); }
+  | T_MSH exp               { $$ = new MshExpression($2); }
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
   ;
 
@@ -192,8 +192,8 @@ lw_group:
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  T_LW exp block { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
-  | lw_stmt T_8ERO T_LW exp block { $1->addConditionalBlock($4, $5); }
+  T_LW exp block                    { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  | lw_stmt T_8ERO T_LW exp block   { $1->addConditionalBlock($4, $5); }
   ;
 
 fe7alet_stmt:
