@@ -14,7 +14,6 @@ public:
     virtual string toString() const override;
 };
 
-
 class SymbolExpression : public Expression {
 public:
     string symbol;
@@ -24,23 +23,12 @@ public:
     virtual string toString() const override;
 };
 
-class IntExpression : public Expression {
+class BinaryExpression : public Expression {
 public:
     Expression* lhs;
     Expression* rhs;
     string operation;
-    IntExpression(Expression* lhs, string operation, Expression* rhs) : 
-        lhs(lhs), rhs(rhs), operation(operation) { }
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
-
-class RealExpression : public Expression {
-public:
-    Expression* lhs;
-    Expression* rhs;
-    string operation;
-    RealExpression(Expression* lhs, string operation, Expression* rhs) : 
+    BinaryExpression(Expression* lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
@@ -57,53 +45,33 @@ public:
     virtual string toString() const override;
 };
 
-class ToSa7e7 : public Expression {
-public:
-    Expression* toBeConverted;
-    ToSa7e7(Expression*  toBeConverted) : 
-        toBeConverted(toBeConverted) { }
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
-
-class To7a2i2i : public Expression {
-public:
-    Expression* toBeConverted;
-    To7a2i2i(Expression*  toBeConverted) : 
-        toBeConverted(toBeConverted) { }
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
-
-class SalbS7e7 : public Expression {
+class NegExpression : public Expression {
 public:
     Expression* toBeNegated;
-    SalbS7e7(Expression*  toBeNegated) : 
+    NegExpression(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
-class Salb7a2i2i : public Expression {
+class MshExpression : public Expression {
 public:
     Expression* toBeNegated;
-    Salb7a2i2i(Expression*  toBeNegated) : 
+    MshExpression(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
-class Msh : public Expression {
-public:
-    Expression* toBeNegated;
-    Msh(Expression*  toBeNegated) : 
-        toBeNegated(toBeNegated) { }
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
+typedef std::vector<Expression*> CallDallahArgs;
 
 class CallDallahExpression : public Expression {
+    string _name;
+    CallDallahArgs _args;
+    
 public:
+    inline CallDallahExpression(string dallahName, CallDallahArgs args):_name(dallahName), _args(args) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
