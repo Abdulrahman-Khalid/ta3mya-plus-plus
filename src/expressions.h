@@ -9,7 +9,7 @@ class Expression : public Node {};
 class Literal : public Expression {
 public:
     string literal;
-    Literal(string literal) : 
+    inline Literal(string literal) : 
         literal(literal) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
@@ -18,7 +18,7 @@ public:
 class SymbolExpression : public Expression {
 public:
     string symbol;
-    SymbolExpression(string symbol) : 
+    inline SymbolExpression(string symbol) : 
         symbol(symbol) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
@@ -29,7 +29,7 @@ public:
     Expression* lhs;
     Expression* rhs;
     string operation;
-    BinaryExpression(Expression* lhs, string operation, Expression* rhs) : 
+    inline BinaryExpression(Expression* lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
@@ -38,7 +38,7 @@ public:
 class NegExpression : public Expression {
 public:
     Expression* toBeNegated;
-    NegExpression(Expression*  toBeNegated) : 
+    inline NegExpression(Expression*  toBeNegated) : 
         toBeNegated(toBeNegated) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
@@ -47,7 +47,12 @@ public:
 class MshExpression : public Expression {
 public:
     Expression* toBeNegated;
-    MshExpression(Expression*  toBeNegated) : 
+    inline MshExpression(Expression*  toBeNegated) : 
+        toBeNegated(toBeNegated) { }
+    virtual void compile(CompileContext & compile_context ) const override;
+    virtual string toString() const override;
+};
+
         toBeNegated(toBeNegated) { }
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
