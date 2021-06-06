@@ -6,10 +6,10 @@ using std::string;
 
 class Expression : public Node {};
 
-class Literal : public Expression {
+class LiteralExpression : public Expression {
 public:
     string literal;
-    inline Literal(string literal) : 
+    inline LiteralExpression(string literal) : 
         literal(literal) { }
     virtual void compile(CompileContext& compile_context) const override;
     virtual string toString() const override;

@@ -152,8 +152,8 @@ stmt:
 exp: 
   T_SYMBOL                                 { $$ = new SymbolExpression(*$1);          }
   | T_TARQEEM_INSTANCE                     { $$ = new TarqeemInstanceExpression(*$1); }
-  | T_INT_LITERAL                          { $$ = new Literal(*$1);                   }
-  | T_REAL_LITERAL                         { $$ = new Literal(*$1);                   }
+  | T_INT_LITERAL                          { $$ = new LiteralExpression(*$1);         }
+  | T_REAL_LITERAL                         { $$ = new LiteralExpression(*$1);         }
   | T_ROUND_BR_BGN exp T_ROUND_BR_END      { $$ = $2;                                 }
   | binary_exp
   | unary_exp

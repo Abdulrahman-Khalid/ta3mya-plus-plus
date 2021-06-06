@@ -1,11 +1,11 @@
 #include "expressions.h"
 
-void Literal::compile(CompileContext& compile_context) const {
+void LiteralExpression::compile(CompileContext& compile_context) const {
     // TODO
 }
 
-string Literal::toString() const {
-    return "Literal: " + this->literal;
+string LiteralExpression::toString() const {
+    return "LiteralExpression: " + this->literal;
 }
 
 void SymbolExpression::compile(CompileContext& compile_context) const {
