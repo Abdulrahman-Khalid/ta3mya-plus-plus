@@ -67,9 +67,7 @@ protected:
     LwStatement* _lwStatement;
     BlockStatement* _8eroBlock;
 public:
-    inline LwGroupStatement(LwStatement* lwStatement) :
-        _lwStatement(lwStatement), _8eroBlock(nullptr) {}
-    inline LwGroupStatement(LwStatement* lwStatement, BlockStatement* __8eroBlock) :
+    inline LwGroupStatement(LwStatement* lwStatement, BlockStatement* __8eroBlock = nullptr) :
         _lwStatement(lwStatement), _8eroBlock(__8eroBlock) {}
 
     virtual void compile(CompileContext & compile_context ) const override;
