@@ -126,15 +126,12 @@ program:
   }
   | program stmt              { $1->addStatement($2); }
   | program stmt T_NEWLINE    { $1->addStatement($2); }
-  | program T_NEWLINE         { $$ = $1; /*DEBUG($$->toString());*/ }
+  | program T_NEWLINE         { $$ = $1;              }
   ;
 
   /* {<program>} */
 block: 
-  T_CRULY_BR_BGN program T_CRULY_BR_END {
-    $$ = new BlockStatement($2);
-    /*DEBUG($$->toString());*/
-  }
+  T_CRULY_BR_BGN program T_CRULY_BR_END { $$ = new BlockStatement($2); }
   ;
 
 stmt:
@@ -185,8 +182,8 @@ unary_exp:
   ;
 
 cast_exp:
-  T_SA7E7 T_ROUND_BR_BGN exp T_ROUND_BR_END     { $$ = new ToSa7e7Expression($3);  /*DEBUG($$->toString());*/}
-  | T_7A2I2I T_ROUND_BR_BGN exp T_ROUND_BR_END  { $$ = new To7a2i2iExpression($3); /*DEBUG($$->toString());*/}
+  T_SA7E7 T_ROUND_BR_BGN exp T_ROUND_BR_END     { $$ = new ToSa7e7Expression($3); }
+  | T_7A2I2I T_ROUND_BR_BGN exp T_ROUND_BR_END  { $$ = new To7a2i2iExpression($3);}
   ;
 
 args:
@@ -201,8 +198,8 @@ call_dallah:
 
   /* ensure one or zero 8ero stmt at end */
 lw_group:
-  lw_stmt                 { $$ = new LwGroupStatement($1);     /*DEBUG($$->toString());*/ }
-  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); /*DEBUG($$->toString());*/ }
+  lw_stmt                 { $$ = new LwGroupStatement($1);     }
+  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); }
   ;
 
   /* zero or more 8erolw stmts only after lw stmt */
@@ -238,7 +235,7 @@ karrar_l7d_stmt:
   ;
 
 basy_stmt:
-  T_BASY exp { $$ = new BasyStatement($2); /*DEBUG($$->toString());*/ }
+  T_BASY exp { $$ = new BasyStatement($2); }
   ;
 
 type:

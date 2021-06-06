@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
 	}
 
 	DEBUG("finished parsing, will compile");
+	DEBUG(prgnodeptr->toString());
 
 	CompileContext compile_context;
 	prgnodeptr->compile(compile_context);
