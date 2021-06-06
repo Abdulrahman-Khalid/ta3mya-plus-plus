@@ -91,7 +91,8 @@ void Ta3reefMota8ierStatement::compile(CompileContext & compile_context ) const 
 }
 
 string Ta3reefMota8ierStatement::toString() const {
-    return "Ta3reefMota8ierStatement";
+    std::string out = "Ta3reefMota8ierStatement{symbol: " + _symbol + ", type: " + typeToString(_type);
+    return _init ? out + ", init_exp: " + _init->toString() + "}" : "}";
 }
 
 void Ta3reefThabetStatement::compile(CompileContext & compile_context ) const {
@@ -99,7 +100,8 @@ void Ta3reefThabetStatement::compile(CompileContext & compile_context ) const {
 }
 
 string Ta3reefThabetStatement::toString() const {
-    return "Ta3reefThabetStatement";
+    return "Ta3reefThabetStatement{symbol: " + _symbol + ", type: " + typeToString(_type)
+        + ", init_exp: " + _init->toString() + "}";
 }
 
 void Ta3reefDallahStatement::compile(CompileContext & compile_context ) const {

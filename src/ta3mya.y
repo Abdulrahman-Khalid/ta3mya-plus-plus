@@ -74,13 +74,14 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <assignment_val> assignment
 %type <ta3reef_mota8ier_val> ta3reef_mota8ier
+%type <ta3reef_thabet_val> ta3reef_thabet
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
 %type <expr_val> bool_exp
 %type <expr_val> call_dallah
 
-%type <str_val>  type
+%type <type_val>  type
 %type <str_val>  binary_operator
 %type <str_val>  bool_comparator bool_compinator
 
@@ -106,6 +107,8 @@ ProgramNode * prgnodeptr = nullptr;
   LefStatement* lef_val;
   AssignmentStatement* assignment_val;
   Ta3reefMota8ierStatement* ta3reef_mota8ier_val;
+  Ta3reefThabetStatement* ta3reef_thabet_val;
+  Type type_val;
 }
 
 %%
@@ -134,8 +137,8 @@ stmt:
   | lw_group          { $$ = $1; }
   | talma_stmt        { $$ = $1; }
   | karrar_l7d_stmt   { $$ = $1; }
-  | ta3reef_mota8ier
-  | ta3reef_thabet
+  | ta3reef_mota8ier  { $$ = $1; }
+  | ta3reef_thabet    { $$ = $1; }
   | ta3reef_dallah
   | ta3reef_tarqeem   { $$ = $1; }
   | assignment        { $$ = $1; }
@@ -226,16 +229,20 @@ basy_stmt:
   T_BASY exp { $$ = new BasyStatement($2); /*DEBUG($$->toString());*/ }
   ;
 
-type: T_7A2I2I | T_SA7E7 | T_SYMBOL;
+type:
+  T_7A2I2I    { $$ = Type::REAL; }
+  | T_SA7E7   { $$ = Type::INT; }
+  | T_SYMBOL  { $$ = Type::ENUM; }
+  ;
 
 ta3reef_mota8ier:
-  type T_SYMBOL                     { cout << "ta3reef_mota8ier: " << *($2) << endl; }
-  | type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_mota8ier: " << *($2) << endl; }
+  type T_SYMBOL                     { $$ = new Ta3reefMota8ierStatement($1, *($2)); }
+  | type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefMota8ierStatement($1, *($2), $4); }
   ;
 
 ta3reef_thabet:
   T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); }
-  | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { cout << "ta3reef_thabet: " << *($3) << endl; }
+  | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefThabetStatement($2, *($3), $5); }
   ;
 
 arg_decl: type T_SYMBOL;

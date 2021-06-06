@@ -97,13 +97,27 @@ public:
 };
 
 class Ta3reefMota8ierStatement : public Statement {
+private:
+    Type _type;
+    std::string _symbol;
+    Expression* _init;
 public:
+    inline Ta3reefMota8ierStatement(Type type, std::string symbol, Expression* init = nullptr) :
+        _type(type), _symbol(symbol), _init(init) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
 
 class Ta3reefThabetStatement : public Statement {
+private:
+    Type _type;
+    std::string _symbol;
+    Expression* _init;
 public:
+    inline Ta3reefThabetStatement(Type type, std::string symbol, Expression* init) :
+        _type(type), _symbol(symbol), _init(init) {}
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

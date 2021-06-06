@@ -4,9 +4,9 @@
 using std::string;
 
 enum class Type {
-    INT, REAL
+    INT, REAL, ENUM
 };
 
 inline string typeToString(Type type) {
-    return type == Type::INT ? "int" : "real";
+    return type == Type::INT ? "int" : type == Type::REAL ? "real" : "enum";
 }
