@@ -9,19 +9,6 @@ extern "C" int yylex(void);
 ProgramNode * prgnodeptr = nullptr;
 %}
 
-%union{
-  string* str_val;
-  Expression* expr_val;
-  ProgramNode* prgnodeptr_val;
-  BasyStatement* basy_stmt_val;
-  BlockStatement* block_stmt_val;
-  Statement* stmt_val;
-  LwStatement* lw_stmt_val;
-  LwGroupStatement* lw_group_val;
-  TarqeemList * tarqeemlist_val;
-  CallDallahArgs * args_val;
-}
-
 // terminals
 %token T_NEWLINE
 
@@ -76,7 +63,9 @@ ProgramNode * prgnodeptr = nullptr;
 %type <block_stmt_val> block
 %type <basy_stmt_val> basy_stmt
 %type <lw_stmt_val> lw_stmt
+%type <lw_stmt_val> halet_stmt
 %type <lw_group_val> lw_group
+%type <lw_group_val> fe7alet_stmt
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -91,6 +80,19 @@ ProgramNode * prgnodeptr = nullptr;
 %type <stmt_val>        ta3reef_tarqeem
 
 %type <args_val>  args
+
+%union{
+  string* str_val;
+  Expression* expr_val;
+  ProgramNode* prgnodeptr_val;
+  BasyStatement* basy_stmt_val;
+  BlockStatement* block_stmt_val;
+  Statement* stmt_val;
+  LwStatement* lw_stmt_val;
+  LwGroupStatement* lw_group_val;
+  TarqeemList * tarqeemlist_val;
+  CallDallahArgs * args_val;
+}
 
 %%
 
@@ -172,13 +174,18 @@ lw_group:
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  T_LW exp block {
-    $$ = new LwStatement();
-    $$->addConditionalBlock($2, $3);
-  }
-  | lw_stmt T_8ERO T_LW exp block {
-    $1->addConditionalBlock($4, $5);
-  }
+  T_LW exp block { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  | lw_stmt T_8ERO T_LW exp block { $1->addConditionalBlock($4, $5); }
+  ;
+
+fe7alet_stmt:
+  T_SYMBOL T_FE halet_stmt                { $$ = new LwGroupStatement($3); }
+  | T_SYMBOL T_FE halet_stmt T_8ERO block { $$ = new LwGroupStatement($3, $5); }
+  ;
+
+halet_stmt:
+  T_7ALET exp block               { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  | halet_stmt T_7ALET exp block  { $1->addConditionalBlock($3, $4); }
   ;
 
 talma_stmt:
@@ -214,16 +221,6 @@ ta3reef_dallah:
 
 assignment:
   T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
-  ;
-
-fe7alet_stmt:
-  T_SYMBOL T_FE halet_stmt                { cout << "fe7alet_stmt: " << *($1) << endl;      }
-  | T_SYMBOL T_FE halet_stmt T_8ERO block { cout << "fe7alet_stmt+8ero: " << *($1) << endl; }
-  ;
-
-halet_stmt:
-  T_7ALET exp block
-  | halet_stmt T_7ALET exp block
   ;
 
 lef_init: assignment | ta3reef_mota8ier;

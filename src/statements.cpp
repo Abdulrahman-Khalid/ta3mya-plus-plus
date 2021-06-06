@@ -120,14 +120,6 @@ string AssignmentStatement::toString() const {
     return "AssignmentStatement";
 }
 
-void Fe7aletStatement::compile(CompileContext & compile_context ) const {
-    // TODO
-}
-
-string Fe7aletStatement::toString() const {
-    return "Fe7aletStatement";
-}
-
 void LefStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }

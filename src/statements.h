@@ -109,12 +109,6 @@ public:
     virtual string toString() const override;
 };
 
-class Fe7aletStatement : public Statement {
-public:
-    virtual void compile(CompileContext & compile_context ) const override;
-    virtual string toString() const override;
-};
-
 class LefStatement : public Statement {
 public:
     virtual void compile(CompileContext & compile_context ) const override;
