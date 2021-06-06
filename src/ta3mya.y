@@ -2,12 +2,16 @@
 #include "heading.h"
 
 int yyerror(char *s);
+int yyerror(const char* s);
 extern "C" int yylex(void);
 
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
+#define EMPTY(s) s.find_first_not_of(" \n\t") == std::string::npos
 
 ProgramNode * prgnodeptr = nullptr;
 %}
+
+%error-verbose
 
 // terminals
 %token T_NEWLINE
@@ -304,16 +308,20 @@ int yyerror(string s) {
   extern int yylineno;    // defined and maintained in lex.c
   extern char *yytext;    // defined and maintained in lex.c
 
+  extern CompileContext compile_context;
+
+  string symbol = string(yytext);
+  string msg = "ERROR (near line " + std::to_string(yylineno) + ")";
   if (s.size() > 0) {
-    s = "ERROR: " + s;
-  } else {
-    s = "ERROR";
+    msg += ": " + s;
   }
-
-  cerr << s << " at symbol \"" << yytext
-      << "\" on line " << yylineno << endl;
-
+  msg += EMPTY(symbol) ? "" : " at symbol \"" + string(yytext) + "\"";
+  compile_context.errors.push_back(msg);
   return 1;
+}
+
+int yyerror(const char* s) {
+  return yyerror(string(s));
 }
 
 int yyerror(char *s) {

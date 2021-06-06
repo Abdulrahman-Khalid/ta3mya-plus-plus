@@ -7,6 +7,8 @@ extern "C" int yylex();
 extern FILE* yyin;
 extern ProgramNode* prgnodeptr;
 
+CompileContext compile_context;
+
 inline void usage(char* p) {
     std::cerr << "Usage: " << p << " [/path/to/file.ta3]" << std::endl;
 }
@@ -53,14 +55,16 @@ int main(int argc, char **argv) {
 	DEBUG("started parsing");
 
 	int yyparse_return = yyparse();
-	if (yyparse_return != 0) {
+	if (yyparse_return != 0 || !compile_context.errors.empty()) {
+		for(const auto& error: compile_context.errors) {
+			cout << error << endl;
+		}
 		return yyparse_return;
 	}
 
 	DEBUG("finished parsing, will compile");
 	DEBUG(prgnodeptr->toString());
 
-	CompileContext compile_context;
 	prgnodeptr->compile(compile_context);
 
 	DEBUG("finished compile, will print assembly");

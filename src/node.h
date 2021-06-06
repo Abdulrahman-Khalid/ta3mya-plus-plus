@@ -7,10 +7,13 @@
 #include "symbols.h"
 #include "quadraples.h"
 
+using Error = std::string;
+
 struct CompileContext {
 	ScopeTracker scope_tracker;
 	SymbolTable  symbol_table;
 	QuadruplesTable quadruples_table;
+	vector<Error> errors;
 
 	inline Program toProgram() const {
 		Program p;
