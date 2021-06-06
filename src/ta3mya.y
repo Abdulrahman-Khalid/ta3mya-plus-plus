@@ -138,18 +138,18 @@ block:
   ;
 
 stmt:
-  basy_stmt
-  | lw_group
-  | talma_stmt
-  | karrar_l7d_stmt
-  | ta3reef_mota8ier
-  | ta3reef_thabet
-  | ta3reef_dallah
-  | ta3reef_tarqeem
-  | assignment
-  | fe7alet_stmt
-  | lef_stmt
-  | block
+  basy_stmt            { $$ = $1; }
+  | lw_group           { $$ = $1; }
+  | talma_stmt         { $$ = $1; }
+  | karrar_l7d_stmt    { $$ = $1; }
+  | ta3reef_mota8ier   { $$ = $1; }
+  | ta3reef_thabet     { $$ = $1; }
+  | ta3reef_dallah     { $$ = $1; }
+  | ta3reef_tarqeem    { $$ = $1; }
+  | assignment         { $$ = $1; }
+  | fe7alet_stmt       { $$ = $1; }
+  | lef_stmt           { $$ = $1; }
+  | block              { $$ = $1; }
   ;
 
 exp: 
@@ -157,12 +157,12 @@ exp:
   | T_TARQEEM_INSTANCE                     { $$ = new TarqeemInstanceExpression(*$1); }
   | T_INT_LITERAL                          { $$ = new Literal(*$1);                   }
   | T_REAL_LITERAL                         { $$ = new Literal(*$1);                   }
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END      { $$ = $2;                                 }
   | binary_exp
   | unary_exp
   | cast_exp
   | bool_exp
   | call_dallah
-  | T_ROUND_BR_BGN exp T_ROUND_BR_END
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
