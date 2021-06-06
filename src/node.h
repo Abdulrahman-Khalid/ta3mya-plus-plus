@@ -1,12 +1,11 @@
 #pragma once
 
-#include <optional>
-
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
 #include "quadraples.h"
 #include "tmpvars.h"
+#include "optional.h"
 
 #define EMPTY(s) s.find_first_not_of(" \n\t") == std::string::npos
 
@@ -36,10 +35,6 @@ struct CompileContext {
 		return p;
 	}
 };
-
-
-template<typename T>
-using Optional = std::optional<T>;
 
 // Result is the name of the variable the holds the expression result
 // it could be a literal to be used directly

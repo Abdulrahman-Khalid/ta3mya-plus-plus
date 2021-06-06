@@ -4,6 +4,8 @@
 #include <string>
 #include <cassert>
 
+#include "optional.h"
+
 enum class Opcode: uint8_t {
     CPY = 0, INT, ADD, MUL, DIV, MOD, NEG, POW, REAL, 
     RADD, RMUL, RDIV, RMOD, RNEG, RPOW, RTN, JMP, 
@@ -22,8 +24,11 @@ inline std::string opcodeToString(Opcode opcode) {
 struct Quadruple {
     Opcode opcode;
     std::string arg1, arg2, result;
+    Optional<std::string> label;
 
     inline std::string toString() const {
+        std::string labelStr = label? (*label + ":\n") : "";
+
         std::string args = " ";
         for (const auto& arg : {arg1, arg2, result}) {
             if (arg.size() > 0) {
@@ -31,7 +36,7 @@ struct Quadruple {
             }
         }
 
-        return opcodeToString(opcode) + args;
+        return labelStr + opcodeToString(opcode) + args;
     }
 };
 
