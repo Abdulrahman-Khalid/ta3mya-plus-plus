@@ -11,7 +11,7 @@ extern int yylineno;
 ProgramNode * prgnodeptr = nullptr;
 %}
 
-%error-verbose
+%define parse.error verbose
 
 // terminals
 %token T_NEWLINE
