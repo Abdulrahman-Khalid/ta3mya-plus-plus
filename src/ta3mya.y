@@ -172,25 +172,21 @@ lw_group:
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  // TODO: When bool_exp has type BoolExpression remove dynamic_cast
-  T_LW bool_exp block {
+  T_LW exp block {
     $$ = new LwStatement();
-    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($2);
-    if (!boolExp) yyerror("An Expression* passed to a Lw statement must be a BooleanExpression*");
-    $$->addConditionalBlock(boolExp, $3);
+    $$->addConditionalBlock($2, $3);
   }
-  | lw_stmt T_8ERO T_LW bool_exp block {
-    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($4);
-    $1->addConditionalBlock(boolExp, $5);
+  | lw_stmt T_8ERO T_LW exp block {
+    $1->addConditionalBlock($4, $5);
   }
   ;
 
 talma_stmt:
-  T_TALMA bool_exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
+  T_TALMA exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
   ;
 
 karrar_l7d_stmt:
-  T_KARRAR block T_L7D bool_exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
+  T_KARRAR block T_L7D exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
   ;
 
 basy_stmt:
@@ -232,7 +228,7 @@ halet_stmt:
 
 lef_init: assignment | ta3reef_mota8ier;
 lef_stmt:
-  T_LEF lef_init T_SEMICOLON bool_exp T_SEMICOLON assignment block
+  T_LEF lef_init T_SEMICOLON exp T_SEMICOLON assignment block
     { cout << "lef_stmt" << endl; }
   ;
 

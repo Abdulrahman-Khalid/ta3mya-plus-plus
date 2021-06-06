@@ -40,7 +40,7 @@ public:
 class LwStatement : public Statement {
 private:
     struct ConditionalBlock {
-        BoolExpression* condition;
+        Expression* condition;
         BlockStatement* block;
     };
     vector<ConditionalBlock> _conditionalBlocks;
@@ -48,7 +48,7 @@ public:
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 
-    inline void addConditionalBlock(BoolExpression* condition, BlockStatement* block) {
+    inline void addConditionalBlock(Expression* condition, BlockStatement* block) {
         _conditionalBlocks.push_back({ condition, block });
     }
 };
