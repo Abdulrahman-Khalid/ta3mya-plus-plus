@@ -91,8 +91,14 @@ public:
     virtual string toString() const override;
 };
 
+typedef std::vector<std::string> TarqeemList;
+
 class Ta3reefTarqeemStatement : public Statement {
+    std::string _name;
+    TarqeemList _list;
 public:
+    inline Ta3reefTarqeemStatement(std::string name, TarqeemList list): _name(name), _list(list) {}
+    
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
