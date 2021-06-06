@@ -243,7 +243,7 @@ basy_stmt:
 
 type:
   T_7A2I2I    { $$ = Type::REAL; }
-  | T_SA7E7   { $$ = Type::INT; }
+  | T_SA7E7   { $$ = Type::INT;  }
   | T_SYMBOL  { $$ = Type::ENUM; }
   ;
 
