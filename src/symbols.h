@@ -25,6 +25,7 @@ struct Symbol {
 struct DataSymbol : public Symbol {
     bool isVar;
     bool isUsed = false;
+    bool isInitialized = false;
     Type type;
 };
 struct FuncSymbol : public Symbol {};
