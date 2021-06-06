@@ -12,3 +12,5 @@ using namespace std;
 #include "statements.h"
 
 #include "node.h"
+
+#define DEBUG(i) cout << "DEBUG >>>>>" << (i) << endl

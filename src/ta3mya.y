@@ -137,12 +137,13 @@ stmt:
   ;
 
 exp: 
-  T_SYMBOL         { $$ = new SymbolExpression(*($1)); }
-  | T_INT_LITERAL  { $$ = new Literal(*($1)); }
-  | T_REAL_LITERAL { $$ = new Literal(*($1)); }
-  | binary_exp
+  T_SYMBOL                                      { $$ = new SymbolExpression(*($1)); }
+  | T_INT_LITERAL                               { $$ = new Literal(*($1));          }
+  | T_REAL_LITERAL                              { $$ = new Literal(*($1));          }
+  | binary_exp                                  { cout << $$->toString() << endl;   }
   | unary_exp
   | call_dallah
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END           {  $$ = $2;                         }
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT | T_WE | T_AW;
