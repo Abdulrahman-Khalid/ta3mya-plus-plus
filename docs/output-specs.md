@@ -51,7 +51,7 @@ You can jump to previosly declared label, or a label that is declared later in t
 
 | Quadruple  | Description                  |
 |------------|------------------------------|
-| CPY x z    | z = copy(y)                  |
+| CPY x z    | z = copy(x)                  |
 | INT x z    | z = int(x)                   |
 | ADD x y z  | z = x + y                    |
 | MUL x y z  | z = x * y                    |
