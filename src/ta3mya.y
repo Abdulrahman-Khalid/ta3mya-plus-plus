@@ -9,19 +9,6 @@ extern "C" int yylex(void);
 ProgramNode * prgnodeptr = nullptr;
 %}
 
-%union{
-  string* str_val;
-  Expression* expr_val;
-  ProgramNode* prgnodeptr_val;
-  BasyStatement* basy_stmt_val;
-  BlockStatement* block_stmt_val;
-  Statement* stmt_val;
-  LwStatement* lw_stmt_val;
-  LwGroupStatement* lw_group_val;
-  TarqeemList * tarqeemlist_val;
-  CallDallahArgs * args_val;
-}
-
 // terminals
 %token T_NEWLINE
 
@@ -76,12 +63,13 @@ ProgramNode * prgnodeptr = nullptr;
 %type <block_stmt_val> block
 %type <basy_stmt_val> basy_stmt
 %type <lw_stmt_val> lw_stmt
+%type <lw_stmt_val> halet_stmt
 %type <lw_group_val> lw_group
+%type <lw_group_val> fe7alet_stmt
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
 %type <expr_val> call_dallah
-%type <expr_val> bool_exp
 
 %type <str_val>  type
 %type <str_val>  binary_operator
@@ -91,6 +79,19 @@ ProgramNode * prgnodeptr = nullptr;
 %type <stmt_val>        ta3reef_tarqeem
 
 %type <args_val>  args
+
+%union{
+  string* str_val;
+  Expression* expr_val;
+  ProgramNode* prgnodeptr_val;
+  BasyStatement* basy_stmt_val;
+  BlockStatement* block_stmt_val;
+  Statement* stmt_val;
+  LwStatement* lw_stmt_val;
+  LwGroupStatement* lw_group_val;
+  TarqeemList * tarqeemlist_val;
+  CallDallahArgs * args_val;
+}
 
 %%
 
@@ -123,7 +124,7 @@ stmt:
   | ta3reef_dallah
   | ta3reef_tarqeem   { $$ = $1; }
   | assignment
-  | fe7alet_stmt
+  | fe7alet_stmt      { $$ = $1; }
   | lef_stmt
   | block             { $$ = $1; }
   ;
@@ -134,25 +135,22 @@ exp:
   | T_REAL_LITERAL                              { $$ = new Literal(*($1));          }
   | binary_exp                                  { cout << $$->toString() << endl;   }
   | unary_exp
-  | bool_exp
   | call_dallah
   | T_ROUND_BR_BGN exp T_ROUND_BR_END           {  $$ = $2;                         }
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT | T_WE | T_AW;
+comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
+
 binary_exp: 
   exp binary_operator exp { $$ = new BinaryExpression($1, *($2), $3); }
+  | exp comparator exp    { $$ = new BinaryExpression($1, *($2), $3); }
   ;
 
 unary_exp: 
-  T_NEG exp %prec T_NEG { $$ = new NegExpression($2); } 
+  T_NEG exp %prec T_NEG  { $$ = new NegExpression($2); } 
+  | T_MSH exp            { $$ = new MshExpression($2);             } 
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
-  ;
-
-comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
-bool_exp: 
-  T_MSH exp            { $$ = new MshExpression($2);             } 
-  | exp comparator exp { $$ = new BoolExpression($1, *($2), $3); }
   ;
 
 args:
@@ -173,25 +171,26 @@ lw_group:
 
   /* zero or more 8erolw stmts only after lw stmt */
 lw_stmt:
-  // TODO: When bool_exp has type BoolExpression remove dynamic_cast
-  T_LW bool_exp block {
-    $$ = new LwStatement();
-    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($2);
-    if (!boolExp) yyerror("An Expression* passed to a Lw statement must be a BooleanExpression*");
-    $$->addConditionalBlock(boolExp, $3);
-  }
-  | lw_stmt T_8ERO T_LW bool_exp block {
-    BoolExpression* boolExp = dynamic_cast<BoolExpression*>($4);
-    $1->addConditionalBlock(boolExp, $5);
-  }
+  T_LW exp block { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  | lw_stmt T_8ERO T_LW exp block { $1->addConditionalBlock($4, $5); }
+  ;
+
+fe7alet_stmt:
+  T_SYMBOL T_FE halet_stmt                { $$ = new LwGroupStatement($3); }
+  | T_SYMBOL T_FE halet_stmt T_8ERO block { $$ = new LwGroupStatement($3, $5); }
+  ;
+
+halet_stmt:
+  T_7ALET exp block               { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  | halet_stmt T_7ALET exp block  { $1->addConditionalBlock($3, $4); }
   ;
 
 talma_stmt:
-  T_TALMA bool_exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
+  T_TALMA exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
   ;
 
 karrar_l7d_stmt:
-  T_KARRAR block T_L7D bool_exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
+  T_KARRAR block T_L7D exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
   ;
 
 basy_stmt:
@@ -221,19 +220,9 @@ assignment:
   T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
   ;
 
-fe7alet_stmt:
-  T_SYMBOL T_FE halet_stmt                { cout << "fe7alet_stmt: " << *($1) << endl;      }
-  | T_SYMBOL T_FE halet_stmt T_8ERO block { cout << "fe7alet_stmt+8ero: " << *($1) << endl; }
-  ;
-
-halet_stmt:
-  T_7ALET exp block
-  | halet_stmt T_7ALET exp block
-  ;
-
 lef_init: assignment | ta3reef_mota8ier;
 lef_stmt:
-  T_LEF lef_init T_SEMICOLON bool_exp T_SEMICOLON assignment block
+  T_LEF lef_init T_SEMICOLON exp T_SEMICOLON assignment block
     { cout << "lef_stmt" << endl; }
   ;
 

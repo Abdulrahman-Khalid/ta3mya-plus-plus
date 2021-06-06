@@ -28,18 +28,6 @@ string BinaryExpression::toString() const {
     return s ;
 }
 
-void BoolExpression::compile(CompileContext & compile_context ) const {
-    // TODO
-}
-
-string BoolExpression::toString() const {
-    string s = "BoolExpression{";
-    s += lhs->toString() + "";
-    s += " " +  operation + " ";
-    s += rhs->toString() + "}";
-    return s;
-}
-
 void NegExpression::compile(CompileContext & compile_context ) const {
     // TODO
 }

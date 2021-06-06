@@ -48,6 +48,8 @@ int main(int argc, char **argv) {
 		return yyparse_return;
 	}
 
+	DEBUG("finished parsing, will compile");
+
 	CompileContext compile_context;// = new CompileContext() ;
 
 	// compile return  Program :std::vector<AssemblyLine> string
