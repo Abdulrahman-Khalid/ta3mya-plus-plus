@@ -184,8 +184,8 @@ unary_exp:
   ;
 
 cast_exp:
-  T_SA7E7 T_ROUND_BR_BGN exp T_ROUND_BR_END     { $$ = new ToSa7e7Expression($3);  DEBUG($$->toString());}
-  | T_7A2I2I T_ROUND_BR_BGN exp T_ROUND_BR_END  { $$ = new To7a2i2iExpression($3); DEBUG($$->toString());}
+  T_SA7E7 T_ROUND_BR_BGN exp T_ROUND_BR_END     { $$ = new ToSa7e7Expression($3);  /*DEBUG($$->toString());*/}
+  | T_7A2I2I T_ROUND_BR_BGN exp T_ROUND_BR_END  { $$ = new To7a2i2iExpression($3); /*DEBUG($$->toString());*/}
   ;
 
 args:
