@@ -42,7 +42,7 @@ public:
 };
 
 class LwStatement : public Statement {
-private:
+protected:
     struct ConditionalBlock {
         Expression* condition;
         BlockStatement* block;
@@ -57,8 +57,13 @@ public:
     }
 };
 
+class HaletStatement : public LwStatement {
+public:
+    void attachSymbol(SymbolExpression* symbol);
+};
+
 class LwGroupStatement : public Statement {
-private:
+protected:
     LwStatement* _lwStatement;
     BlockStatement* _8eroBlock;
 public:

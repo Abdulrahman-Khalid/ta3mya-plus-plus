@@ -49,6 +49,12 @@ string LwStatement::toString() const {
     return out + "]}";
 }
 
+void HaletStatement::attachSymbol(SymbolExpression* symbol) {
+    for (auto& conditionalBlock: _conditionalBlocks) {
+        conditionalBlock.condition = new BinaryExpression(symbol, "==", conditionalBlock.condition);
+    }
+}
+
 void LwGroupStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }

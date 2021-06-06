@@ -64,7 +64,7 @@ ProgramNode * prgnodeptr = nullptr;
 %type <basy_stmt_val> basy_stmt
 
 %type <lw_stmt_val> lw_stmt
-%type <lw_stmt_val> halet_stmt
+%type <halet_stmt_val> halet_stmt
 %type <lw_group_val> lw_group
 %type <lw_group_val> fe7alet_stmt
 
@@ -97,6 +97,7 @@ ProgramNode * prgnodeptr = nullptr;
   BlockStatement* block_stmt_val;
   Statement* stmt_val;
   LwStatement* lw_stmt_val;
+  HaletStatement* halet_stmt_val;
   LwGroupStatement* lw_group_val;
   TarqeemList* tarqeemlist_val;
   CallDallahArgs* args_val;
@@ -196,12 +197,20 @@ lw_stmt:
   ;
 
 fe7alet_stmt:
-  T_SYMBOL T_FE halet_stmt                { $$ = new LwGroupStatement($3); }
-  | T_SYMBOL T_FE halet_stmt T_8ERO block { $$ = new LwGroupStatement($3, $5); }
+  T_SYMBOL T_FE halet_stmt {
+    auto symbol = new SymbolExpression(*($1));
+    ($3)->attachSymbol(symbol);
+    $$ = new LwGroupStatement($3);
+  }
+  | T_SYMBOL T_FE halet_stmt T_8ERO block {
+    auto symbol = new SymbolExpression(*($1));
+    ($3)->attachSymbol(symbol);
+    $$ = new LwGroupStatement($3, $5);
+  }
   ;
 
 halet_stmt:
-  T_7ALET exp block               { $$ = new LwStatement(); $$->addConditionalBlock($2, $3); }
+  T_7ALET exp block               { $$ = new HaletStatement(); $$->addConditionalBlock($2, $3); }
   | halet_stmt T_7ALET exp block  { $1->addConditionalBlock($3, $4); }
   ;
 
