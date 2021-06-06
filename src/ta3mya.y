@@ -70,6 +70,7 @@ ProgramNode * prgnodeptr = nullptr;
 %type <lw_group_val> fe7alet_stmt
 
 %type <karrar_l7d_val> karrar_l7d_stmt
+%type <talma_val> talma_stmt
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -96,6 +97,7 @@ ProgramNode * prgnodeptr = nullptr;
   TarqeemList* tarqeemlist_val;
   CallDallahArgs* args_val;
   KarrarL7dStatement* karrar_l7d_val;
+  TalmaStatement* talma_val;
 }
 
 %%
@@ -122,7 +124,7 @@ block:
 stmt:
   basy_stmt           { $$ = $1; }
   | lw_group          { $$ = $1; }
-  | talma_stmt
+  | talma_stmt        { $$ = $1; }
   | karrar_l7d_stmt   { $$ = $1; }
   | ta3reef_mota8ier
   | ta3reef_thabet
@@ -190,7 +192,7 @@ halet_stmt:
   ;
 
 talma_stmt:
-  T_TALMA exp block { cout << "talma_stmt: " << BOOL_STR($2) << endl; }
+  T_TALMA exp block { $$ = new TalmaStatement($2, $3); }
   ;
 
 karrar_l7d_stmt:

@@ -78,6 +78,17 @@ public:
     virtual string toString() const override;
 };
 
+class TalmaStatement : public Statement {
+private:
+    Expression* _condition;
+    BlockStatement* _block;
+public:
+    inline TalmaStatement(Expression* condition, BlockStatement* block) :
+        _condition(condition), _block(block) {}
+    virtual void compile(CompileContext & compile_context ) const override;
+    virtual string toString() const override;
+};
+
 class Ta3reefMota8ierStatement : public Statement {
 public:
     virtual void compile(CompileContext & compile_context ) const override;

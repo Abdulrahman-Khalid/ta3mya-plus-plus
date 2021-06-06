@@ -66,6 +66,15 @@ void KarrarL7dStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }
 
+string TalmaStatement::toString() const {
+    return "TalmaStatement{condition: " + _condition->toString()
+            + " , block: " + _block->toString() + "}";
+}
+
+void TalmaStatement::compile(CompileContext & compile_context ) const {
+    // TODO
+}
+
 string KarrarL7dStatement::toString() const {
     return "KarrarL7dStatement{condition: " + _condition->toString()
             + " , block: " + _block->toString() + "}";
