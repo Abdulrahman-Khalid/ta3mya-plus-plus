@@ -82,9 +82,7 @@ whitespace              [ \t]*
 
     /* invalid */
 {rest_chars} {
-    std::cerr << "SCANNER ";
-    yyerror("");
-    exit(1);
+    yyerror("unexpected character");
 }
 
 %%
