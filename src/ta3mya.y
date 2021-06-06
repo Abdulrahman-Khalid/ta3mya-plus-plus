@@ -309,7 +309,7 @@ int yyerror(string s) {
   extern char *yytext;    // defined and maintained in lex.c
 
   extern CompileContext compile_context;
-  compile_context.error_registry.syntaxError(s, yylineno, string(yytext));
+  compile_context.errorRegistry.syntaxError(s, yylineno, string(yytext));
   return 1;
 }
 
