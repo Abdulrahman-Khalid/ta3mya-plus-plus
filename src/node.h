@@ -6,6 +6,7 @@
 #include "scope.h"
 #include "symbols.h"
 #include "quadraples.h"
+#include "tmpvars.h"
 
 using Error = std::string;
 
@@ -13,6 +14,7 @@ struct CompileContext {
 	ScopeTracker scope_tracker;
 	SymbolTable  symbol_table;
 	QuadruplesTable quadruples_table;
+	TempVarsRegistry tempVarsRegistry;
 	vector<Error> errors;
 
 	inline Program toProgram() const {
