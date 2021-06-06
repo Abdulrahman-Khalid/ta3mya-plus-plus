@@ -32,7 +32,7 @@ class CompileContext
 };
 class Node {
 public:
-	virtual void compile(CompileContext & compile_context ) const = 0;
+	virtual void compile(CompileContext& compile_context) const = 0;
 
 	// toString returns a string representation
 	// of the object for debugging
