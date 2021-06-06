@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
@@ -19,10 +21,17 @@ struct CompileContext {
 	}
 };
 
-using std::string;
+
+template<typename T>
+using Optional = std::optional<T>;
+
+// Result is the name of the variable the holds the expression result
+// it could be a literal to be used directly
+using Result = std::string;
+
 class Node {
 public:
-	virtual void compile(CompileContext& compile_context) const = 0;
+	virtual Optional<Result> compile(CompileContext& compile_context) const = 0;
 
 	// toString returns a string representation
 	// of the object for debugging

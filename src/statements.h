@@ -9,7 +9,7 @@ private:
     std::vector<Statement*> _stmts;
 
 public:
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 
     inline void addStatement(Statement* stmt) {
@@ -23,7 +23,7 @@ private:
 public:
     inline BlockStatement(ProgramNode* programNode):_programNode(programNode) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 
     inline void addStatement(Statement* stmt) {
@@ -37,7 +37,7 @@ private:
 public:
     inline BasyStatement(Expression* toBasy):_toBasy(toBasy) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -49,7 +49,7 @@ protected:
     };
     vector<ConditionalBlock> _conditionalBlocks;
 public:
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 
     inline void addConditionalBlock(Expression* condition, BlockStatement* block) {
@@ -70,7 +70,7 @@ public:
     inline LwGroupStatement(LwStatement* lwStatement, BlockStatement* __8eroBlock = nullptr) :
         _lwStatement(lwStatement), _8eroBlock(__8eroBlock) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -81,7 +81,7 @@ private:
 public:
     inline KarrarL7dStatement(Expression* condition, BlockStatement* block) :
         _condition(condition), _block(block) {}
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -92,7 +92,7 @@ private:
 public:
     inline TalmaStatement(Expression* condition, BlockStatement* block) :
         _condition(condition), _block(block) {}
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -105,7 +105,7 @@ public:
     inline Ta3reefMota8ierStatement(Type type, std::string symbol, Expression* init = nullptr) :
         _type(type), _symbol(symbol), _init(init) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -118,7 +118,7 @@ public:
     inline Ta3reefThabetStatement(Type type, std::string symbol, Expression* init) :
         _type(type), _symbol(symbol), _init(init) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -130,7 +130,7 @@ public:
         _declarations.push_back(declaration);
     }
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -145,7 +145,7 @@ public:
                                   BlockStatement* block) :
         _type(type), _name(name), _args(args), _block(block) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -157,7 +157,7 @@ class Ta3reefTarqeemStatement : public Statement {
 public:
     inline Ta3reefTarqeemStatement(std::string name, TarqeemList list): _name(name), _list(list) {}
     
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -169,7 +169,7 @@ public:
     inline AssignmentStatement(std::string symbol, Expression* exp) :
         _symbol(symbol), _exp(exp) {}
 
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
@@ -179,6 +179,6 @@ private:
     TalmaStatement* _talmaStmt;
 public:
     LefStatement(Statement* init, Expression* condition, Statement* b3dKolLaffa, BlockStatement* block);
-    virtual void compile(CompileContext& compile_context) const override;
+    virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
