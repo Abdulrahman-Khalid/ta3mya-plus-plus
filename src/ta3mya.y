@@ -60,12 +60,16 @@ ProgramNode * prgnodeptr = nullptr;
 %type <prgnodeptr_val>    program
 %type <expr_val> exp
 %type <stmt_val> stmt
+
 %type <block_stmt_val> block
 %type <basy_stmt_val> basy_stmt
+
 %type <lw_stmt_val> lw_stmt
 %type <lw_stmt_val> halet_stmt
 %type <lw_group_val> lw_group
 %type <lw_group_val> fe7alet_stmt
+
+%type <karrar_l7d_val> karrar_l7d_stmt
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -89,8 +93,9 @@ ProgramNode * prgnodeptr = nullptr;
   Statement* stmt_val;
   LwStatement* lw_stmt_val;
   LwGroupStatement* lw_group_val;
-  TarqeemList * tarqeemlist_val;
-  CallDallahArgs * args_val;
+  TarqeemList* tarqeemlist_val;
+  CallDallahArgs* args_val;
+  KarrarL7dStatement* karrar_l7d_val;
 }
 
 %%
@@ -118,7 +123,7 @@ stmt:
   basy_stmt           { $$ = $1; }
   | lw_group          { $$ = $1; }
   | talma_stmt
-  | karrar_l7d_stmt
+  | karrar_l7d_stmt   { $$ = $1; }
   | ta3reef_mota8ier
   | ta3reef_thabet
   | ta3reef_dallah
@@ -189,7 +194,7 @@ talma_stmt:
   ;
 
 karrar_l7d_stmt:
-  T_KARRAR block T_L7D exp { cout << "karrar_l7d_stmt: " << BOOL_STR($4) << endl; }
+  T_KARRAR block T_L7D exp { $$ = new KarrarL7dStatement($4, $2); }
   ;
 
 basy_stmt:

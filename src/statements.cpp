@@ -40,9 +40,8 @@ void LwStatement::compile(CompileContext & compile_context ) const {
 string LwStatement::toString() const {
     string out = "LwStatement{conditional_stmts: [";
      for (auto i = 0; i < _conditionalBlocks.size(); i++) {
-        out += "ConditionalBlock{condition: " + _conditionalBlocks[i].condition->toString();
-        out += ", block:" + _conditionalBlocks[i].block->toString();
-        out += "}";
+        out += "ConditionalBlock{condition: " + _conditionalBlocks[i].condition->toString()
+            + ", block:" + _conditionalBlocks[i].block->toString() + "}";
         if (i+1 < _conditionalBlocks.size()) {
             out += ", ";
         }
@@ -55,7 +54,7 @@ void LwGroupStatement::compile(CompileContext & compile_context ) const {
 }
 
 string LwGroupStatement::toString() const {
-    string out =  "LwGroupStatement{lw_stmt: " + _lwStatement->toString();
+    string out = "LwGroupStatement{lw_stmt: " + _lwStatement->toString();
     if (_8eroBlock) {
         return out + ", 8ero_block: " + _8eroBlock->toString() + "}";
     } else {
@@ -68,7 +67,8 @@ void KarrarL7dStatement::compile(CompileContext & compile_context ) const {
 }
 
 string KarrarL7dStatement::toString() const {
-    return "KarrarL7dStatement";
+    return "KarrarL7dStatement{condition: " + _condition->toString()
+            + " , block: " + _block->toString() + "}";
 }
 
 void Ta3reefMota8ierStatement::compile(CompileContext & compile_context ) const {

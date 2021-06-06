@@ -68,7 +68,12 @@ public:
 };
 
 class KarrarL7dStatement : public Statement {
+private:
+    Expression* _condition;
+    BlockStatement* _block;
 public:
+    inline KarrarL7dStatement(Expression* condition, BlockStatement* block) :
+        _condition(condition), _block(block) {}
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
