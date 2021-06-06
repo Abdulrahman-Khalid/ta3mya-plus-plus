@@ -6,9 +6,9 @@ int yyerror(const char* s);
 extern "C" int yylex(void);
 extern int yylineno;
 
-#define BOOL_STR(b) ((b)? "sa7":"8alat")
-
 ProgramNode * prgnodeptr = nullptr;
+
+#define SAVE_LINE(n) (n)->setLineNumber(yylineno)
 %}
 
 %define parse.error verbose
@@ -124,12 +124,11 @@ ProgramNode * prgnodeptr = nullptr;
 
 program:
   /* empty */ {
-    auto programnode = new ProgramNode();
-    if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
-    $$ = programnode;    
+    $$ = new ProgramNode();
+    if (prgnodeptr == nullptr) { prgnodeptr = $$; }
   }
-  | program stmt              { $2->setLineNumber(yylineno); $1->addStatement($2); }
-  | program stmt T_NEWLINE    { $2->setLineNumber(yylineno); $1->addStatement($2); }
+  | program stmt              { $1->addStatement($2); }
+  | program stmt T_NEWLINE    { $1->addStatement($2); }
   | program T_NEWLINE         { $$ = $1;              }
   ;
 
@@ -139,31 +138,31 @@ block:
   ;
 
 stmt:
-  basy_stmt            { $$ = $1; }
-  | lw_group           { $$ = $1; }
-  | talma_stmt         { $$ = $1; }
-  | karrar_l7d_stmt    { $$ = $1; }
-  | ta3reef_mota8ier   { $$ = $1; }
-  | ta3reef_thabet     { $$ = $1; }
-  | ta3reef_dallah     { $$ = $1; }
-  | ta3reef_tarqeem    { $$ = $1; }
-  | assignment         { $$ = $1; }
-  | fe7alet_stmt       { $$ = $1; }
-  | lef_stmt           { $$ = $1; }
-  | block              { $$ = $1; }
+  basy_stmt            { $$ = $1; SAVE_LINE($$); }
+  | lw_group           { $$ = $1; SAVE_LINE($$); }
+  | talma_stmt         { $$ = $1; SAVE_LINE($$); }
+  | karrar_l7d_stmt    { $$ = $1; SAVE_LINE($$); }
+  | ta3reef_mota8ier   { $$ = $1; SAVE_LINE($$); }
+  | ta3reef_thabet     { $$ = $1; SAVE_LINE($$); }
+  | ta3reef_dallah     { $$ = $1; SAVE_LINE($$); }
+  | ta3reef_tarqeem    { $$ = $1; SAVE_LINE($$); }
+  | assignment         { $$ = $1; SAVE_LINE($$); }
+  | fe7alet_stmt       { $$ = $1; SAVE_LINE($$); }
+  | lef_stmt           { $$ = $1; SAVE_LINE($$); }
+  | block              { $$ = $1; SAVE_LINE($$); }
   ;
 
 exp: 
-  T_SYMBOL                                 { $$ = new SymbolExpression(*$1);              }
-  | T_TARQEEM_INSTANCE                     { $$ = new TarqeemInstanceExpression(*$1);     }
-  | T_INT_LITERAL                          { $$ = new LiteralExpression(*$1, Type::INT);  }
-  | T_REAL_LITERAL                         { $$ = new LiteralExpression(*$1, Type::REAL); }
-  | T_ROUND_BR_BGN exp T_ROUND_BR_END      { $$ = $2;                                     }
-  | binary_exp
-  | unary_exp
-  | cast_exp
-  | bool_exp
-  | call_dallah
+  T_SYMBOL                                 { $$ = new SymbolExpression(*$1);              SAVE_LINE($$); }
+  | T_TARQEEM_INSTANCE                     { $$ = new TarqeemInstanceExpression(*$1);     SAVE_LINE($$); }
+  | T_INT_LITERAL                          { $$ = new LiteralExpression(*$1, Type::INT);  SAVE_LINE($$); }
+  | T_REAL_LITERAL                         { $$ = new LiteralExpression(*$1, Type::REAL); SAVE_LINE($$); }
+  | T_ROUND_BR_BGN exp T_ROUND_BR_END      { $$ = $2;                                     SAVE_LINE($$); }
+  | binary_exp                             { $$ = $1;                                     SAVE_LINE($$); }        
+  | unary_exp                              { $$ = $1;                                     SAVE_LINE($$); }       
+  | cast_exp                               { $$ = $1;                                     SAVE_LINE($$); }      
+  | bool_exp                               { $$ = $1;                                     SAVE_LINE($$); }      
+  | call_dallah                            { $$ = $1;                                     SAVE_LINE($$); }         
   ;
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
