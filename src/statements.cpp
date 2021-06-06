@@ -129,10 +129,16 @@ string AssignmentStatement::toString() const {
     return "AssignmentStatement";
 }
 
+LefStatement::LefStatement(Statement* init, Expression* condition,
+                           Statement* b3dKolLaffa, BlockStatement* block) : _init(init) {
+    block->addStatement(b3dKolLaffa);
+    _talmaStmt = new TalmaStatement(condition, block);
+}
+
 void LefStatement::compile(CompileContext & compile_context ) const {
     // TODO
 }
 
 string LefStatement::toString() const {
-    return "LefStatement";
+    return "LefStatement{init: " + _init->toString() + ", talma: " + _talmaStmt->toString() + "}";
 }

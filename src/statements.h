@@ -25,6 +25,10 @@ public:
 
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
+
+    inline void addStatement(Statement* stmt) {
+        _programNode->addStatement(stmt);
+    }
 };
 
 class BasyStatement : public Statement {
@@ -126,7 +130,11 @@ public:
 };
 
 class LefStatement : public Statement {
+private:
+    Statement* _init;
+    TalmaStatement* _talmaStmt;
 public:
+    LefStatement(Statement* init, Expression* condition, Statement* b3dKolLaffa, BlockStatement* block);
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };

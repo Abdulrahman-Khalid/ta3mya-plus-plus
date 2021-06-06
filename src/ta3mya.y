@@ -71,6 +71,10 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <karrar_l7d_val> karrar_l7d_stmt
 %type <talma_val> talma_stmt
+%type <lef_val> lef_stmt
+
+%type <assignment_val> assignment
+%type <ta3reef_mota8ier_val> ta3reef_mota8ier
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
@@ -98,6 +102,9 @@ ProgramNode * prgnodeptr = nullptr;
   CallDallahArgs* args_val;
   KarrarL7dStatement* karrar_l7d_val;
   TalmaStatement* talma_val;
+  LefStatement* lef_val;
+  AssignmentStatement* assignment_val;
+  Ta3reefMota8ierStatement* ta3reef_mota8ier_val;
 }
 
 %%
@@ -110,7 +117,7 @@ program:
   }
   | program stmt              { $1->addStatement($2); }
   | program stmt T_NEWLINE    { $1->addStatement($2); }
-  | program T_NEWLINE         { $$ = $1; /*cout << $$->toString() << endl;*/ }
+  | program T_NEWLINE         { $$ = $1; cout << $$->toString() << endl; }
   ;
 
   /* {<program>} */
@@ -132,7 +139,7 @@ stmt:
   | ta3reef_tarqeem   { $$ = $1; }
   | assignment
   | fe7alet_stmt      { $$ = $1; }
-  | lef_stmt
+  | lef_stmt          { $$ = $1; }
   | block             { $$ = $1; }
   ;
 
@@ -227,10 +234,11 @@ assignment:
   T_SYMBOL T_ASSIGNMENT exp { cout << "assignemnt to " << *($1) << endl; }
   ;
 
-lef_init: assignment | ta3reef_mota8ier;
 lef_stmt:
-  T_LEF lef_init T_SEMICOLON exp T_SEMICOLON assignment block
-    { cout << "lef_stmt" << endl; }
+  T_LEF assignment T_SEMICOLON exp T_SEMICOLON assignment block
+    { $$ = new LefStatement($2, $4, $6, $7); }
+  | T_LEF ta3reef_mota8ier T_SEMICOLON exp T_SEMICOLON assignment block
+    { $$ = new LefStatement($2, $4, $6, $7); }
   ;
 
 ta3reef_tarqeem:
