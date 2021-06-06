@@ -4,6 +4,7 @@
 int yyerror(char *s);
 int yyerror(const char* s);
 extern "C" int yylex(void);
+extern int yylineno;
 
 #define BOOL_STR(b) ((b)? "sa7":"8alat")
 
@@ -127,8 +128,8 @@ program:
     if (prgnodeptr == nullptr) { prgnodeptr = programnode; }
     $$ = programnode;    
   }
-  | program stmt              { $1->addStatement($2); }
-  | program stmt T_NEWLINE    { $1->addStatement($2); }
+  | program stmt              { $2->setLineNumber(yylineno); $1->addStatement($2); }
+  | program stmt T_NEWLINE    { $2->setLineNumber(yylineno); $1->addStatement($2); }
   | program T_NEWLINE         { $$ = $1;              }
   ;
 
@@ -308,7 +309,7 @@ int yyerror(string s) {
   extern char *yytext;    // defined and maintained in lex.c
 
   extern CompileContext compile_context;
-  compile_context.errors.push_back(Error{std::to_string(yylineno), s, string(yytext)});
+  compile_context.error_registry.syntaxError(s, yylineno, string(yytext));
   return 1;
 }
 

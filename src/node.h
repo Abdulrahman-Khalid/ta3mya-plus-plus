@@ -7,26 +7,14 @@
 #include "symbols.h"
 #include "quadraples.h"
 #include "tmpvars.h"
-
-#define EMPTY(s) s.find_first_not_of(" \n\t") == std::string::npos
-
-struct Error {
-	string line_number = "";
-	string msg = "";
-	string symbol = "";
-
-	void display() const {
-		std::cerr << "ERROR" << (EMPTY(line_number) ? ":" : " (near line " + line_number) + "):"
-			<< msg << (EMPTY(symbol) ? "" : " at symbol \"" + symbol + "\"") << std::endl;
-	}
-};
+#include "error_registry.h"
 
 struct CompileContext {
 	ScopeTracker scope_tracker;
 	SymbolTable  symbol_table;
 	QuadruplesTable quadruples_table;
-	TempVarsRegistry tempVarsRegistry;
-	vector<Error> errors;
+	TempVarsRegistry temp_vars_registry;
+	ErrorRegistry error_registry;
 
 	inline Program toProgram() const {
 		Program p;
@@ -46,10 +34,15 @@ using Optional = std::optional<T>;
 using Result = std::string;
 
 class Node {
+protected:
+	int _line_number;
 public:
 	virtual Optional<Result> compile(CompileContext& compile_context) const = 0;
 
 	// toString returns a string representation
 	// of the object for debugging
 	virtual string toString() const = 0;
+
+	inline void setLineNumber(int line_number) { _line_number = line_number; }
+	inline int getLineNumber() { return _line_number; }
 };

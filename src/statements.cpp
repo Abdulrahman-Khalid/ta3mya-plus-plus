@@ -19,6 +19,7 @@ Optional<Result> ProgramNode::compile(CompileContext& compile_context) const {
 string ProgramNode::toString() const {
     string out = "ProgramNode{stmts: [";
     for (auto i = 0; i < _stmts.size(); i++) {
+        // out += "line_number: " + to_string(_stmts[i]->getLineNumber()) + ", stmt: ";
         out += _stmts[i]->toString();
         if (i+1 < _stmts.size()) {
             out += ", ";
