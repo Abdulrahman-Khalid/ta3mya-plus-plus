@@ -41,12 +41,11 @@ int main(int argc, char **argv) {
 	}
 
 #ifdef DEBUG_LEX
-    std::cout << "enabled only-lexical-analysis mode" << std::endl;
+    DEBUG("entered only-lexical debug mode");
     do { } while (yylex());
     return 0; // not reachable
 #elif YYDEBUG==1
-    std::cout << "enabled parser tracing" << std::endl;
-
+    DEBUG("enabled parser debugging");
     extern int yydebug;
     yydebug = 1;
 #endif
