@@ -3,7 +3,7 @@
 
 using std::string;
 
-enum class Type {
+enum class Type: uint8_t {
     INT, REAL, ENUM
 };
 
