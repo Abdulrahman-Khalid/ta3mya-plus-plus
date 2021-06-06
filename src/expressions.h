@@ -9,8 +9,9 @@ class Expression : public Node {};
 class LiteralExpression : public Expression {
 public:
     string literal;
-    inline LiteralExpression(string literal) : 
-        literal(literal) { }
+    Type type;
+    inline LiteralExpression(string literal, Type type) : 
+        literal(literal), type(type) { }
     virtual void compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };

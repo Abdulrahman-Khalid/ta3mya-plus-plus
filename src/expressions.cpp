@@ -5,7 +5,7 @@ void LiteralExpression::compile(CompileContext& compile_context) const {
 }
 
 string LiteralExpression::toString() const {
-    return "LiteralExpression: " + this->literal;
+    return "LiteralExpression: ("+ typeToString(type) + ") " + this->literal;
 }
 
 void SymbolExpression::compile(CompileContext& compile_context) const {
