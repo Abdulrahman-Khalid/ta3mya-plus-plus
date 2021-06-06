@@ -103,14 +103,14 @@ program:
   }
   | program stmt              { $1->addStatement($2); }
   | program stmt T_NEWLINE    { $1->addStatement($2); }
-  | program T_NEWLINE         { $$ = $1; /*cout << $$->toString() << endl;*/ }
+  | program T_NEWLINE         { $$ = $1; /*DEBUG($$->toString());*/ }
   ;
 
   /* {<program>} */
 block: 
   T_CRULY_BR_BGN program T_CRULY_BR_END {
     $$ = new BlockStatement($2);
-    /*cout << $$->toString() << endl;*/
+    /*DEBUG($$->toString());*/
   }
   ;
 
@@ -133,7 +133,7 @@ exp:
   T_SYMBOL                                      { $$ = new SymbolExpression(*($1)); }
   | T_INT_LITERAL                               { $$ = new Literal(*($1));          }
   | T_REAL_LITERAL                              { $$ = new Literal(*($1));          }
-  | binary_exp                                  { cout << $$->toString() << endl;   }
+  | binary_exp                                  { $$ = $1;/*DEBUG($$->toString());*/}
   | unary_exp
   | bool_exp
   | call_dallah
@@ -148,13 +148,14 @@ binary_exp:
 bool_compinator: T_WE | T_AW;
 bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
 bool_exp:
-  bool_exp bool_compinator bool_exp  { $$ = new BinaryExpression($1, *($2), $3); }
-  | exp bool_comparator exp          { $$ = new BinaryExpression($1, *($2), $3); }
+  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, *($2), $3); }
+  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, *($2), $3); }
+  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  {  $$ = $2;                                 }
   ;
 
 unary_exp: 
   T_NEG exp %prec T_NEG  { $$ = new NegExpression($2); } 
-  | T_MSH exp            { $$ = new MshExpression($2);             } 
+  | T_MSH exp            { $$ = new MshExpression($2); } 
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
   ;
 
@@ -170,8 +171,8 @@ call_dallah:
 
   /* ensure one or zero 8ero stmt at end */
 lw_group:
-  lw_stmt                 { $$ = new LwGroupStatement($1); /*cout << $$->toString() << endl;*/ }
-  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); /*cout << $$->toString() << endl;*/ }
+  lw_stmt                 { $$ = new LwGroupStatement($1);     /*DEBUG($$->toString());*/ }
+  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); /*DEBUG($$->toString());*/ }
   ;
 
   /* zero or more 8erolw stmts only after lw stmt */
@@ -199,7 +200,7 @@ karrar_l7d_stmt:
   ;
 
 basy_stmt:
-  T_BASY exp { $$ = new BasyStatement($2); /*cout << $$->toString() << endl;*/ }
+  T_BASY exp { $$ = new BasyStatement($2); /*DEBUG($$->toString());*/ }
   ;
 
 type: T_7A2I2I | T_SA7E7 | T_SYMBOL;
