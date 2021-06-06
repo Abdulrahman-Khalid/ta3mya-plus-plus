@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cassert>
 
 enum class Opcode: uint8_t {
     CPY = 0, INT, ADD, MUL, DIV, MOD, NEG, POW, REAL, 
@@ -9,11 +10,14 @@ enum class Opcode: uint8_t {
     JMPZ, GT, LT, GTE, LTE, AND, OR,
 };
 
-const std::string opcodeToString[] = {
+const std::string _opcodeToString[] = {
     "CPY", "INT", "ADD", "MUL", "DIV", "MOD", "NEG", "POW", "REAL", 
     "RADD", "RMUL", "RDIV", "RMOD", "RNEG", "RPOW", "RTN", "JMP", 
     "JMPZ", "GT", "LT", "GTE", "LTE", "AND", "OR",
 };
+inline std::string opcodeToString(Opcode opcode) {
+    return _opcodeToString[int(opcode)];
+}
 
 struct Quadruple {
     Opcode opcode;
@@ -27,7 +31,7 @@ struct Quadruple {
             }
         }
 
-        return opcodeToString[int(opcode)] + args;
+        return opcodeToString(opcode) + args;
     }
 };
 
