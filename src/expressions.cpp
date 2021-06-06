@@ -21,7 +21,7 @@ void BinaryExpression::compile(CompileContext & compile_context ) const {
 }
 
 string BinaryExpression::toString() const {
-    string s = "Sa7e7Expression{";
+    string s = "BinaryExpression{";
     s += lhs->toString() + "";
     s += " " +  operation + " ";
     s += rhs->toString() + "}";
