@@ -6,11 +6,13 @@
 #include "scope.h"
 #include "symbols.h"
 #include "quadraples.h"
+#include "tmpvars.h"
 
 struct CompileContext {
 	ScopeTracker scope_tracker;
 	SymbolTable  symbol_table;
 	QuadruplesTable quadruples_table;
+	TempVarsRegistry tempVarsRegistry;
 
 	inline Program toProgram() const {
 		Program p;
