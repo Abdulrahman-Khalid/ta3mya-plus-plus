@@ -38,6 +38,26 @@ string NegExpression::toString() const {
     return s;
 }
 
+void ToSa7e7Expression::compile(CompileContext & compile_context ) const {
+    // TODO
+}
+
+string ToSa7e7Expression::toString() const {
+    string s = "ToSa7e7Expression{";
+    s += _exp->toString() + "}";
+    return s;
+}
+
+void To7a2i2iExpression::compile(CompileContext & compile_context ) const {
+    // TODO
+}
+
+string To7a2i2iExpression::toString() const {
+    string s = "To7a2i2iExpression{";
+    s += _exp->toString() + "}";
+    return s;
+}
+
 void MshExpression::compile(CompileContext & compile_context ) const {
     // TODO
 }

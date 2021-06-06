@@ -80,6 +80,7 @@ ProgramNode * prgnodeptr = nullptr;
 
 %type <expr_val> binary_exp
 %type <expr_val> unary_exp
+%type <expr_val> cast_exp
 %type <expr_val> bool_exp
 %type <expr_val> call_dallah
 
@@ -157,6 +158,7 @@ exp:
   | T_REAL_LITERAL                         { $$ = new Literal(*$1);          }
   | binary_exp
   | unary_exp
+  | cast_exp
   | bool_exp
   | call_dallah
   | T_ROUND_BR_BGN exp T_ROUND_BR_END
@@ -180,7 +182,12 @@ unary_exp:
   | T_MSH exp               { $$ = new MshExpression($2); }
   | T_PLUS exp %prec T_PLUS { $$ = $2; }
   ;
-  // TODO add cast expression
+
+cast_exp:
+  T_SA7E7 T_ROUND_BR_BGN exp T_ROUND_BR_END     { $$ = new ToSa7e7Expression($3);  DEBUG($$->toString());}
+  | T_7A2I2I T_ROUND_BR_BGN exp T_ROUND_BR_END  { $$ = new To7a2i2iExpression($3); DEBUG($$->toString());}
+  ;
+
 args:
   /* empty  */         { $$ = new CallDallahArgs();     }
   | exp                { $$ = new CallDallahArgs({$1}); }

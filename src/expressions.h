@@ -53,7 +53,20 @@ public:
     virtual string toString() const override;
 };
 
-        toBeNegated(toBeNegated) { }
+class ToSa7e7Expression : public Expression {
+    Expression* _exp;
+public:
+    inline ToSa7e7Expression(Expression*  exp): _exp(exp) { }
+
+    virtual void compile(CompileContext & compile_context ) const override;
+    virtual string toString() const override;
+};
+
+class To7a2i2iExpression : public Expression {
+    Expression* _exp;
+public:
+    inline To7a2i2iExpression(Expression*  exp): _exp(exp) { }
+
     virtual void compile(CompileContext & compile_context ) const override;
     virtual string toString() const override;
 };
