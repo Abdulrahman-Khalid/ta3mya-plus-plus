@@ -50,7 +50,7 @@ CompileResult BasyStatement::compile(CompileContext& compile_context) const {
     }
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: funcSymbol->returnSymbol
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: funcSymbol->returnSymbol->toString()
     });
 
     compile_context.quadruplesTable.push_back(Quadruple{
@@ -374,7 +374,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     returnSymbol->type = _type;
 
     compile_context.symbolTable.add(returnSymbol);
-    symbol->returnSymbol = returnSymbol->name;
+    symbol->returnSymbol = returnSymbol;
     compile_context.symbolTable.add(symbol);
 
     /*

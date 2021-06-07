@@ -276,7 +276,7 @@ CompileResult CallDallahExpression::compile(CompileContext &compile_context) con
         arg1 : funcSymbol->bodyLabel,
     });
 
-    return CompileResult{out : funcSymbol->returnSymbol, type : funcSymbol->returnType};
+    return CompileResult{out : funcSymbol->returnSymbol->toString(), type : funcSymbol->returnType};
 }
 
 string CallDallahExpression::toString() const
