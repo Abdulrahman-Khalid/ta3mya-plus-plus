@@ -129,7 +129,7 @@ sa7e7 bedayah() {
     // mm barrah el ta8tyah
 
     IPVersion v = IPVersion::V6
-    lw v == IPVersion::V5 {
+    lw v == IPVersion::V4 {
         basy hatThabet()
     }
 
