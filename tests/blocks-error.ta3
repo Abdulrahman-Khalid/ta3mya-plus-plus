@@ -1,0 +1,8 @@
+sa7e7 bedayah() {
+  sa7e7 x = 10
+  {
+    sa7e7 y = 20
+  }
+  x = y
+  basy 0
+}
