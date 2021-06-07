@@ -13,12 +13,12 @@ sa7e7 bedayah() {
 
   karrar {
     x = x + 1
-  } l7d (msh x < 20)
+  } l7d (msh x < 20) // added msh as this is similar to repeat-until, not do-while
 
   x fe 7alet 1 {
       x = 10
   } 8ero {
-
+      // ta3mya++ has no break statement
   }
   basy 0
 }
