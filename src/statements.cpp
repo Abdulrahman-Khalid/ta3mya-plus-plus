@@ -260,7 +260,36 @@ string Ta3reefMota8ierStatement::toString() const {
 }
 
 CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    // error if symbol already exists
+    auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
+    if (s != nullptr) {
+        compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
+        return {};
+    }
+
+    // Create a new entry in the symbol table
+    DataSymbol* symbol = new DataSymbol();
+    symbol->name = _symbol;
+    symbol->scope = compile_context.scopeTracker.get();
+    symbol->symbolType = SymbolType::DATA;
+    symbol->isVar = false;
+    symbol->type = _type;
+    compile_context.symbolTable.add(symbol);
+
+    auto expResult = _init->compile(compile_context);
+    if (!expResult.out.has_value() || !expResult.type.has_value()) compile_context.abort();
+
+    // TODO: Handle different enum types
+    if (symbol->type != expResult.type.value()) {
+        compile_context.errorRegistry.invalidExpressionType(symbol->type, expResult.type.value());
+        return {};
+    }
+
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: symbol->name
+    });
+
+    symbol->isInitialized = true;
     return {};
 }
 

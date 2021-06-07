@@ -58,6 +58,6 @@ void ErrorRegistry::nonDataSymbol(string symbol, string otherType, int line_numb
 
 void ErrorRegistry::constantAssignment(string symbol, int line_number) {
     string prefix = generatePrefix();
-    string msg = "\"" + symbol + "\" is a constant, it cannot be assigned";
+    string msg = "\"" + symbol + "\" is a constant, it cannot be reassigned";
     errors.push_back({ prefix + msg });
 }
