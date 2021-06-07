@@ -170,21 +170,21 @@ binary_exp:
   | exp T_MODULO exp         { $$ = new BinaryExpression($1, $2, $3); }
   ;
 
+unary_exp: 
+  T_NEG  exp %prec T_NEG     { $$ = new NegExpression($2); }
+  | T_PLUS exp %prec T_PLUS  { $$ = $2; }
+  ;
+
 bool_exp:
-  exp T_WE exp               { $$ = new BinaryExpression($1, $2, $3); }
-  | exp T_AW exp             { $$ = new BinaryExpression($1, $2, $3); }
+  T_MSH bool_exp             { $$ = new MshExpression($2);            }
+  | bool_exp T_WE bool_exp   { $$ = new BinaryExpression($1, $2, $3); }
+  | bool_exp T_AW bool_exp   { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_DOESNT_EQUAL exp   { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_EQUALS exp         { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_GREATER exp        { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_GREATER_EQUAL exp  { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_LESS exp           { $$ = new BinaryExpression($1, $2, $3); }
   | exp T_LESS_EQUAL exp     { $$ = new BinaryExpression($1, $2, $3); }
-  ;
-
-unary_exp: 
-  T_MSH exp                  { $$ = new MshExpression($2); }
-  | T_NEG  exp %prec T_NEG   { $$ = new NegExpression($2); }
-  | T_PLUS exp %prec T_PLUS  { $$ = $2; }
   ;
 
 cast_exp:
