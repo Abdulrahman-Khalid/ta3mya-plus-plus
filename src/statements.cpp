@@ -38,7 +38,65 @@ string BasyStatement::toString() const {
 }
 
 CompileResult LwStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    /*
+    lw (C1) {B1}
+    8ero lw (C2) {B2}
+    8ero lw (C3) {B3}
+    8ero {B4}
+    ....
+    JZ C1 L1
+    B1
+    JMP L4
+
+    L1: JZ C2 L2
+    B2
+    JMP L4
+
+    L2: JZ C3 L3
+    B3
+    JMP L4
+
+    L3: NOP
+    B4  (if it exists)
+    L4: NOP
+    */
+    string doneLabel = compile_context.labelsCreator.next(), nextJZLabel = "";
+    // Create conditionals quadruples
+    for(int i = 0; i < _conditionalBlocks.size(); i++) {
+        // Get condition
+        auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
+        // Get label of current JZ
+        auto currentJZLabel = nextJZLabel;
+        // If this is the last conditional and no _8eroBlock exists then JZ to doneLabel
+        if (i == _conditionalBlocks.size() - 1 && !_8eroBlock) {
+            nextJZLabel = doneLabel;
+        } else {
+            // Otherwise, create the label of the next conditional to JZ to
+            nextJZLabel = compile_context.labelsCreator.next();
+        }
+        // Add JZ
+        compile_context.quadruplesTable.push_back(Quadruple{ 
+            .opcode = Opcode::JMPZ, .arg1 = conditionResult.out.value(), 
+            .arg2 = nextJZLabel, .label = currentJZLabel
+        });
+        // Add block
+        _conditionalBlocks[i].block->compile(compile_context);
+        // Add JMP
+        compile_context.quadruplesTable.push_back(Quadruple{ 
+            .opcode = Opcode::JMP, .arg1 = doneLabel
+        });
+    }    
+    // Add 8ero label & block if it exists
+    if (_8eroBlock) {
+        compile_context.quadruplesTable.push_back(Quadruple{
+            .opcode = Opcode::NOP, .label = nextJZLabel
+        });
+        _8eroBlock->compile(compile_context);
+    }
+    // Add done label
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::NOP, .label = doneLabel
+    });
     return {};
 }
 
@@ -51,26 +109,12 @@ string LwStatement::toString() const {
             out += ", ";
         }
     }
-    return out + "]}";
+    return _8eroBlock ? out + "], 8ero_block: " + _8eroBlock->toString() + "}" : out + "]}";
 }
 
 void HaletStatement::attachSymbol(SymbolExpression* symbol) {
     for (auto& conditionalBlock: _conditionalBlocks) {
         conditionalBlock.condition = new BinaryExpression(symbol, "==", conditionalBlock.condition);
-    }
-}
-
-CompileResult LwGroupStatement::compile(CompileContext& compile_context) const {
-    // TODO
-    return {};
-}
-
-string LwGroupStatement::toString() const {
-    string out = "LwGroupStatement{lw_stmt: " + _lwStatement->toString();
-    if (_8eroBlock) {
-        return out + ", 8ero_block: " + _8eroBlock->toString() + "}";
-    } else {
-        return out + "}";
     }
 }
 

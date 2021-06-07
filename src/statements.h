@@ -48,6 +48,7 @@ protected:
         BlockStatement* block;
     };
     vector<ConditionalBlock> _conditionalBlocks;
+    BlockStatement* _8eroBlock;
 public:
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
@@ -55,23 +56,15 @@ public:
     inline void addConditionalBlock(Expression* condition, BlockStatement* block) {
         _conditionalBlocks.push_back({ condition, block });
     }
+
+    inline void add8eroBlock(BlockStatement* block) {
+        _8eroBlock = block;
+    }
 };
 
 class HaletStatement : public LwStatement {
 public:
     void attachSymbol(SymbolExpression* symbol);
-};
-
-class LwGroupStatement : public Statement {
-protected:
-    LwStatement* _lwStatement;
-    BlockStatement* _8eroBlock;
-public:
-    inline LwGroupStatement(LwStatement* lwStatement, BlockStatement* __8eroBlock = nullptr) :
-        _lwStatement(lwStatement), _8eroBlock(__8eroBlock) {}
-
-    virtual CompileResult compile(CompileContext& compile_context) const override;
-    virtual string toString() const override;
 };
 
 class KarrarL7dStatement : public Statement {

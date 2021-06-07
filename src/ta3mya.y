@@ -67,10 +67,8 @@ ProgramNode * prgnodeptr = nullptr;
 %type <block_stmt_val> block
 %type <basy_stmt_val> basy_stmt
 
-%type <lw_stmt_val> lw_stmt
-%type <halet_stmt_val> halet_stmt
-%type <lw_group_val> lw_group
-%type <lw_group_val> fe7alet_stmt
+%type <lw_stmt_val> lw_stmt lw_group
+%type <halet_stmt_val> halet_stmt fe7alet_stmt
 
 %type <karrar_l7d_val> karrar_l7d_stmt
 %type <talma_val> talma_stmt
@@ -106,7 +104,6 @@ ProgramNode * prgnodeptr = nullptr;
   Statement* stmt_val;
   LwStatement* lw_stmt_val;
   HaletStatement* halet_stmt_val;
-  LwGroupStatement* lw_group_val;
   TarqeemList* tarqeemlist_val;
   CallDallahArgs* call_args_val;
   KarrarL7dStatement* karrar_l7d_val;
@@ -201,8 +198,8 @@ call_dallah:
 
   /* ensure one or zero 8ero stmt at end */
 lw_group:
-  lw_stmt                 { $$ = new LwGroupStatement($1);     }
-  | lw_stmt T_8ERO block  { $$ = new LwGroupStatement($1, $3); }
+  lw_stmt                 { $$ = $1;                        }
+  | lw_stmt T_8ERO block  { $$ = $1; $$->add8eroBlock($3);  }
   ;
 
   /* zero or more 8erolw stmts only after lw stmt */
@@ -214,13 +211,14 @@ lw_stmt:
 fe7alet_stmt:
   T_SYMBOL T_FE halet_stmt {
     auto symbol = new SymbolExpression(*$1);
-    $3->attachSymbol(symbol);
-    $$ = new LwGroupStatement($3);
+    $$ = $3;
+    $$->attachSymbol(symbol);
   }
   | T_SYMBOL T_FE halet_stmt T_8ERO block {
     auto symbol = new SymbolExpression(*$1);
-    $3->attachSymbol(symbol);
-    $$ = new LwGroupStatement($3, $5);
+    $$ = $3;
+    $$->attachSymbol(symbol);
+    $$->add8eroBlock($5);
   }
   ;
 
