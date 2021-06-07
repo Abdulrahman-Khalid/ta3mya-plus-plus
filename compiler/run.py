@@ -5,8 +5,12 @@ import sys
 from subprocess import Popen, PIPE
 
 def compileOnly(gui, compiler):
+    console = gui.getConsoleArea()
+    console.config(state=tk.NORMAL)
+    console.delete("1.0", "end")
+    console.config(state=tk.DISABLED)
+
     content = gui.getTextArea().get("1.0", tk.END+"-1c")
-    gui.getConsoleArea().delete('1.0', tk.END)
     with Popen(compiler.getCompilerExe(), stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True) as process:
         process.stdin.write(str.encode(content))
         assemblyOutput = process.communicate()[0].decode("utf-8")
