@@ -10,6 +10,12 @@ CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     return { out: {}, type: {}, scope: scope };
 }
 
+CompileResult BlockStatement::compileAsInFunc(CompileContext &compile_context) const {
+    auto r = compile(compile_context);
+    BasyStatement(new LiteralExpression("0", Type::INT)).compile(compile_context);
+    return r;
+}
+
 string BlockStatement::toString() const {
     return "BlockStatement{program: " + _programNode->toString() + "}";
 }
@@ -420,7 +426,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
         opcode: Opcode::LABEL, label: funcSymbol->bodyLabel
     });
     
-    auto blockScope = _block->compile(compile_context).scope;
+    auto blockScope = _block->compileAsInFunc(compile_context).scope;
 
     if(!blockScope.has_value()) {
         return {};
