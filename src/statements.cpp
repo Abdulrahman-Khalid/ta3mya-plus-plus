@@ -21,6 +21,10 @@ CompileResult ProgramNode::compile(CompileContext& compile_context) const {
     return {};
 }
 
+void ProgramNode::addBedayahCall() {
+    _stmts.push_back(new BasyStatement(new CallDallahExpression("bedayah", CallDallahArgs()), true));
+}
+
 string ProgramNode::toString() const {
     string out = "ProgramNode{stmts: [";
     for (auto i = 0; i < _stmts.size(); i++) {
@@ -36,6 +40,18 @@ string ProgramNode::toString() const {
 CompileResult BasyStatement::compile(CompileContext& compile_context) const {
     auto expResult = _toBasy->compile(compile_context);
     if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
+
+    if (_basyBedayah) {
+        compile_context.quadruplesTable.push_back(Quadruple{
+            opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: "$0"
+        });
+
+        compile_context.quadruplesTable.push_back(Quadruple{
+            opcode: Opcode::RTN
+        });
+
         return {};
     }
 

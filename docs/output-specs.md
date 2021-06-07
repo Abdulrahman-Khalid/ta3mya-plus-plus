@@ -31,6 +31,8 @@ You can't store any values at constants, but you can read them.
 ### `$0` to `$7`
 The machine has 8 64bit registers.
 
+The exit code of a program should be stored in $0.
+
 ## Labels
 Labels are places you can jump to.
 To declare `infLoop` as label:

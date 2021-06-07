@@ -59,6 +59,7 @@ int main(int argc, char **argv) {
 	DEBUG("finished parsing, will compile");
 	DEBUG(prgnodeptr->toString());
 
+	prgnodeptr->addBedayahCall();
 	prgnodeptr->compile(compile_context);
 
 	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
