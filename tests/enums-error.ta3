@@ -1,0 +1,9 @@
+tarqeem day_of_the_week {
+  Mon,
+  Sun
+}
+
+sa7e7 bedayah() {
+  sa7e7 x = day_of_the_week::Tue
+  basy 0
+}

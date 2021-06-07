@@ -1,0 +1,9 @@
+sa7e7 sum(sa7e7 x, sa7e7 y) {
+  basy x + y
+}
+
+sa7e7 bedayah() {
+  sa7e7 a = sum(10, 20)
+  a = sum(a, a)
+  basy 0
+}

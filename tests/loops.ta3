@@ -1,0 +1,24 @@
+sa7e7 bedayah() {
+  lef sa7e7 i = 0; i < 10; i = i + 1 {
+    sa7e7 b = 10
+  }
+
+  sa7e7 x = 0
+
+  talma (x < 20) {
+    x = x + 1
+  }
+
+  x = 0
+
+  karrar {
+    x = x + 1
+  } l7d (msh x < 20)
+
+  x fe 7alet 1 {
+      x = 10
+  } 8ero {
+
+  }
+  basy 0
+}
