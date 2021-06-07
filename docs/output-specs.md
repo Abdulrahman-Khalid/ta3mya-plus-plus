@@ -52,6 +52,7 @@ You can jump to previosly declared label, or a label that is declared later in t
 | CPY    | x    | z    |        | z = copy(x)                  |
 | INT    | x    | z    |        | z = int(x)                   |
 | ADD    | x    | y    | z      | z = x + y                    |
+| SUB    | x    | y    | z      | z = x - y                    |
 | MUL    | x    | y    | z      | z = x * y                    |
 | DIV    | x    | y    | z      | z = x / y                    |
 | MOD    | x    | y    | z      | z = x % y                    |
@@ -59,6 +60,7 @@ You can jump to previosly declared label, or a label that is declared later in t
 | POW    | x    | y    | z      | z = pow(x, y)                |
 | REAL   | x    | z    |        | z = real(x)                  |
 | RADD   | x    | y    | z      | z = x + y     (real numbers) |
+| RSUB   | x    | y    | z      | z = x - y     (real numbers) |
 | RMUL   | x    | y    | z      | z = x * y     (real numbers) |
 | RDIV   | x    | y    | z      | z = x / y     (real numbers) |
 | RMOD   | x    | y    | z      | z = x % y     (real numbers) |
@@ -69,10 +71,13 @@ You can jump to previosly declared label, or a label that is declared later in t
 | JMP    | b    |      |        | goto b                       |
 | JZ     | x    | b    |        | if x == 0 { goto b }         |
 | JNZ    | x    | b    |        | if x != 0 { goto b }         |
+| EQ     | x    | y    | z      | z = x == y? 1:0              |
+| NEQ    | x    | y    | z      | z = x != y? 1:0              |
 | GT     | x    | y    | z      | z = x >  y? 1:0              |
 | LT     | x    | y    | z      | z = x >  y? 1:0              |
 | GTE    | x    | y    | z      | z = x >= y? 1:0              |
 | LTE    | x    | y    | z      | z = x >= y? 1:0              |
 | AND    | x    | y    | z      | z = x & y                    |
 | OR     | x    | y    | z      | z = x \| y                   |
+| NOT    | x    | z    |        | z = !x                       |
 | NOP    |      |      |        | placeholder for a label      |
