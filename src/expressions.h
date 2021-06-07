@@ -36,12 +36,13 @@ public:
 };
 
 class BinaryExpression : public Expression {
-public:
     Expression* lhs;
     Expression* rhs;
     string operation;
+public:
     inline BinaryExpression(Expression* lhs, string operation, Expression* rhs) : 
         lhs(lhs), rhs(rhs), operation(operation) { }
+
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
