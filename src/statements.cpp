@@ -397,6 +397,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     returnSymbol->scope = compile_context.scopeTracker.get();
     returnSymbol->symbolType = SymbolType::DATA;
     returnSymbol->type = _type;
+    returnSymbol->isVar = true;
 
     compile_context.symbolTable.add(returnSymbol);
     funcSymbol->returnSymbol = returnSymbol;
