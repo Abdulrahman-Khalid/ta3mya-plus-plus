@@ -254,7 +254,6 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
         return {};
     }
 
-    // TODO: Handle different enum types
     if (dataSymbol->type != expResult.type.value()) {
         compile_context.errorRegistry.invalidExpressionType(dataSymbol->type, expResult.type.value(), _lineNumber);
         return {};
@@ -328,7 +327,6 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
         return {};
     }
 
-    // TODO: Handle different enum types
     if (symbol->type != expResult.type.value()) {
         compile_context.errorRegistry.invalidExpressionType(symbol->type, expResult.type.value(), _lineNumber);
         return {};
@@ -434,7 +432,29 @@ string Ta3reefDallahStatement::toString() const {
 }
 
 CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
+
+    // check if symbol already exists
+    if (s != nullptr) {
+        compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
+        return {};
+    }
+
+    // add it
+    s = new Symbol {
+        name: _name,
+        scope: compile_context.scopeTracker.get(),
+        symbolType: SymbolType::TARQEEM,
+    };
+    compile_context.symbolTable.add(s);
+
+    // add its enums
+    for (int i = 0; i < _list.size(); i++) {
+        auto key = _name + "::" + _list[i];
+        auto value = std::to_string(i);
+        compile_context.enumsMap.insert({key, value});
+    }
+
     return {};
 }
 

@@ -49,8 +49,15 @@ string SymbolExpression::toString() const
 
 CompileResult TarqeemInstanceExpression::compile(CompileContext &compile_context) const
 {
-    // TODO
-    return {};
+    auto got = compile_context.enumsMap.find(_instance);
+
+    // doesn't exist
+    if (got == compile_context.enumsMap.end()) {
+        compile_context.errorRegistry.undeclaredSymbol(_instance, _lineNumber);
+        return {};
+    }
+
+    return LiteralExpression(got->second, Type::INT).compile(compile_context);
 }
 
 string TarqeemInstanceExpression::toString() const

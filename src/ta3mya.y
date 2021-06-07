@@ -248,7 +248,7 @@ basy_stmt:
 type:
   T_7A2I2I    { $$ = Type::REAL; }
   | T_SA7E7   { $$ = Type::INT;  }
-  | T_SYMBOL  { $$ = Type::ENUM; }
+  | T_SYMBOL  { $$ = Type::INT;  }
   ;
 
 ta3reef_mota8ier:
