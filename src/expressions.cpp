@@ -39,7 +39,7 @@ CompileResult SymbolExpression::compile(CompileContext &compile_context) const
 
     ds->isUsed = true;
 
-    return CompileResult{out : symbol};
+    return CompileResult{out : symbol, type : ds->type};
 }
 
 string SymbolExpression::toString() const
@@ -76,8 +76,9 @@ string BinaryExpression::toString() const
 CompileResult NegExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     // TODO: Expected Type ?
     if (!isNumerical(expResult.type.value()))
@@ -106,8 +107,9 @@ string NegExpression::toString() const
 CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if(!isNumerical(expResult.type.value())) {
         compile_context.errorRegistry.invalidExpressionType(
@@ -132,8 +134,9 @@ string ToSa7e7Expression::toString() const
 CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if(!isNumerical(expResult.type.value())) {
         compile_context.errorRegistry.invalidExpressionType(
@@ -160,8 +163,9 @@ string To7a2i2iExpression::toString() const
 CompileResult MshExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if (expResult.type.value() != Type::BOOLEAN)
     {
