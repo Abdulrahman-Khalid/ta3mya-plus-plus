@@ -1,0 +1,7 @@
+sa7e7 bedayah() {
+  sa7e7 x
+  // We had to initialize a to avoid the uninitialization error and show the invalid type error
+  7a2i2i a = 1.0
+  x = a
+  basy 0
+}

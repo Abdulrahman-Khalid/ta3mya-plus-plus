@@ -89,14 +89,17 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     8ero lw (C3) {B3}
     8ero {B4}
     ....
+    C1
     JZ C1 L1
     B1
     JMP DONE
 
+    C2
     L1: JZ C2 L2
     B2
     JMP DONE
 
+    C3
     L2: JZ C3 L3
     B3
     JMP DONE
@@ -109,7 +112,7 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     Optional<string> nextJZLabel;
     // Create conditionals quadruples
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
-        // Get condition
+        // Add condition
         auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
         if (!conditionResult.out.has_value()) {
             return {};
@@ -173,6 +176,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     /*
     LOOP:
     B
+    C
     JZ C LOOP
     */
     // Create LOOP label
@@ -183,7 +187,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     });
     // Add block
     _block->compile(compile_context);
-    // Get condition
+    // Add condition
     auto conditionResult = _condition->compile(compile_context);
     if (!conditionResult.out.has_value()) {
         return {};
@@ -204,29 +208,34 @@ string TalmaStatement::toString() const {
 
 CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     /*
-    LOOP: JZ C DONE
+    LOOP: 
+    C
+    JZ C DONE
     B
     JMP LOOP
     DONE:
     */
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
+    // Add LOOP label
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::LABEL, label: loopLabel
+    });
     // Create DONE label
     auto doneLabel = compile_context.labelsCreator.next();
-    // Get condition
+    // Add condition
     auto conditionResult = _condition->compile(compile_context);
     if (!conditionResult.out.has_value()) {
         return {};
     }
     // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::JZ, arg1: conditionResult.out.value(),
-        arg2: doneLabel, label: loopLabel
+        opcode: Opcode::JZ, arg1: conditionResult.out.value(), arg2: doneLabel
     });
     compile_context.tempVarsRegistry.put(conditionResult.out.value());
     // Add block
     _block->compile(compile_context);
-    // Add JML
+    // Add JMP
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::JMP, arg1: loopLabel
     });
@@ -289,9 +298,9 @@ string AssignmentStatement::toString() const {
 }
 
 CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context) const {
-    // error if symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
         return {};
     }
@@ -322,9 +331,9 @@ string Ta3reefMota8ierStatement::toString() const {
 }
 
 CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
-    // error if symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
         return {};
     }
@@ -363,9 +372,9 @@ string Ta3reefThabetStatement::toString() const {
 }
 
 CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
-    // error if function symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
         return {};
     }
@@ -388,6 +397,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     returnSymbol->scope = compile_context.scopeTracker.get();
     returnSymbol->symbolType = SymbolType::DATA;
     returnSymbol->type = _type;
+    returnSymbol->isVar = true;
 
     compile_context.symbolTable.add(returnSymbol);
     funcSymbol->returnSymbol = returnSymbol;
@@ -448,10 +458,9 @@ string Ta3reefDallahStatement::toString() const {
 }
 
 CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
-
-    // check if symbol already exists
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
         return {};
     }
@@ -494,8 +503,13 @@ LefStatement::LefStatement(Statement* init, Expression* condition,
 }
 
 CompileResult LefStatement::compile(CompileContext& compile_context) const {
-    _init->compile(compile_context);
-    _talmaStmt->compile(compile_context);
+    // Create a block to encapsulate the initialization & loop in a scope
+    auto node = new ProgramNode();
+    auto block = new BlockStatement(node);
+    block->appendStatement(_init);
+    block->appendStatement(_talmaStmt);
+    // Compile the block
+    block->compile(compile_context);
     return {};
 }
 

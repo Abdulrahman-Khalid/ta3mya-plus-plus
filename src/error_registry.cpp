@@ -94,5 +94,14 @@ void ErrorRegistry::incorrectArgType(string function_name, string arg_name, Type
         + " expected to be " + typeToString(expected)
         + ", but was found to be " + typeToString(actual);
     errors.push_back({ prefix + msg });
+}
 
+void ErrorRegistry::invalidEnumInstance(string instance, int line_number) {
+    string prefix = generatePrefix(line_number);
+    auto separatorLocation = instance.find("::");
+    string intendedEnum = instance.substr(0, separatorLocation);
+    string instanceName = instance.substr(separatorLocation + 2, string::npos);
+    string msg = "Invalid enum instance, \"" + instanceName + "\" does not belong to \""
+        + intendedEnum + "\"";
+    errors.push_back({ prefix + msg });
 }

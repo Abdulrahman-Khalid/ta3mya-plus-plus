@@ -53,7 +53,7 @@ CompileResult TarqeemInstanceExpression::compile(CompileContext &compile_context
 
     // doesn't exist
     if (got == compile_context.enumsMap.end()) {
-        compile_context.errorRegistry.undeclaredSymbol(_instance, _lineNumber);
+        compile_context.errorRegistry.invalidEnumInstance(_instance, _lineNumber);
         return {};
     }
 
@@ -150,13 +150,6 @@ CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
         return {};
     }
 
-    if (!isNumericalType(expResult.type.value()))
-    {
-        compile_context.errorRegistry.invalidExpressionType(
-            Type::INT, expResult.type.value(), _lineNumber);
-        return {};
-    }
-
     auto tmpVar = compile_context.tempVarsRegistry.get();
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode : Opcode::INT,
@@ -177,13 +170,6 @@ CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
     if (!expResult.out.has_value() || !expResult.type.has_value()) {
-        return {};
-    }
-
-    if (!isNumericalType(expResult.type.value()))
-    {
-        compile_context.errorRegistry.invalidExpressionType(
-            Type::REAL, expResult.type.value(), _lineNumber);
         return {};
     }
 
