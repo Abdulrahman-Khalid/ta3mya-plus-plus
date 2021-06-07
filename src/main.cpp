@@ -18,7 +18,7 @@ inline void printProgram(const Program& p) {
 		std::cout << line << std::endl;
 	}
 	if (p.size() > 0) {
-		std::cout<<endl;
+		std::cout << endl;
 	}
 }
 
