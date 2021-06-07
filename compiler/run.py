@@ -25,9 +25,9 @@ def compileOnly(gui, compiler):
                 debugList.append(line)
         consoleOut = ""
         if (len(errorList) > 0):
-            consoleOut = utils.ERR_MSG + '\n' + '\n'.join(errorList)
+            consoleOut = utils.ERR_MSG + '\n\n' + '\n'.join(errorList)
         else:
-            consoleOut = "Compiled Successfully"
+            consoleOut = "Compiled Successfully\n"
         print(consoleOut)
         debugOut = '\n'.join(debugList)
         if (len(debugOut) > 0):
@@ -36,7 +36,7 @@ def compileOnly(gui, compiler):
         if (len(assemblyOutput) > 0):
             with open(compiler.getProgFile(), 'w') as f:
                 f.write(assemblyOutput)
-            print("Compiled Assembly:\n")
+            print("\nCompiled Assembly:\n")
             print(assemblyOutput)
 
 class TextLineNumbers(tk.Canvas):
