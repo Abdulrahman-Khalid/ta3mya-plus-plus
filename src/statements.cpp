@@ -25,16 +25,72 @@ string BlockStatement::toString() const {
     return "BlockStatement{program: " + _programNode->toString() + "}";
 }
 
+class CallBedayahStatement : public Statement {
+public:
+    virtual CompileResult compile(CompileContext &compile_context) const override;
+    virtual string toString() const override;
+};
+
+string CallBedayahStatement::toString() const {
+    return "CallBedayahStatement";
+}
+
+CompileResult CallBedayahStatement::compile(CompileContext& compile_context) const {
+    // make sure bedayah exists
+    auto s = compile_context.symbolTable.get("bedayah", Scope(vector<Level>({})));
+    if (s == nullptr) {
+        compile_context.errorRegistry.noBedayah(); // TODO
+        return {};
+    }
+
+    if (s->symbolType != SymbolType::FUNC) {
+        compile_context.errorRegistry.bedayahHasAnonFuncType(symbolTypeToString(s->symbolType)); // TODO
+        return {};
+    }
+
+    FuncSymbol* bd = static_cast<FuncSymbol*>(s);
+
+    // RTN
+    compile_context.quadruplesTable.insert(
+        compile_context.quadruplesTable.begin(),
+        Quadruple {
+            opcode: Opcode::END,
+        }
+    );
+
+    // CPY :_bedayah_RET $0
+    compile_context.quadruplesTable.insert(
+        compile_context.quadruplesTable.begin(),
+        Quadruple {
+            opcode: Opcode::CPY,
+            arg1: bd->returnSymbol->name,
+            arg2: "",
+            result: "$0",
+        }
+    );
+
+    // CALL <label>
+    compile_context.quadruplesTable.insert(
+        compile_context.quadruplesTable.begin(),
+        Quadruple {
+            opcode: Opcode::CALL,
+            arg1: bd->bodyLabel,
+        }
+    );
+
+    return {};
+}
+
 CompileResult ProgramNode::compile(CompileContext& compile_context) const {
     for (const auto& stmt : _stmts) {
         stmt->compile(compile_context);
     }
+
+    if (_isRoot) {
+        CallBedayahStatement().compile(compile_context);
+    }
     bool endsWithBasy = !_stmts.empty() && dynamic_cast<BasyStatement*>(_stmts.back()) != nullptr;
     return { endsWithBasy: endsWithBasy };
-}
-
-void ProgramNode::addEndStatement() {
-    _stmts.push_back(new EndStatement());
 }
 
 string ProgramNode::toString() const {
@@ -80,17 +136,6 @@ CompileResult BasyStatement::compile(CompileContext& compile_context) const {
 
 string BasyStatement::toString() const {
     return "BasyStatement{exp: " + _toBasy->toString() + "}";
-}
-
-CompileResult EndStatement::compile(CompileContext& compile_context) const {
-    auto callBedayah = new CallDallahExpression("bedayah", CallDallahArgs());
-    callBedayah->compile(compile_context);
-    compile_context.quadruplesTable.push_back(Quadruple{opcode: Opcode::END});
-    return {};
-}
-
-string EndStatement::toString() const {
-    return "EndStatement";
 }
 
 CompileResult LwStatement::compile(CompileContext& compile_context) const {

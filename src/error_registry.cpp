@@ -113,3 +113,14 @@ void WarningRegistry::unusedSymbol(string symbol, int line_number) {
     string msg = "\"" + symbol + "\" declared but not used";
     warnings.push_back({ prefix + msg });
 }
+void ErrorRegistry::noBedayah() {
+    string prefix = generateErrorPrefix();
+    string msg = "Didn't find bedayah function in file!";
+    errors.push_back({ prefix + msg });
+}
+
+void ErrorRegistry::bedayahHasAnonFuncType(string actual) {
+    string prefix = generateErrorPrefix();
+    string msg = "bedayah function symbol is used as a name for other type, found type: " + actual;
+    errors.push_back({ prefix + msg });
+}

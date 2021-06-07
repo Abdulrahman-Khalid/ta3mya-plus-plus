@@ -7,7 +7,7 @@ from subprocess import Popen, PIPE
 def compileOnly(gui, compiler):
     console = gui.getConsoleArea()
     console.config(state=tk.NORMAL)
-    console.delete("1.0", "end")
+    console.delete("1.0", tk.END)
     console.config(state=tk.DISABLED)
 
     content = gui.getTextArea().get("1.0", tk.END+"-1c")
@@ -38,6 +38,42 @@ def compileOnly(gui, compiler):
                 f.write(assemblyOutput)
             print("\nCompiled Assembly:\n")
             print(assemblyOutput)
+
+def printSymbolTable(gui, compiler):
+    console = gui.getConsoleArea()
+    console.config(state=tk.NORMAL)
+    console.delete("1.0", tk.END)
+    console.config(state=tk.DISABLED)
+
+    content = gui.getTextArea().get("1.0", tk.END+"-1c")
+    cmd = compiler.getCompilerExe() + " --symbol-table"
+    with Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True) as process:
+        process.stdin.write(str.encode(content))
+        symbolTableOutput = process.communicate()[0].decode("utf-8")
+        error = process.communicate()[1].decode("utf-8")
+        lines = error.splitlines()
+        debugList = []
+        errorList = []
+        for line in lines:
+            if (line.lower().startswith("error")):
+                errorList.append(line)
+            else:
+                debugList.append(line)
+        consoleOut = ""
+        if (len(errorList) > 0):
+            consoleOut = utils.ERR_MSG + '\n\n' + '\n'.join(errorList)
+        else:
+            consoleOut = "Compiled Successfully\n"
+        print(consoleOut)
+        debugOut = '\n'.join(debugList)
+        if (len(debugOut) > 0):
+            with open(compiler.getDebugFile(), 'w') as f:
+                f.write(debugOut)
+        if (len(symbolTableOutput) > 0):
+            with open(compiler.getSymbolTableFile(), 'w') as f:
+                f.write(symbolTableOutput)
+            print("\nSymbol Table:\n")
+            print(symbolTableOutput)
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
@@ -141,8 +177,10 @@ class GUI(tk.Frame):
 
         runMenu = tk.Menu(menu)
         menu.add_cascade(label="Compile", menu=runMenu)
-        runMenu.add_command(label="compile",
+        runMenu.add_command(label="Compile",
                             command=lambda: compileOnly(self, self.compiler))
+        runMenu.add_command(label="Symbol Table",
+                            command=lambda: printSymbolTable(self, self.compiler))
         runMenu.add_command(label="Choose Compilation Directory",
                             command=lambda: utils.chooseProgDirectory(self.compiler))
         ramMenu = tk.Menu(menu)
@@ -171,8 +209,9 @@ class GUI(tk.Frame):
 
 class Compiler:
     def __init__(self):
-        self.debugFile = "./debug.txt"
-        self.progFile = "./program.asm"
+        self.debugFile = "./Debug.txt"
+        self.progFile = "./Program.asm"
+        self.symbolTableFile = "./SymbolTable.txt"
         if os.name == 'nt':
             self.compilerExe = "../src/ta3myac.exe"
         else:
@@ -188,11 +227,19 @@ class Compiler:
             self.progFile.close()
         self.progFile = progFile
 
+    def setSymbolTableFile(self, symbolTableFile):
+        if(self.symbolTableFile):
+            self.symbolTableFile.close()
+        self.symbolTableFile = symbolTableFile
+
     def getDebugFile(self):
         return self.debugFile
 
     def getProgFile(self):
         return self.progFile
+
+    def getSymbolTableFile(self):
+        return self.symbolTableFile
 
     def getCompilerExe(self):
         return self.compilerExe

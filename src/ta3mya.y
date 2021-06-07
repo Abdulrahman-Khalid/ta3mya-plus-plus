@@ -121,7 +121,7 @@ ProgramNode * prgnodeptr = nullptr;
 program:
   /* empty */ {
     $$ = new ProgramNode();
-    if (prgnodeptr == nullptr) { prgnodeptr = $$; }
+    if (prgnodeptr == nullptr) { prgnodeptr = $$; prgnodeptr->setRoot(); }
   }
   | program stmt              { $1->appendStatement($2); }
   | program stmt T_NEWLINE    { $1->appendStatement($2); }

@@ -73,5 +73,6 @@ def chooseProgDirectory(assemblerObj):
         initialdir="./", title="Select debug file directory")
 
     if(progLocation):
-        assemblerObj.setDebugFile(progLocation+"/debug.txt")
-        assemblerObj.setProgFile(progLocation+"/program.asm")
+        assemblerObj.setDebugFile(progLocation+"/Debug.txt")
+        assemblerObj.setProgFile(progLocation+"/Program.asm")
+        assemblerObj.setSymbolTableFile(progLocation+"/SymbolTable.txt")
