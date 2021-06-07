@@ -36,6 +36,8 @@ def compileOnly(gui, compiler):
         if (len(assemblyOutput) > 0):
             with open(compiler.getProgFile(), 'w') as f:
                 f.write(assemblyOutput)
+            print("Compiled Assembly:\n")
+            print(assemblyOutput)
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
