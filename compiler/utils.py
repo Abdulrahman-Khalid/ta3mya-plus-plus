@@ -1,8 +1,8 @@
-from assembler import generate_empty_memory
 from tkinter import filedialog, messagebox
 import tkinter as tk
 import os
 
+ERR_MSG = "Compilation Failed"
 
 class PrintLogger():  # create file like object
     def __init__(self, textbox):  # pass reference to text widget
@@ -10,10 +10,9 @@ class PrintLogger():  # create file like object
         self.isError = False
 
     def write(self, text):
-        err = "Error"
-        failed = "Failed"
+        self.textbox.delete("1.0", tk.END)
         self.textbox.config(state=tk.NORMAL)
-        if((len(text) >= len(err) and text[:len(err)] == err) or (len(text) >= len(failed) and text[:len(failed)] == failed)):
+        if(text.startswith(ERR_MSG)):
             self.isError = True
             self.textbox.insert(tk.END, text, "error")
         else:
@@ -69,9 +68,10 @@ def showHelp():
     messagebox.showinfo(
         "Help", "1. Write or open your program in ta3mya++\n2.Click compile")
 
-def chooseDebugDirectory(assemblerObj):
-    debugLocation = tk.filedialog.askdirectory(
+def chooseProgDirectory(assemblerObj):
+    progLocation = tk.filedialog.askdirectory(
         initialdir="./", title="Select debug file directory")
 
-    if(debugLocation):
-        assemblerObj.setDebugFile(debugLocation+"/debug.txt")
+    if(progLocation):
+        assemblerObj.setDebugFile(progLocation+"/debug.txt")
+        assemblerObj.setProgFile(progLocation+"/program.asm")
