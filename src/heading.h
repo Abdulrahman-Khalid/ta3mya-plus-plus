@@ -15,4 +15,4 @@ using namespace std;
 #include "type.h"
 #include "node.h"
 
-#define DEBUG(i) cout << "DEBUG: " << (i) << endl
+#define DEBUG(i) cerr << "DEBUG: " << (i) << endl
