@@ -51,13 +51,37 @@ void ErrorRegistry::unusedSymbol(string symbol) {
 }
 
 void ErrorRegistry::nonDataSymbol(string symbol, string otherType, int line_number) {
-    string prefix = generatePrefix();
+    string prefix = generatePrefix(line_number);
     string msg = "\"" + symbol + "\" was expected to be a var/const but it's " + otherType;
     errors.push_back({ prefix + msg });
 }
 
 void ErrorRegistry::constantAssignment(string symbol, int line_number) {
-    string prefix = generatePrefix();
+    string prefix = generatePrefix(line_number);
     string msg = "\"" + symbol + "\" is a constant, it cannot be reassigned";
     errors.push_back({ prefix + msg });
+}
+
+void ErrorRegistry::invalidReturn(int line_number) {
+    string prefix = generatePrefix(line_number);
+    string msg = "Can't use basy statement outside function definitions";
+    errors.push_back({ prefix + msg });
+}
+
+void ErrorRegistry::incorrectArgsCount(string function_name, int expected, int actual, int line_number) {
+    string prefix = generatePrefix(line_number);
+    string msg = "Incorrect number of parameters for function call of \"" + function_name + "\""
+        + " expected to be " + to_string(expected)
+        + ", but was found to be " + to_string(actual);
+    errors.push_back({ prefix + msg });
+}
+
+void ErrorRegistry::incorrectArgType(string function_name, string arg_name, Type expected, Type actual, int line_number) {
+    string prefix = generatePrefix(line_number);
+    string msg = "Incorrect parameter type for parameter \"" + arg_name + "\"" 
+        + " in function call of \"" + function_name + "\"" 
+        + " expected to be " + typeToString(expected)
+        + ", but was found to be " + typeToString(actual);
+    errors.push_back({ prefix + msg });
+
 }

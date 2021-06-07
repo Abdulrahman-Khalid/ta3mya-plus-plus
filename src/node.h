@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <stack>
 
 #include "program.h"
 #include "scope.h"
@@ -27,7 +28,8 @@ struct CompileContext {
 	TempVarsRegistry tempVarsRegistry;
 	ErrorRegistry errorRegistry;
 	LabelsCreator labelsCreator;
-
+	stack<FuncSymbol*> functionDefinitions;
+	
 	inline void abort() const {
 		errorRegistry.displayErrors();
 		exit(1);

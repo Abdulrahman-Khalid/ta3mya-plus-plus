@@ -25,6 +25,9 @@ public:
     void nonDataSymbol(string symbol, string otherType, int line_number = 0);
     void constantAssignment(string symbol, int line_number = 0);
     void unusedSymbol(string symbol);
+    void invalidReturn(int line_number = 0);
+    void incorrectArgsCount(string function_name, int expected, int actual, int line_number = 0);
+    void incorrectArgType(string function_name, string arg_name, Type expected, Type actual, int line_number = 0);
 
     inline bool empty() const { return errors.empty(); }
     inline void displayErrors() const { for(auto error : errors) error.display(); }

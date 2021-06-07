@@ -44,6 +44,17 @@ struct DataSymbol : public Symbol {
     Type type;
 };
 
+struct FuncSymbol : public Symbol {
+    struct Arg {
+        Type type;
+        std::string symbol;
+    };
+    vector<Arg> args;
+    Type returnType;
+    std::string returnSymbol;
+    std::string bodyLabel;
+};
+
 class SymbolTable {
 private:
 

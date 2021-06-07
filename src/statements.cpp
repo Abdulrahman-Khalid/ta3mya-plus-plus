@@ -1,5 +1,6 @@
 #include "statements.h"
 #include "operator.h"
+#include "optional.h"
 
 CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     compile_context.scopeTracker.push();
@@ -32,7 +33,31 @@ string ProgramNode::toString() const {
 }
 
 CompileResult BasyStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    auto expResult = _toBasy->compile(compile_context);
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
+
+    if(compile_context.functionDefinitions.empty()) {
+        compile_context.errorRegistry.invalidReturn(_lineNumber);
+        return {};
+    }
+
+    auto funcSymbol = compile_context.functionDefinitions.top();
+    if(expResult.type.value() != funcSymbol->returnType) {
+        compile_context.errorRegistry.invalidExpressionType(funcSymbol->returnType, expResult.type.value(), _lineNumber);
+        return {};
+    }
+
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: funcSymbol->returnSymbol
+    });
+
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::RTN
+    });
+
+    compile_context.tempVarsRegistry.put(expResult.out.value());
     return {};
 }
 
@@ -63,7 +88,8 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     B4  (if it exists)
     DONE: NOP
     */
-    string doneLabel = compile_context.labelsCreator.next(), nextJZLabel = "";
+    string doneLabel = compile_context.labelsCreator.next();
+    Optional<string> nextJZLabel;
     // Create conditionals quadruples
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
         // Get condition
@@ -81,8 +107,10 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
         // Add JZ
         compile_context.quadruplesTable.push_back(Quadruple{ 
             opcode: Opcode::JZ, arg1: conditionResult.out.value(),
-            arg2: nextJZLabel, label: currentJZLabel
+            arg2: nextJZLabel.value(), label: currentJZLabel
         });
+        compile_context.tempVarsRegistry.put(conditionResult.out.value());
+
         // Add block
         _conditionalBlocks[i].block->compile(compile_context);
         // Add JMP
@@ -143,6 +171,8 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::JNZ, arg1: conditionResult.out.value(), arg2: loopLabel
     });
+    compile_context.tempVarsRegistry.put(conditionResult.out.value());
+
     return {};
 }
 
@@ -170,6 +200,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
         opcode: Opcode::JZ, arg1: conditionResult.out.value(),
         arg2: doneLabel, label: loopLabel
     });
+    compile_context.tempVarsRegistry.put(conditionResult.out.value());
     // Add block
     _block->compile(compile_context);
     // Add JML
@@ -223,6 +254,7 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: s->name
     });
+    compile_context.tempVarsRegistry.put(expResult.out.value());
 
     dataSymbol->isInitialized = true;
     return {};
@@ -290,6 +322,7 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: symbol->name
     });
+    compile_context.tempVarsRegistry.put(expResult.out.value());
 
     symbol->isInitialized = true;
     return {};
@@ -301,7 +334,62 @@ string Ta3reefThabetStatement::toString() const {
 }
 
 CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    // error if function symbol already exists
+    auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
+    if (s != nullptr) {
+        compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
+        return {};
+    }
+
+    vector<FuncSymbol::Arg> args;
+    // Compile function arguments declartion 
+    for (auto argDecl: *_args) {
+        _block->prependStatement(argDecl);
+        args.push_back(argDecl->getAsArg());
+    }
+    
+    // Create a new entry in the symbol table
+    FuncSymbol* symbol = new FuncSymbol();
+    symbol->name = _name;
+    symbol->scope = compile_context.scopeTracker.get();
+    symbol->symbolType = SymbolType::FUNC;
+    symbol->returnType = _type;
+    symbol->args = args;
+    symbol->bodyLabel = compile_context.labelsCreator.next();
+
+    DataSymbol* returnSymbol = new DataSymbol();
+    returnSymbol->name = "_" + _name + "_RET";
+    returnSymbol->scope = compile_context.scopeTracker.get();
+    returnSymbol->symbolType = SymbolType::DATA;
+    returnSymbol->type = _type;
+
+    compile_context.symbolTable.add(returnSymbol);
+    symbol->returnSymbol = returnSymbol->name;
+    compile_context.symbolTable.add(symbol);
+
+    /*
+    JMP AFTER_DEF
+    BODY_LABEL: NOP
+        B
+    AFTER_DEF: NOP
+    */
+    std::string afterDefLabel = compile_context.labelsCreator.next();
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::JMP, arg1: afterDefLabel
+    });
+
+    compile_context.functionDefinitions.push(symbol);
+
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::NOP, label: symbol->bodyLabel
+    });
+    
+    _block->compile(compile_context);
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::NOP, label: afterDefLabel
+    });
+
+    compile_context.functionDefinitions.pop();
     return {};
 }
 
@@ -339,7 +427,7 @@ string Ta3reefTarqeemStatement::toString() const {
 
 LefStatement::LefStatement(Statement* init, Expression* condition,
                            Statement* b3dKolLaffa, BlockStatement* block) : _init(init) {
-    block->addStatement(b3dKolLaffa);
+    block->appendStatement(b3dKolLaffa);
     _talmaStmt = new TalmaStatement(condition, block);
 }
 

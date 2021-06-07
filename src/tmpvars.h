@@ -4,6 +4,8 @@
 #include <array>
 #include <unordered_set>
 
+typedef std::string TempVar;
+
 class TempVarsRegistry {
     enum class RegisterState: bool {
         NOT_USED = 0, USED,
@@ -19,9 +21,9 @@ public:
     }
 
     // get reserves a reg/var for you, returns its name
-    std::string get();
+    TempVar get();
 
     // put returns back the variable to be used by others
     // call it when you no longer use the temporary reg/var
-    void put(const std::string& s);
+    void put(const TempVar& s);
 };

@@ -38,12 +38,12 @@ public:
 };
 
 class BinaryExpression : public Expression {
-    Expression* lhs;
-    Expression* rhs;
-    Operator op;
+    Expression* _lhs;
+    Expression* _rhs;
+    Operator _op;
 public:
     inline BinaryExpression(Expression* lhs, Operator op, Expression* rhs) : 
-        lhs(lhs), rhs(rhs), op(op) { }
+        _lhs(lhs), _rhs(rhs), _op(op) { }
 
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
@@ -90,7 +90,6 @@ typedef std::vector<Expression*> CallDallahArgs;
 class CallDallahExpression : public Expression {
     string _name;
     CallDallahArgs _args;
-    
 public:
     inline CallDallahExpression(string dallahName, CallDallahArgs args):_name(dallahName), _args(args) {}
 

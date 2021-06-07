@@ -2,15 +2,15 @@
 #include <cassert>
 #include "heading.h"
 
-inline bool isRegister(const std::string& s) {
+inline bool isRegister(const TempVar& s) {
     return s.find('$') == 0;
 }
 
-inline bool isVar(const std::string& s) {
+inline bool isVar(const TempVar& s) {
     return s.find("tmp") == 0;
 }
 
-std::string TempVarsRegistry::get() {
+TempVar TempVarsRegistry::get() {
     for (int i = 0; i < _registers.size(); i++) {
         if (_registers[i] == RegisterState::NOT_USED) {
             _registers[i] = RegisterState::USED;
@@ -29,7 +29,7 @@ std::string TempVarsRegistry::get() {
     return "";
 }
 
-void TempVarsRegistry::put(const std::string& s) {
+void TempVarsRegistry::put(const TempVar& s) {
     if (isRegister(s)) {
         auto i = stoi(s.substr(1));
         assert(_registers[i] == RegisterState::USED && "trying to put an already put reg");

@@ -39,7 +39,7 @@ CompileResult SymbolExpression::compile(CompileContext &compile_context) const
 
     ds->isUsed = true;
 
-    return CompileResult{out : symbol};
+    return CompileResult{out : symbol, type : ds->type};
 }
 
 string SymbolExpression::toString() const
@@ -60,16 +60,51 @@ string TarqeemInstanceExpression::toString() const
 
 CompileResult BinaryExpression::compile(CompileContext &compile_context) const
 {
-    // TODO
-    return {};
+    auto lhsResult = _lhs->compile(compile_context);
+    if (!lhsResult.out.has_value() || !lhsResult.type.has_value())
+        compile_context.abort();
+
+    auto rhsResult = _rhs->compile(compile_context);
+    if (!rhsResult.out.has_value() || !rhsResult.type.has_value())
+        compile_context.abort();
+
+    if (lhsResult.type.value() != rhsResult.type.value())
+    {
+        compile_context.errorRegistry.invalidExpressionType(
+            lhsResult.type.value(), rhsResult.type.value(), _lineNumber);
+        return {};
+    }
+
+    // TODO: Expected Type ?
+    if (isBooleanType(lhsResult.type.value()) && isBooleanType(rhsResult.type.value()) &&
+        (isNumericalOperator(_op) || isComparator(_op)))
+    {
+        compile_context.errorRegistry.invalidExpressionType(
+            Type::INT, Type::BOOLEAN, _lineNumber);
+        return {};
+    }
+
+    auto tmpVar = compile_context.tempVarsRegistry.get();
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode : operatorToOpcode(_op),
+        arg1 : lhsResult.out.value(),
+        arg2 : rhsResult.out.value(),
+        result : tmpVar
+    });
+
+    compile_context.tempVarsRegistry.put(lhsResult.out.value());
+    compile_context.tempVarsRegistry.put(rhsResult.out.value());
+
+    Type expressionType = isComparator(_op) || isCombiner(_op) ? Type::BOOLEAN : lhsResult.type.value();
+    return CompileResult{out : tmpVar, type : expressionType};
 }
 
 string BinaryExpression::toString() const
 {
     string out = "BinaryExpression{";
-    out += lhs->toString();
-    out += " " + operatorToString(op) + " ";
-    out += rhs->toString() + "}";
+    out += _lhs->toString();
+    out += " " + operatorToString(_op) + " ";
+    out += _rhs->toString() + "}";
     return out;
 }
 
@@ -80,7 +115,7 @@ CompileResult NegExpression::compile(CompileContext &compile_context) const
         compile_context.abort();
 
     // TODO: Expected Type ?
-    if (!isNumerical(expResult.type.value()))
+    if (!isNumericalType(expResult.type.value()))
     {
         compile_context.errorRegistry.invalidExpressionType(
             Type::INT, expResult.type.value(), _lineNumber);
@@ -109,7 +144,8 @@ CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
     if (!expResult.out.has_value() || !expResult.type.has_value())
         compile_context.abort();
 
-    if(!isNumerical(expResult.type.value())) {
+    if (!isNumericalType(expResult.type.value()))
+    {
         compile_context.errorRegistry.invalidExpressionType(
             Type::INT, expResult.type.value(), _lineNumber);
         return {};
@@ -135,7 +171,8 @@ CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
     if (!expResult.out.has_value() || !expResult.type.has_value())
         compile_context.abort();
 
-    if(!isNumerical(expResult.type.value())) {
+    if (!isNumericalType(expResult.type.value()))
+    {
         compile_context.errorRegistry.invalidExpressionType(
             Type::REAL, expResult.type.value(), _lineNumber);
         return {};
@@ -179,7 +216,6 @@ CompileResult MshExpression::compile(CompileContext &compile_context) const
     compile_context.tempVarsRegistry.put(expResult.out.value());
 
     return CompileResult{out : tmpVar, type : expResult.type.value()};
-    return {};
 }
 
 string MshExpression::toString() const
@@ -189,8 +225,54 @@ string MshExpression::toString() const
 
 CompileResult CallDallahExpression::compile(CompileContext &compile_context) const
 {
-    // TODO
-    return {};
+    // error if symbol doesn't exist
+    auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
+    if (s == nullptr)
+    {
+        compile_context.errorRegistry.undeclaredSymbol(_name, _lineNumber);
+        return {};
+    }
+
+    FuncSymbol *funcSymbol = static_cast<FuncSymbol *>(s);
+
+    // Check arguments count equal to parameters count 
+    if (_args.size() != funcSymbol->args.size())
+    {
+        compile_context.errorRegistry.incorrectArgsCount(
+            funcSymbol->name, funcSymbol->args.size(), _args.size(), _lineNumber);
+        return {};
+    }
+
+    // Compile all arguments expressions and copy them to arguments symbols
+    for (auto i = 0; i < _args.size(); i++)
+    {
+        auto expResult = _args[i]->compile(compile_context);
+        if (!expResult.out.has_value() || !expResult.type.has_value())
+            return {};
+
+        if (expResult.type.value() != funcSymbol->args[i].type)
+        {
+            compile_context.errorRegistry.incorrectArgType(
+                funcSymbol->name, funcSymbol->args[i].symbol,
+                funcSymbol->args[i].type, expResult.type.value(), _lineNumber);
+            return {};
+        }
+
+        compile_context.quadruplesTable.push_back(Quadruple{
+            opcode : Opcode::CPY,
+            arg1 : expResult.out.value(),
+            arg2 : funcSymbol->args[i].symbol
+        });
+        compile_context.tempVarsRegistry.put(expResult.out.value());
+    }
+
+    // Add CALL to jump to function body
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode : Opcode::CALL,
+        arg1 : funcSymbol->bodyLabel,
+    });
+
+    return CompileResult{out : funcSymbol->returnSymbol, type : funcSymbol->returnType};
 }
 
 string CallDallahExpression::toString() const

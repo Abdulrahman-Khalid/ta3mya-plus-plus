@@ -125,8 +125,8 @@ program:
     $$ = new ProgramNode();
     if (prgnodeptr == nullptr) { prgnodeptr = $$; }
   }
-  | program stmt              { $1->addStatement($2); }
-  | program stmt T_NEWLINE    { $1->addStatement($2); }
+  | program stmt              { $1->appendStatement($2); }
+  | program stmt T_NEWLINE    { $1->appendStatement($2); }
   | program T_NEWLINE         { $$ = $1;              }
   ;
 
@@ -257,7 +257,10 @@ ta3reef_thabet:
   ;
 
 arg_decl:
-  type T_SYMBOL { $$ = new Ta3reefMota8ierStatement($1, *$2); }
+  type T_SYMBOL {
+    auto implicitInitialization = new LiteralExpression("0", $1); 
+    $$ = new Ta3reefMota8ierStatement($1, *$2, implicitInitialization); 
+  }
   ;
 
 args_decl:
