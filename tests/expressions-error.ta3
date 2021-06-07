@@ -5,5 +5,5 @@ sa7e7 bedayah() {
   sa7e7 a = 1
   sa7e7 b = 0
   sa7e7 c = sa7e7(a==1 we b==1)
-  basy c // must use all variables
+  basy 0 // the error is we didn't use all variables
 }
