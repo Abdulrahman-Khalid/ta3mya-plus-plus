@@ -58,11 +58,14 @@ int main(int argc, char **argv) {
 
 	prgnodeptr->addBedayahCall();
 	prgnodeptr->compile(compile_context);
+	compile_context.symbolTable.checkUnusedDataSymbols(compile_context.warningRegistry);
 
 	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
 		compile_context.errorRegistry.displayErrors();
 		return yyparse_return == 0? 1:yyparse_return;
 	}
+
+	compile_context.warningRegistry.displayWarnings();
 
 	DEBUG("finished compile, will print assembly");
 

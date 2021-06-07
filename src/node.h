@@ -31,6 +31,7 @@ struct CompileContext {
 	QuadruplesTable quadruplesTable;
 	TempVarsRegistry tempVarsRegistry;
 	ErrorRegistry errorRegistry;
+	WarningRegistry warningRegistry;
 	LabelsCreator labelsCreator;
 	stack<FuncSymbol*> functionDefinitions;
 	Map<EnumInstance, EnumValue> enumsMap;

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "error_registry.h"
 #include "optional.h"
 #include "type.h"
 #include "scope.h"
@@ -42,6 +43,7 @@ struct DataSymbol : public Symbol {
     bool isVar;
     bool isUsed = false;
     bool isInitialized = false;
+    int declarationLineNumber;
     Type type;
 };
 
@@ -69,4 +71,6 @@ public:
 
     // get the data (vars/const) and stringify them according to output-specs.md
     std::string getSections() const;
+
+    void checkUnusedDataSymbols(WarningRegistry& w);
 };

@@ -318,6 +318,7 @@ CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context)
     symbol->symbolType = SymbolType::DATA;
     symbol->isVar = true;
     symbol->type = _type;
+    symbol->declarationLineNumber = _lineNumber;
     if(_argDecl) {
         // Arg declarations are always initialized by calls
         symbol->isInitialized = true;
@@ -351,6 +352,7 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
     symbol->symbolType = SymbolType::DATA;
     symbol->isVar = false;
     symbol->type = _type;
+    symbol->declarationLineNumber = _lineNumber;
     compile_context.symbolTable.add(symbol);
 
     auto expResult = _init->compile(compile_context);
@@ -399,7 +401,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     funcSymbol->bodyLabel = compile_context.labelsCreator.next();
 
     DataSymbol* returnSymbol = new DataSymbol();
-    returnSymbol->name = "_" + _name + "_RET";
+    returnSymbol->name = "$RET_" + _name;
     returnSymbol->scope = compile_context.scopeTracker.get();
     returnSymbol->symbolType = SymbolType::DATA;
     returnSymbol->type = _type;
