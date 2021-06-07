@@ -57,7 +57,7 @@ CompileResult BinaryExpression::compile(CompileContext& compile_context) const {
 string BinaryExpression::toString() const {
     string s = "BinaryExpression{";
     s += lhs->toString() + "";
-    s += " " +  operation + " ";
+    s += " " +  operatorToString(op) + " ";
     s += rhs->toString() + "}";
     return s ;
 }

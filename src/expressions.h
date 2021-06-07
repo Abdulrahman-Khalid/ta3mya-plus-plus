@@ -1,4 +1,6 @@
 #pragma once
+
+#include "operator.h"
 #include "node.h"
 #include "type.h"
 
@@ -36,12 +38,13 @@ public:
 };
 
 class BinaryExpression : public Expression {
-public:
     Expression* lhs;
     Expression* rhs;
-    string operation;
-    inline BinaryExpression(Expression* lhs, string operation, Expression* rhs) : 
-        lhs(lhs), rhs(rhs), operation(operation) { }
+    Operator op;
+public:
+    inline BinaryExpression(Expression* lhs, Operator op, Expression* rhs) : 
+        lhs(lhs), rhs(rhs), op(op) { }
+
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };

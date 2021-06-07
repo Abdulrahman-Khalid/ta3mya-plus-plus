@@ -34,13 +34,13 @@ ProgramNode * prgnodeptr = nullptr;
 
 %token T_ASSIGNMENT
 
-%left <str_val> T_DOESNT_EQUAL T_EQUALS T_GREATER T_GREATER_EQUAL T_LESS T_LESS_EQUAL
-%left <str_val> T_MSH
-%left <str_val> T_WE T_AW
+%left <oper_val> T_DOESNT_EQUAL T_EQUALS T_GREATER T_GREATER_EQUAL T_LESS T_LESS_EQUAL
+%left <oper_val> T_MSH
+%left <oper_val> T_WE T_AW
 
-%left <str_val> T_PLUS T_NEG
-%left <str_val> T_MULT T_DIV T_MODULO
-%right <str_val> T_EXPONENT
+%left <oper_val> T_PLUS T_NEG
+%left <oper_val> T_MULT T_DIV T_MODULO
+%right <oper_val> T_EXPONENT
 
 %token T_BASY
 
@@ -87,8 +87,8 @@ ProgramNode * prgnodeptr = nullptr;
 %type <expr_val> call_dallah
 
 %type <type_val>  type
-%type <str_val>  binary_operator
-%type <str_val>  bool_comparator bool_compinator
+%type <oper_val>  binary_operator
+%type <oper_val>  bool_comparator bool_compinator
 
 %type <tarqeemlist_val> tarqeem_list
 %type <stmt_val>        ta3reef_tarqeem
@@ -115,6 +115,7 @@ ProgramNode * prgnodeptr = nullptr;
   Ta3reefDallahStatement* ta3reef_dallah_val;
   ArgsDeclarationsList* args_decl_val;
   Type type_val;
+  Operator oper_val;
 }
 
 %%
@@ -164,15 +165,15 @@ exp:
 
 binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
 binary_exp: 
-  exp binary_operator exp { $$ = new BinaryExpression($1, *$2, $3); }
+  exp binary_operator exp { $$ = new BinaryExpression($1, $2, $3); }
   ;
 
 bool_compinator: T_WE | T_AW;
 bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
 bool_exp:
-  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, *$2, $3); }
-  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, *$2, $3); }
-  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                                }
+  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, $2, $3); }
+  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, $2, $3); }
+  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                               }
   ;
 
 unary_exp: 

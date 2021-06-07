@@ -6,6 +6,7 @@ int yyerror(char *s);
 extern "C" int yylex(void);
 
 #define RETURN_STR(t) do { yylval.str_val = new std::string(yytext, yyleng); return (t); } while(0)
+#define RETURN_OPR(t) do { yylval.oper_val = t; return (T_##t); } while(0)
 %}
 
     // increment yylineno automatically
@@ -39,15 +40,15 @@ whitespace       [ \t]*
 "karrar"         { return T_KARRAR; }
 
 "msh"            { return T_MSH; }
-"we"             { RETURN_STR(T_WE); }
-"aw"             { RETURN_STR(T_AW); }
+"we"             { RETURN_OPR(WE); }
+"aw"             { RETURN_OPR(AW); }
 
-"!="             { RETURN_STR(T_DOESNT_EQUAL); }
-"=="             { RETURN_STR(T_EQUALS); }
-">"              { RETURN_STR(T_GREATER); }
-">="             { RETURN_STR(T_GREATER_EQUAL); }
-"<"              { RETURN_STR(T_LESS); }
-"<="             { RETURN_STR(T_LESS_EQUAL); }
+"!="             { RETURN_OPR(DOESNT_EQUAL); }
+"=="             { RETURN_OPR(EQUALS); }
+">"              { RETURN_OPR(GREATER); }
+">="             { RETURN_OPR(GREATER_EQUAL); }
+"<"              { RETURN_OPR(LESS); }
+"<="             { RETURN_OPR(LESS_EQUAL); }
 
 "fe"             { return T_FE; }
 "7alet"          { return T_7ALET; }
@@ -58,12 +59,12 @@ whitespace       [ \t]*
 "tarqeem"        { return T_TARQEEM; }
 
 "="              { return T_ASSIGNMENT; }
-"+"              { RETURN_STR(T_PLUS); }
-"-"              { RETURN_STR(T_NEG); }
-"*"              { RETURN_STR(T_MULT); }
-"/"              { RETURN_STR(T_DIV); }
-"%"              { RETURN_STR(T_MODULO); }
-"**"             { RETURN_STR(T_EXPONENT); }
+"+"              { RETURN_OPR(PLUS); }
+"-"              { RETURN_OPR(NEG); }
+"*"              { RETURN_OPR(MULT); }
+"/"              { RETURN_OPR(DIV); }
+"%"              { RETURN_OPR(MODULO); }
+"**"             { RETURN_OPR(EXPONENT); }
 
 "basy"           { return T_BASY; }
 

@@ -11,6 +11,7 @@ using namespace std;
 
 #include "statements.h"
 
+#include "operator.h"
 #include "type.h"
 #include "node.h"
 
