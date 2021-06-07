@@ -252,7 +252,7 @@ ta3reef_mota8ier:
   ;
 
 ta3reef_thabet:
-  T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); }
+  T_THABET type T_SYMBOL                     { yyerror("maynfa3sh te3mel const men 8er initial value"); YYABORT; }
   | T_THABET type T_SYMBOL T_ASSIGNMENT exp  { $$ = new Ta3reefThabetStatement($2, *$3, $5); }
   ;
 

@@ -55,3 +55,9 @@ void ErrorRegistry::nonDataSymbol(string symbol, string otherType, int line_numb
     string msg = "\"" + symbol + "\" was expected to be a var/const but it's " + otherType;
     errors.push_back({ prefix + msg });
 }
+
+void ErrorRegistry::constantAssignment(string symbol, int line_number) {
+    string prefix = generatePrefix();
+    string msg = "\"" + symbol + "\" is a constant, it cannot be assigned";
+    errors.push_back({ prefix + msg });
+}

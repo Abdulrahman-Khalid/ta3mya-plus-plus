@@ -23,6 +23,7 @@ public:
     void uninitializedVariable(string symbol, int line_number = 0); 
     void invalidExpressionType(Type expected, Type actual, int line_number = 0);
     void nonDataSymbol(string symbol, string otherType, int line_number = 0);
+    void constantAssignment(string symbol, int line_number = 0);
     void unusedSymbol(string symbol);
 
     inline bool empty() const { return errors.empty(); }

@@ -203,6 +203,12 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
 
     auto dataSymbol = (DataSymbol*)s;
 
+    // error if symbol is const
+    if (!dataSymbol->isVar) {
+        compile_context.errorRegistry.constantAssignment(_symbol, _lineNumber);
+        return {};
+    }
+
     auto expResult = _exp->compile(compile_context);
     if (!expResult.out.has_value() || !expResult.type.has_value()) compile_context.abort();
 
