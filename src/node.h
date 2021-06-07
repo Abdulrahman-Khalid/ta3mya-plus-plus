@@ -6,7 +6,7 @@
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
-#include "quadraples.h"
+#include "quadruples.h"
 #include "tmpvars.h"
 #include "error_registry.h"
 #include "optional.h"

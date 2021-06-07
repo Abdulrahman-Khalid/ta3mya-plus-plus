@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "quadraples.h"
+#include "quadruples.h"
 
 using std::vector;
 
