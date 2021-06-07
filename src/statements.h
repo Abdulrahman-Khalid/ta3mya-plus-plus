@@ -142,9 +142,8 @@ public:
 
     virtual CompileResult compile(CompileContext &compile_context) const override;
     virtual string toString() const override;
-    inline FuncSymbol::Arg getAsArg() {
-        return {_type, _symbol};
-    } 
+
+    inline string getSymbolName() { return _symbol; }
 };
 
 class Ta3reefThabetStatement : public Statement

@@ -251,22 +251,23 @@ CompileResult CallDallahExpression::compile(CompileContext &compile_context) con
     // Compile all arguments expressions and copy them to arguments symbols
     for (auto i = 0; i < _args.size(); i++)
     {
+        auto argSymbol = static_cast<DataSymbol*> (funcSymbol->args[i]);
         auto expResult = _args[i]->compile(compile_context);
         if (!expResult.out.has_value() || !expResult.type.has_value())
             return {};
 
-        if (expResult.type.value() != funcSymbol->args[i].type)
+        if (expResult.type.value() != argSymbol->type)
         {
             compile_context.errorRegistry.incorrectArgType(
-                funcSymbol->name, funcSymbol->args[i].symbol,
-                funcSymbol->args[i].type, expResult.type.value(), _lineNumber);
+                funcSymbol->name, argSymbol->name,
+                argSymbol->type, expResult.type.value(), _lineNumber);
             return {};
         }
 
         compile_context.quadruplesTable.push_back(Quadruple{
             opcode : Opcode::CPY,
             arg1 : expResult.out.value(),
-            arg2 : funcSymbol->args[i].symbol
+            arg2 : argSymbol->toString()
         });
         compile_context.tempVarsRegistry.put(expResult.out.value());
     }

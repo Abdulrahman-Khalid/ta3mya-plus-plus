@@ -46,6 +46,9 @@ struct CompileResult {
 
 	// type of expression passed to parent expression
 	Optional<Type> type;
+
+	// scope of BlockStatement
+	Optional<Scope> scope;
 };
 
 class Node {
