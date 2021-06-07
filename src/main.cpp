@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 
 	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
 		compile_context.errorRegistry.displayErrors();
-		return yyparse_return;
+		return yyparse_return == 0? 1:yyparse_return;
 	}
 
 	DEBUG("finished compile, will print assembly");
