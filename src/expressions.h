@@ -52,8 +52,8 @@ public:
 class NegExpression : public Expression {
 public:
     Expression* _exp;
-    inline NegExpression(Expression*  toBeNegated) : 
-        _exp(_exp) { }
+    inline NegExpression(Expression* exp) : 
+        _exp(exp) { }
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
@@ -61,8 +61,8 @@ public:
 class MshExpression : public Expression {
 public:
     Expression* _exp;
-    inline MshExpression(Expression*  toBeNegated) : 
-        _exp(_exp) { }
+    inline MshExpression(Expression* exp) : 
+        _exp(exp) { }
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
@@ -70,7 +70,7 @@ public:
 class ToSa7e7Expression : public Expression {
     Expression* _exp;
 public:
-    inline ToSa7e7Expression(Expression*  exp): _exp(exp) { }
+    inline ToSa7e7Expression(Expression* exp): _exp(exp) { }
 
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
@@ -79,7 +79,7 @@ public:
 class To7a2i2iExpression : public Expression {
     Expression* _exp;
 public:
-    inline To7a2i2iExpression(Expression*  exp): _exp(exp) { }
+    inline To7a2i2iExpression(Expression* exp): _exp(exp) { }
 
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
