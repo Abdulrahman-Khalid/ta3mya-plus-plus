@@ -10,8 +10,11 @@ class ProgramNode : public Node
 {
 private:
     std::vector<Statement *> _stmts;
+    bool _isRoot;
 
 public:
+    inline void setRoot() { _isRoot = true; }
+
     virtual CompileResult compile(CompileContext &compile_context) const override;
     virtual string toString() const override;
 
@@ -24,8 +27,6 @@ public:
     {
         _stmts.insert(_stmts.begin(), stmt);
     }
-
-    void addBedayahCall();
 };
 
 class BlockStatement : public Statement

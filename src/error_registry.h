@@ -33,6 +33,8 @@ public:
     void incorrectArgsCount(string function_name, int expected, int actual, int line_number);
     void incorrectArgType(string function_name, string arg_name, Type expected, Type actual, int line_number);
     void invalidEnumInstance(string instance, int line_number);
+    void noBedayah();
+    void bedayahHasAnonFuncType(string actual);
 
     inline bool empty() const { return errors.empty(); }
     inline void displayErrors() const { for(auto error : errors) error.display(); }
