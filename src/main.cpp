@@ -17,9 +17,6 @@ inline void printProgram(const Program& p) {
 	for (const auto& line : p) {
 		std::cout << line << std::endl;
 	}
-	if (p.size() > 0) {
-		std::cout << endl;
-	}
 }
 
 int main(int argc, char **argv) {
