@@ -39,7 +39,7 @@ CompileResult SymbolExpression::compile(CompileContext &compile_context) const
 
     ds->isUsed = true;
 
-    return CompileResult{out : symbol, type : ds->type};
+    return CompileResult{out : ds->toString(), type : ds->type};
 }
 
 string SymbolExpression::toString() const
@@ -109,13 +109,12 @@ string BinaryExpression::toString() const
 }
 
 CompileResult NegExpression::compile(CompileContext &compile_context) const
-{
+{   
     auto expResult = _exp->compile(compile_context);
     if (!expResult.out.has_value() || !expResult.type.has_value()) {
         return {};
     }
 
-    // TODO: Expected Type ?
     if (!isNumericalType(expResult.type.value()))
     {
         compile_context.errorRegistry.invalidExpressionType(
@@ -160,6 +159,8 @@ CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
         arg2 : tmpVar
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
+
+    return CompileResult{out : tmpVar, type : Type::INT};
 }
 
 string ToSa7e7Expression::toString() const
@@ -189,7 +190,7 @@ CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
 
-    return CompileResult{out : tmpVar, type : expResult.type.value()};
+    return CompileResult{out : tmpVar, type : Type::REAL};
 }
 
 string To7a2i2iExpression::toString() const
@@ -219,7 +220,7 @@ CompileResult MshExpression::compile(CompileContext &compile_context) const
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
 
-    return CompileResult{out : tmpVar, type : expResult.type.value()};
+    return CompileResult{out : tmpVar, type : Type::BOOLEAN};
 }
 
 string MshExpression::toString() const
