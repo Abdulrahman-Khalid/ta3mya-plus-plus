@@ -1,7 +1,7 @@
 #include "expressions.h"
 
 CompileResult LiteralExpression::compile(CompileContext& compile_context) const {
-    return CompileResult {out: literal };
+    return CompileResult {out: literal, type: type };
 }
 
 string LiteralExpression::toString() const {

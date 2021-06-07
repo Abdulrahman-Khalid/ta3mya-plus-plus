@@ -45,6 +45,6 @@ bool SymbolTable::add(Symbol* s ) {
     return true;
   }
 
-  // crete new vector
+  // create new vector
   Symbol_Table.insert({name, vector<Symbol*>({s})});
 }

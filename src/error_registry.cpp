@@ -37,9 +37,9 @@ void ErrorRegistry::uninitializedVariable(string symbol, int line_number) {
     errors.push_back({ prefix + msg });
 }
 
-void ErrorRegistry::invalidSymbolType(string symbol, Type expected, Type actual, int line_number) {
+void ErrorRegistry::invalidExpressionType(Type expected, Type actual, int line_number) {
     string prefix = generatePrefix(line_number);
-    string msg = "Symbol type mismatch. \"" + symbol + "\" expected to be " + typeToString(expected)
+    string msg = "Invalid expression type, expected to be " + typeToString(expected)
         + ", but was found to be " + typeToString(actual);
     errors.push_back({ prefix + msg });
 }

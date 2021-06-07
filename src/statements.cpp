@@ -77,26 +77,26 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
         }
         // Add JZ
         compile_context.quadruplesTable.push_back(Quadruple{ 
-            .opcode = Opcode::JZ, .arg1 = conditionResult.out.value(),
-            .arg2 = nextJZLabel, .label = currentJZLabel
+            opcode: Opcode::JZ, arg1: conditionResult.out.value(),
+            arg2: nextJZLabel, label: currentJZLabel
         });
         // Add block
         _conditionalBlocks[i].block->compile(compile_context);
         // Add JMP
         compile_context.quadruplesTable.push_back(Quadruple{ 
-            .opcode = Opcode::JMP, .arg1 = doneLabel
+            opcode: Opcode::JMP, arg1: doneLabel
         });
     }    
     // Add 8ero label & block if it exists
     if (_8eroBlock) {
         compile_context.quadruplesTable.push_back(Quadruple{
-            .opcode = Opcode::NOP, .label = nextJZLabel
+            opcode: Opcode::NOP, label: nextJZLabel
         });
         _8eroBlock->compile(compile_context);
     }
     // Add done label
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::NOP, .label = doneLabel
+        opcode: Opcode::NOP, label: doneLabel
     });
     return {};
 }
@@ -129,7 +129,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     auto loopLabel = compile_context.labelsCreator.next();
     // Add LOOP label
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::NOP, .label = loopLabel
+        opcode: Opcode::NOP, label: loopLabel
     });
     // Add block
     _block->compile(compile_context);
@@ -138,7 +138,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     if (!conditionResult.out.has_value()) compile_context.abort();
     // Add JNZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::JNZ, .arg1 = conditionResult.out.value(), .arg2 = loopLabel
+        opcode: Opcode::JNZ, arg1: conditionResult.out.value(), arg2: loopLabel
     });
     return {};
 }
@@ -164,18 +164,18 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     if (!conditionResult.out.has_value()) compile_context.abort();
     // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::JZ, .arg1 = conditionResult.out.value(),
-        .arg2 = doneLabel, .label = loopLabel
+        opcode: Opcode::JZ, arg1: conditionResult.out.value(),
+        arg2: doneLabel, label: loopLabel
     });
     // Add block
     _block->compile(compile_context);
     // Add JML
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::JMP, .arg1 = loopLabel
+        opcode: Opcode::JMP, arg1: loopLabel
     });
     // Add DONE label
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::NOP, .label = doneLabel
+        opcode: Opcode::NOP, label: doneLabel
     });
     return {};
 }
@@ -185,14 +185,71 @@ string KarrarL7dStatement::toString() const {
             + " , block: " + _block->toString() + "}";
 }
 
+CompileResult AssignmentStatement::compile(CompileContext& compile_context) const {
+    auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
+
+    // error if symbol doesn't exist
+    if (s == nullptr) {
+        compile_context.errorRegistry.undeclaredSymbol(_symbol, _lineNumber);
+        return {};
+    }
+
+    // error if symbol is not data symbol
+    if (s->symbolType != SymbolType::DATA) {
+        compile_context.errorRegistry.nonDataSymbol(_symbol, symbolTypeToString(s->symbolType), _lineNumber);
+        return {};
+    }
+
+    auto dataSymbol = (DataSymbol*)s;
+
+    auto expResult = _exp->compile(compile_context);
+    if (!expResult.out.has_value() || !expResult.type.has_value()) compile_context.abort();
+
+    // TODO: Handle different enum types
+    if (dataSymbol->type != expResult.type.value()) {
+        compile_context.errorRegistry.invalidExpressionType(dataSymbol->type, expResult.type.value());
+        return {};
+    }
+
+    compile_context.quadruplesTable.push_back(Quadruple{
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: s->name
+    });
+
+    dataSymbol->isInitialized = true;
+    return {};
+}
+
+string AssignmentStatement::toString() const {
+    return "AssignmentStatement{symbol: " + _symbol + ", exp: " + _exp->toString() + "}";
+}
+
 CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    // error if symbol already exists
+    auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
+    if (s != nullptr) {
+        compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
+        return {};
+    }
+
+    // Create a new entry in the symbol table
+    DataSymbol* symbol = new DataSymbol();
+    symbol->name = _symbol;
+    symbol->scope = compile_context.scopeTracker.get();
+    symbol->symbolType = SymbolType::DATA;
+    symbol->isVar = true;
+    symbol->type = _type;
+    compile_context.symbolTable.add(symbol);
+
+    // Assign the symbol if an assignment exists
+    if(_assignment) {
+        _assignment->compile(compile_context);
+    }
     return {};
 }
 
 string Ta3reefMota8ierStatement::toString() const {
     std::string out = "Ta3reefMota8ierStatement{symbol: " + _symbol + ", type: " + typeToString(_type);
-    return _init ? out + ", init_exp: " + _init->toString() + "}" : out + "}";
+    return _assignment ? out + ", assignment_exp: " + _assignment->toString() + "}" : out + "}";
 }
 
 CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
@@ -240,15 +297,6 @@ string Ta3reefTarqeemStatement::toString() const {
     }
     
     return "Ta3reefTarqeemStatement{name: " + _name + ", list: [" + listString +"]}";
-}
-
-CompileResult AssignmentStatement::compile(CompileContext& compile_context) const {
-    // TODO
-    return {};
-}
-
-string AssignmentStatement::toString() const {
-    return "AssignmentStatement{symbol: " + _symbol + ", exp: " + _exp->toString() + "}";
 }
 
 LefStatement::LefStatement(Statement* init, Expression* condition,

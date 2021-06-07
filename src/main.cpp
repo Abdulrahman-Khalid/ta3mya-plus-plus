@@ -55,15 +55,16 @@ int main(int argc, char **argv) {
 	DEBUG("started parsing");
 
 	int yyparse_return = yyparse();
-	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
-		compile_context.errorRegistry.displayErrors();
-		return yyparse_return;
-	}
 
 	DEBUG("finished parsing, will compile");
 	DEBUG(prgnodeptr->toString());
 
 	prgnodeptr->compile(compile_context);
+
+	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
+		compile_context.errorRegistry.displayErrors();
+		return yyparse_return;
+	}
 
 	DEBUG("finished compile, will print assembly");
 

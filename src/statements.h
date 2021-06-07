@@ -89,14 +89,27 @@ public:
     virtual string toString() const override;
 };
 
+class AssignmentStatement : public Statement {
+private:
+    std::string _symbol;
+    Expression* _exp;
+public:
+    inline AssignmentStatement(std::string symbol, Expression* exp) :
+        _symbol(symbol), _exp(exp) {}
+
+    virtual CompileResult compile(CompileContext& compile_context) const override;
+    virtual string toString() const override;
+};
+
 class Ta3reefMota8ierStatement : public Statement {
 private:
     Type _type;
     std::string _symbol;
-    Expression* _init;
+    AssignmentStatement* _assignment;
 public:
     inline Ta3reefMota8ierStatement(Type type, std::string symbol, Expression* init = nullptr) :
-        _type(type), _symbol(symbol), _init(init) {}
+        _type(type), _symbol(symbol),
+        _assignment(init ? new AssignmentStatement(_symbol, init) : nullptr) {}
 
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
@@ -140,18 +153,6 @@ class Ta3reefTarqeemStatement : public Statement {
 public:
     inline Ta3reefTarqeemStatement(std::string name, TarqeemList list): _name(name), _list(list) {}
     
-    virtual CompileResult compile(CompileContext& compile_context) const override;
-    virtual string toString() const override;
-};
-
-class AssignmentStatement : public Statement {
-private:
-    std::string _symbol;
-    Expression* _exp;
-public:
-    inline AssignmentStatement(std::string symbol, Expression* exp) :
-        _symbol(symbol), _exp(exp) {}
-
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };

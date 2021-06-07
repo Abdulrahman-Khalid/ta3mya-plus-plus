@@ -46,6 +46,9 @@ struct CompileResult {
     // out is the name of the variable the holds the expression result
     // it could be a literal to be used directly
     Optional<std::string> out;
+
+	// type of expression passed to parent expression
+	Optional<Type> type;
 };
 
 class Node {
