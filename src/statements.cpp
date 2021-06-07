@@ -77,7 +77,7 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
         }
         // Add JZ
         compile_context.quadruplesTable.push_back(Quadruple{ 
-            .opcode = Opcode::JMPZ, .arg1 = conditionResult.out.value(), 
+            .opcode = Opcode::JZ, .arg1 = conditionResult.out.value(),
             .arg2 = nextJZLabel, .label = currentJZLabel
         });
         // Add block
@@ -120,7 +120,26 @@ void HaletStatement::attachSymbol(SymbolExpression* symbol) {
 }
 
 CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    /*
+    LOOP: NOP
+    B
+    JNZ C LOOP
+    */
+    // Create LOOP label
+    auto loopLabel = compile_context.labelsCreator.next();
+    // Add LOOP label
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::NOP, .label = loopLabel
+    });
+    // Add block
+    _block->compile(compile_context);
+    // Get condition
+    auto conditionResult = _condition->compile(compile_context);
+    if (!conditionResult.out.has_value()) compile_context.abort();
+    // Add JNZ
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::JNZ, .arg1 = conditionResult.out.value(), .arg2 = loopLabel
+    });
     return {};
 }
 
@@ -131,7 +150,7 @@ string TalmaStatement::toString() const {
 
 CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     /*
-    LOOP: JZ C END
+    LOOP: JZ C DONE
     B
     JMP LOOP
     DONE: NOP
@@ -145,7 +164,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     if (!conditionResult.out.has_value()) compile_context.abort();
     // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        .opcode = Opcode::JMPZ, .arg1 = conditionResult.out.value(),
+        .opcode = Opcode::JZ, .arg1 = conditionResult.out.value(),
         .arg2 = doneLabel, .label = loopLabel
     });
     // Add block
