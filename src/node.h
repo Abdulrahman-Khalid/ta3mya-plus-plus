@@ -32,6 +32,10 @@ struct CompileContext {
 	
 	inline Program toProgram() const {
 		Program p;
+		
+		p.push_back(symbolTable.getSections());
+		p.push_back("; code segment");
+		
 		for (const auto& quadrauple : quadruplesTable) {
 			p.push_back(quadrauple.toString());
 		}

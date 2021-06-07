@@ -48,3 +48,41 @@ bool SymbolTable::add(Symbol* s ) {
   // create new vector
   Symbol_Table.insert({name, vector<Symbol*>({s})});
 }
+
+std::vector<DataSymbol*> SymbolTable::_getAllDataSymbols() const {
+  auto v = std::vector<DataSymbol*>();
+
+  for (const auto& pair : Symbol_Table) {
+    for (const auto& s : pair.second) {
+      if (s->symbolType == SymbolType::DATA) {
+        v.push_back(static_cast<DataSymbol*>(s));
+      }
+    }
+  }
+
+  return v;
+}
+
+std::string SymbolTable::getSections() const {
+  std::string varSec;
+  std::string constSec;
+
+  for (const auto& ds : _getAllDataSymbols()) {
+    std::string str = ds->toString();
+
+    if (ds->isVar) {
+      varSec += "%var " + str + '\n';
+    } else {
+      constSec += "%const " + str + '\n';
+    }
+  }
+
+  if (varSec.size() > 0) {
+    varSec = "; variables declarations\n" + varSec;
+  }
+  if (constSec.size() > 0) {
+    constSec = "; constants declarations\n" + constSec;
+  }
+
+  return varSec + constSec;
+}
