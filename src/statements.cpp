@@ -157,7 +157,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     /*
     LOOP:
     B
-    JNZ C LOOP
+    JZ C LOOP
     */
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
@@ -172,9 +172,9 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     if (!conditionResult.out.has_value()) {
         return {};
     }
-    // Add JNZ
+    // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::JNZ, arg1: conditionResult.out.value(), arg2: loopLabel
+        opcode: Opcode::JZ, arg1: conditionResult.out.value(), arg2: loopLabel
     });
     compile_context.tempVarsRegistry.put(conditionResult.out.value());
 
