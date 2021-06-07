@@ -1,4 +1,5 @@
 #include "statements.h"
+#include "operator.h"
 
 CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     // TODO
@@ -115,7 +116,7 @@ string LwStatement::toString() const {
 
 void HaletStatement::attachSymbol(SymbolExpression* symbol) {
     for (auto& conditionalBlock: _conditionalBlocks) {
-        conditionalBlock.condition = new BinaryExpression(symbol, "==", conditionalBlock.condition);
+        conditionalBlock.condition = new BinaryExpression(symbol, Operator::EQUALS, conditionalBlock.condition);
     }
 }
 
