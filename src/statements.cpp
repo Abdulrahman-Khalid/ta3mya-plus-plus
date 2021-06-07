@@ -46,28 +46,29 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     ....
     JZ C1 L1
     B1
-    JMP L4
+    JMP DONE
 
     L1: JZ C2 L2
     B2
-    JMP L4
+    JMP DONE
 
     L2: JZ C3 L3
     B3
-    JMP L4
+    JMP DONE
 
     L3: NOP
     B4  (if it exists)
-    L4: NOP
+    DONE: NOP
     */
     string doneLabel = compile_context.labelsCreator.next(), nextJZLabel = "";
     // Create conditionals quadruples
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
         // Get condition
         auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
+        if (!conditionResult.out.has_value()) compile_context.abort();
         // Get label of current JZ
         auto currentJZLabel = nextJZLabel;
-        // If this is the last conditional and no _8eroBlock exists then JZ to doneLabel
+        // If this is the last conditional and no _8eroBlock exists then JZ to DONE
         if (i == _conditionalBlocks.size() - 1 && !_8eroBlock) {
             nextJZLabel = doneLabel;
         } else {
@@ -129,7 +130,34 @@ string TalmaStatement::toString() const {
 }
 
 CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    /*
+    LOOP: JZ C END
+    B
+    JMP LOOP
+    DONE: NOP
+    */
+    // Create LOOP label
+    auto loopLabel = compile_context.labelsCreator.next();
+    // Create DONE label
+    auto doneLabel = compile_context.labelsCreator.next();
+    // Get condition
+    auto conditionResult = _condition->compile(compile_context);
+    if (!conditionResult.out.has_value()) compile_context.abort();
+    // Add JZ
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::JMPZ, .arg1 = conditionResult.out.value(),
+        .arg2 = doneLabel, .label = loopLabel
+    });
+    // Add block
+    _block->compile(compile_context);
+    // Add JML
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::JMP, .arg1 = loopLabel
+    });
+    // Add DONE label
+    compile_context.quadruplesTable.push_back(Quadruple{
+        .opcode = Opcode::NOP, .label = doneLabel
+    });
     return {};
 }
 
@@ -211,7 +239,8 @@ LefStatement::LefStatement(Statement* init, Expression* condition,
 }
 
 CompileResult LefStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    _init->compile(compile_context);
+    _talmaStmt->compile(compile_context);
     return {};
 }
 
