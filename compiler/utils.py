@@ -70,7 +70,7 @@ def showHelp():
 
 def chooseProgDirectory(assemblerObj):
     progLocation = tk.filedialog.askdirectory(
-        initialdir="./", title="Select debug file directory")
+        initialdir="./", title="Select Compilation directory")
 
     if(progLocation):
         assemblerObj.setDebugFile(progLocation+"/Debug.txt")
