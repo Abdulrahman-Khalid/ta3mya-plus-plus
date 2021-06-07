@@ -49,3 +49,9 @@ void ErrorRegistry::unusedSymbol(string symbol) {
     string msg = "\"" + symbol + "\" defined but not used";
     errors.push_back({ prefix + msg });
 }
+
+void ErrorRegistry::nonDataSymbol(string symbol, string otherType, int line_number) {
+    string prefix = generatePrefix();
+    string msg = "\"" + symbol + "\" was expected to be a var/const but it's " + otherType;
+    errors.push_back({ prefix + msg });
+}

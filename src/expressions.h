@@ -18,10 +18,10 @@ public:
 };
 
 class SymbolExpression : public Expression {
-public:
     string symbol;
-    inline SymbolExpression(string symbol) : 
-        symbol(symbol) { }
+public:
+    inline SymbolExpression(string symbol): symbol(symbol) { }
+
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };

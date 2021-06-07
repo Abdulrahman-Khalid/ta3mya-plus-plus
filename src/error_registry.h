@@ -22,6 +22,7 @@ public:
     void undeclaredSymbol(string symbol, int line_number = 0);
     void uninitializedVariable(string symbol, int line_number = 0); 
     void invalidSymbolType(string symbol, Type expected, Type actual, int line_number = 0);
+    void nonDataSymbol(string symbol, string otherType, int line_number = 0);
     void unusedSymbol(string symbol);
 
     inline bool empty() { return errors.empty(); }
