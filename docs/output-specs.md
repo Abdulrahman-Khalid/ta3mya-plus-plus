@@ -67,10 +67,12 @@ You can jump to previosly declared label, or a label that is declared later in t
 | CALL   | b    |      |        | stack.push(pos); goto b      |
 | RTN    |      |      |        | goto stack.pop()             |
 | JMP    | b    |      |        | goto b                       |
-| JMPZ   | x    | b    |        | if x == 0 { goto b }         |
+| JZ     | x    | b    |        | if x == 0 { goto b }         |
+| JNZ    | x    | b    |        | if x != 0 { goto b }         |
 | GT     | x    | y    | z      | z = x >  y? 1:0              |
 | LT     | x    | y    | z      | z = x >  y? 1:0              |
 | GTE    | x    | y    | z      | z = x >= y? 1:0              |
 | LTE    | x    | y    | z      | z = x >= y? 1:0              |
 | AND    | x    | y    | z      | z = x & y                    |
 | OR     | x    | y    | z      | z = x \| y                   |
+| NOP    |      |      |        | placeholder for a label      |
