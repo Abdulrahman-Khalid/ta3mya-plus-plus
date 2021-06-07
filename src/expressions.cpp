@@ -9,8 +9,31 @@ string LiteralExpression::toString() const {
 }
 
 CompileResult SymbolExpression::compile(CompileContext& compile_context) const {
+    auto s = compile_context.symbolTable.get(symbol, compile_context.scopeTracker.get());
+
     // error if symbol doesn't exist
-    return {};
+    if (s == nullptr) {
+        compile_context.errorRegistry.undeclaredSymbol(symbol, _lineNumber);
+        return {};
+    }
+
+    // error if symbol is not data symbol
+    if (s->symbolType != SymbolType::DATA) {
+        compile_context.errorRegistry.nonDataSymbol(symbol, symbolTypeToString(s->symbolType), _lineNumber);
+        return {};
+    }
+
+    DataSymbol* ds = static_cast<DataSymbol*>(s);
+
+    // error if symbol is not initialized
+    if (!ds->isInitialized) {
+        compile_context.errorRegistry.uninitializedVariable(symbol, _lineNumber);
+        return {};
+    }
+
+    ds->isUsed = true;
+
+    return CompileResult {out: symbol};
 }
 
 string SymbolExpression::toString() const {

@@ -11,10 +11,25 @@
 using std::string;
 using std::vector;
 
+enum class SymbolType: uint8_t { FUNC, TARQEEM, DATA };
+
+inline string symbolTypeToString(SymbolType st) {
+    switch (st) {
+    case SymbolType::FUNC:
+        return "Function";
+    case SymbolType::TARQEEM:
+        return "Tarqeem";
+    case SymbolType::DATA:
+        return "Data";
+    }
+
+    return "????";
+}
+
 struct Symbol {
     string name;
     Scope scope;
-    
+    SymbolType symbolType;
 
     // {name: "a", scope: [0,1,1]}.toString() == ":0:1:1:a"
     inline string toString() const {
@@ -28,7 +43,6 @@ struct DataSymbol : public Symbol {
     bool isInitialized = false;
     Type type;
 };
-struct FuncSymbol : public Symbol {};
 
 class SymbolTable {
 private:
