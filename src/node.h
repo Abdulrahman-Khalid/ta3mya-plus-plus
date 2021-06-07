@@ -6,7 +6,7 @@
 #include "program.h"
 #include "scope.h"
 #include "symbols.h"
-#include "quadraples.h"
+#include "quadruples.h"
 #include "tmpvars.h"
 #include "error_registry.h"
 #include "optional.h"
@@ -46,6 +46,9 @@ struct CompileResult {
 
 	// type of expression passed to parent expression
 	Optional<Type> type;
+
+	// scope of BlockStatement
+	Optional<Scope> scope;
 };
 
 class Node {

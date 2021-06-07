@@ -80,4 +80,3 @@ You can jump to previosly declared label, or a label that is declared later in t
 | AND    | x    | y    | z      | z = x & y                    |
 | OR     | x    | y    | z      | z = x \| y                   |
 | NOT    | x    | z    |        | z = !x                       |
-| NOP    |      |      |        | placeholder for a label      |

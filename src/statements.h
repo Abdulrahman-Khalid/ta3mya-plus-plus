@@ -132,19 +132,19 @@ public:
 class Ta3reefMota8ierStatement : public Statement
 {
 private:
+    bool _argDecl;
     Type _type;
     std::string _symbol;
     AssignmentStatement *_assignment;
 
 public:
-    inline Ta3reefMota8ierStatement(Type type, std::string symbol, Expression *init = nullptr) : _type(type), _symbol(symbol),
-                                                                                                 _assignment(init ? new AssignmentStatement(_symbol, init) : nullptr) {}
+    inline Ta3reefMota8ierStatement(Type type, std::string symbol, Expression *init = nullptr, bool argDecl = false)
+        : _type(type), _symbol(symbol), _assignment(init ? new AssignmentStatement(_symbol, init) : nullptr), _argDecl(argDecl) {}
 
     virtual CompileResult compile(CompileContext &compile_context) const override;
     virtual string toString() const override;
-    inline FuncSymbol::Arg getAsArg() {
-        return {_type, _symbol};
-    } 
+
+    inline string getSymbolName() { return _symbol; }
 };
 
 class Ta3reefThabetStatement : public Statement

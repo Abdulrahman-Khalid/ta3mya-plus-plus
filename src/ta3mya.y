@@ -262,10 +262,7 @@ ta3reef_thabet:
   ;
 
 arg_decl:
-  type T_SYMBOL {
-    auto implicitInitialization = new LiteralExpression("0", $1); 
-    $$ = new Ta3reefMota8ierStatement($1, *$2, implicitInitialization); 
-  }
+  type T_SYMBOL { $$ = new Ta3reefMota8ierStatement($1, *$2, nullptr, true); }
   ;
 
 args_decl:

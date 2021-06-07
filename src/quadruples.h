@@ -9,13 +9,13 @@
 enum class Opcode: uint8_t {
     CPY = 0, INT, ADD, SUB, MUL, DIV, MOD, NEG, POW, REAL, 
     RADD, RSUB, RMUL, RDIV, RMOD, RNEG, RPOW, CALL, RTN, JMP, 
-    JZ, JNZ, EQ, NEQ, GT, LT, GTE, LTE, AND, OR, NOT, NOP,
+    JZ, JNZ, EQ, NEQ, GT, LT, GTE, LTE, AND, OR, NOT, LABEL,
 };
 
 const std::string _opcodeToString[] = {
     "CPY", "INT", "ADD", "SUB", "MUL", "DIV", "MOD", "NEG", "POW", "REAL", 
     "RADD", "RSUB", "RMUL", "RDIV", "RMOD", "RNEG", "RPOW", "CALL", "RTN", "JMP", 
-    "JZ", "JNZ", "EQ", "NEQ", "GT", "LT", "GTE", "LTE", "AND", "OR", "NOT", "NOP",
+    "JZ", "JNZ", "EQ", "NEQ", "GT", "LT", "GTE", "LTE", "AND", "OR", "NOT", "LABEL",
 };
 
 inline std::string opcodeToString(Opcode opcode) {
@@ -28,6 +28,10 @@ struct Quadruple {
     Optional<std::string> label;
 
     inline std::string toString() const {
+        if (opcode == Opcode::LABEL) {
+            return *label + ":";
+        }
+
         std::string labelStr = label? (*label + ":\n") : "";
 
         std::string args = " ";

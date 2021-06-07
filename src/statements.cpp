@@ -5,8 +5,9 @@
 CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     compile_context.scopeTracker.push();
     _programNode->compile(compile_context);
+    auto scope = compile_context.scopeTracker.get();
     compile_context.scopeTracker.pop();
-    return {};
+    return { scope: scope };
 }
 
 string BlockStatement::toString() const {
@@ -84,9 +85,9 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     B3
     JMP DONE
 
-    L3: NOP
+    L3:
     B4  (if it exists)
-    DONE: NOP
+    DONE:
     */
     string doneLabel = compile_context.labelsCreator.next();
     Optional<string> nextJZLabel;
@@ -123,13 +124,13 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     // Add 8ero label & block if it exists
     if (_8eroBlock) {
         compile_context.quadruplesTable.push_back(Quadruple{
-            opcode: Opcode::NOP, label: nextJZLabel
+            opcode: Opcode::LABEL, label: nextJZLabel
         });
         _8eroBlock->compile(compile_context);
     }
     // Add done label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: doneLabel
+        opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
 }
@@ -154,7 +155,7 @@ void HaletStatement::attachSymbol(SymbolExpression* symbol) {
 
 CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const {
     /*
-    LOOP: NOP
+    LOOP:
     B
     JNZ C LOOP
     */
@@ -162,7 +163,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     auto loopLabel = compile_context.labelsCreator.next();
     // Add LOOP label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: loopLabel
+        opcode: Opcode::LABEL, label: loopLabel
     });
     // Add block
     _block->compile(compile_context);
@@ -190,7 +191,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     LOOP: JZ C DONE
     B
     JMP LOOP
-    DONE: NOP
+    DONE:
     */
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
@@ -215,7 +216,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     });
     // Add DONE label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: doneLabel
+        opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
 }
@@ -240,7 +241,7 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
         return {};
     }
 
-    auto dataSymbol = (DataSymbol*)s;
+    auto dataSymbol = static_cast<DataSymbol*> (s);
 
     // error if symbol is const
     if (!dataSymbol->isVar) {
@@ -255,12 +256,12 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
 
     // TODO: Handle different enum types
     if (dataSymbol->type != expResult.type.value()) {
-        compile_context.errorRegistry.invalidExpressionType(dataSymbol->type, expResult.type.value());
+        compile_context.errorRegistry.invalidExpressionType(dataSymbol->type, expResult.type.value(), _lineNumber);
         return {};
     }
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: s->name
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: s->toString()
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
 
@@ -287,6 +288,10 @@ CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context)
     symbol->symbolType = SymbolType::DATA;
     symbol->isVar = true;
     symbol->type = _type;
+    if(_argDecl) {
+        // Arg declarations are always initialized by calls
+        symbol->isInitialized = true;
+    }
     compile_context.symbolTable.add(symbol);
 
     // Assign the symbol if an assignment exists
@@ -325,12 +330,12 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
 
     // TODO: Handle different enum types
     if (symbol->type != expResult.type.value()) {
-        compile_context.errorRegistry.invalidExpressionType(symbol->type, expResult.type.value());
+        compile_context.errorRegistry.invalidExpressionType(symbol->type, expResult.type.value(), _lineNumber);
         return {};
     }
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: symbol->name
+        opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: symbol->toString()
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
 
@@ -351,21 +356,18 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
         return {};
     }
 
-    vector<FuncSymbol::Arg> args;
-    // Compile function arguments declartion 
+    // Add function arguments declartion to the block
     for (auto argDecl: *_args) {
         _block->prependStatement(argDecl);
-        args.push_back(argDecl->getAsArg());
     }
     
     // Create a new entry in the symbol table
-    FuncSymbol* symbol = new FuncSymbol();
-    symbol->name = _name;
-    symbol->scope = compile_context.scopeTracker.get();
-    symbol->symbolType = SymbolType::FUNC;
-    symbol->returnType = _type;
-    symbol->args = args;
-    symbol->bodyLabel = compile_context.labelsCreator.next();
+    FuncSymbol* funcSymbol = new FuncSymbol();
+    funcSymbol->name = _name;
+    funcSymbol->scope = compile_context.scopeTracker.get();
+    funcSymbol->symbolType = SymbolType::FUNC;
+    funcSymbol->returnType = _type;
+    funcSymbol->bodyLabel = compile_context.labelsCreator.next();
 
     DataSymbol* returnSymbol = new DataSymbol();
     returnSymbol->name = "_" + _name + "_RET";
@@ -374,32 +376,46 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     returnSymbol->type = _type;
 
     compile_context.symbolTable.add(returnSymbol);
-    symbol->returnSymbol = returnSymbol;
-    compile_context.symbolTable.add(symbol);
+    funcSymbol->returnSymbol = returnSymbol;
+    compile_context.symbolTable.add(funcSymbol);
 
     /*
     JMP AFTER_DEF
-    BODY_LABEL: NOP
+    BODY_LABEL:
         B
-    AFTER_DEF: NOP
+    AFTER_DEF:
     */
     std::string afterDefLabel = compile_context.labelsCreator.next();
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::JMP, arg1: afterDefLabel
     });
 
-    compile_context.functionDefinitions.push(symbol);
+    compile_context.functionDefinitions.push(funcSymbol);
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: symbol->bodyLabel
+        opcode: Opcode::LABEL, label: funcSymbol->bodyLabel
     });
     
-    _block->compile(compile_context);
+    auto blockScope = _block->compile(compile_context).scope;
+
+    if(!blockScope.has_value()) {
+        return {};
+    }
+
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: afterDefLabel
+        opcode: Opcode::LABEL, label: afterDefLabel
     });
 
     compile_context.functionDefinitions.pop();
+
+    // Add function arguments to its FuncSymbol
+    for (auto argDecl: *_args) {
+        auto s = compile_context.symbolTable.get(argDecl->getSymbolName(), blockScope.value());
+        assert(s != nullptr);
+        DataSymbol* argSymbol = static_cast<DataSymbol*> (s);
+        funcSymbol->args.push_back(argSymbol);
+    }
+
     return {};
 }
 

@@ -3,8 +3,8 @@
 
 #define EMPTY(s) (s.find_first_not_of(" \n\t") == std::string::npos)
 
-string generatePrefix(int line_number = 0) {
-    if (line_number == 0) {
+string generatePrefix(int line_number = -1) {
+    if (line_number == -1) {
         return "ERROR: ";
     } else {
         return "ERROR (near line " + to_string(line_number) + "): ";
