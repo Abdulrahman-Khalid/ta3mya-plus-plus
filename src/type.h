@@ -9,7 +9,7 @@ enum class Type: uint8_t {
 
 using std::string;
 const string _typeToString[] = {
-    "sa7e7", "7a2i2i","tarqeem","bool",
+    "sa7e7", "7a2i2i", "bool",
 };
 
 inline string typeToString(Type type) {
