@@ -7,7 +7,7 @@ CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     _programNode->compile(compile_context);
     auto scope = compile_context.scopeTracker.get();
     compile_context.scopeTracker.pop();
-    return { scope: scope };
+    return { out: {}, type: {}, scope: scope };
 }
 
 string BlockStatement::toString() const {

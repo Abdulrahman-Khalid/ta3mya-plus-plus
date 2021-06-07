@@ -74,13 +74,11 @@ CompileResult BinaryExpression::compile(CompileContext &compile_context) const
             lhsResult.type.value(), rhsResult.type.value(), _lineNumber);
         return {};
     }
-
-    // TODO: Expected Type ?
     if (isBooleanType(lhsResult.type.value()) && isBooleanType(rhsResult.type.value()) &&
         (isNumericalOperator(_op) || isComparator(_op)))
     {
         compile_context.errorRegistry.invalidExpressionType(
-            Type::INT, Type::BOOLEAN, _lineNumber);
+            {Type::INT, Type::REAL}, Type::BOOLEAN, _lineNumber);
         return {};
     }
 

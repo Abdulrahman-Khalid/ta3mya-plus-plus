@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "optional.h"
 #include "type.h"
 #include "scope.h"
 
@@ -53,9 +54,9 @@ struct FuncSymbol : public Symbol {
 
 class SymbolTable {
 private:
+    std::unordered_map<string, vector<Symbol*> > Symbol_Table;
 
-  std::unordered_map<string, vector<Symbol*> > Symbol_Table;
-  
+    std::vector<DataSymbol*> _getAllDataSymbols() const;
 public:
     // get returns a pointer to symbol given its name and its scope
     // if not available return null
@@ -65,4 +66,7 @@ public:
     // add adds symbol s
     // returns false if symbol exists, otherwise true if succeeded
     bool add(Symbol* s);
+
+    // get the data (vars/const) and stringify them according to output-specs.md
+    std::string getSections() const;
 };
