@@ -59,6 +59,9 @@ struct CompileResult {
 
 	// scope of BlockStatement
 	Optional<Scope> scope;
+
+	// whether a program node or block end with a basy stmt
+	Optional<bool> endsWithBasy;
 };
 
 class Node {

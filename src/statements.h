@@ -25,7 +25,7 @@ public:
         _stmts.insert(_stmts.begin(), stmt);
     }
 
-    void addBedayahCall();
+    void addEndStatement();
 };
 
 class BlockStatement : public Statement
@@ -55,10 +55,21 @@ class BasyStatement : public Statement
 {
 private:
     Expression *_toBasy;
-    bool _basyBedayah;
 
 public:
-    inline BasyStatement(Expression *toBasy, bool basyBedayah = false) : _toBasy(toBasy), _basyBedayah(basyBedayah) {}
+    inline BasyStatement(Expression *toBasy) : _toBasy(toBasy) {}
+
+    virtual CompileResult compile(CompileContext &compile_context) const override;
+    virtual string toString() const override;
+};
+
+class EndStatement : public Statement
+{
+private:
+    Expression *_toBasy;
+
+public:
+    inline EndStatement() {}
 
     virtual CompileResult compile(CompileContext &compile_context) const override;
     virtual string toString() const override;

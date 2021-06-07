@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	DEBUG("finished parsing, will compile");
 	DEBUG(prgnodeptr->toString());
 
-	prgnodeptr->addBedayahCall();
+	prgnodeptr->addEndStatement();
 	prgnodeptr->compile(compile_context);
 	compile_context.symbolTable.checkUnusedDataSymbols(compile_context.warningRegistry);
 
