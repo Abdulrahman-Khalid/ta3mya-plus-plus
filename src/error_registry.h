@@ -9,7 +9,11 @@ using namespace std;
 
 struct Error {
 	string msg;
+    inline void display() const { cerr << msg << endl; }
+};
 
+struct Warning {
+	string msg;
     inline void display() const { cerr << msg << endl; }
 };
 
@@ -25,7 +29,6 @@ public:
     void invalidExpressionType(vector<Type> expected, Type actual, int line_number);
     void nonDataSymbol(string symbol, string otherType, int line_number);
     void constantAssignment(string symbol, int line_number);
-    void unusedSymbol(string symbol);
     void invalidReturn(int line_number);
     void incorrectArgsCount(string function_name, int expected, int actual, int line_number);
     void incorrectArgType(string function_name, string arg_name, Type expected, Type actual, int line_number);
@@ -33,4 +36,14 @@ public:
 
     inline bool empty() const { return errors.empty(); }
     inline void displayErrors() const { for(auto error : errors) error.display(); }
+};
+
+class WarningRegistry {
+private:
+    vector<Warning> warnings;
+public:
+    void unusedSymbol(string symbol, int line_number);
+
+    inline bool empty() const { return warnings.empty(); }
+    inline void displayWarnings() const { for(auto warning : warnings) warning.display(); }
 };
