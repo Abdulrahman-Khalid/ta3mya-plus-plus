@@ -7,7 +7,7 @@ from subprocess import Popen, PIPE
 def compileOnly(gui, compiler):
     console = gui.getConsoleArea()
     console.config(state=tk.NORMAL)
-    console.delete("1.0", "end")
+    console.delete("1.0", tk.END)
     console.config(state=tk.DISABLED)
 
     content = gui.getTextArea().get("1.0", tk.END+"-1c")
@@ -42,7 +42,7 @@ def compileOnly(gui, compiler):
 def printSymbolTable(gui, compiler):
     console = gui.getConsoleArea()
     console.config(state=tk.NORMAL)
-    console.delete("1.0", "end")
+    console.delete("1.0", tk.END)
     console.config(state=tk.DISABLED)
 
     content = gui.getTextArea().get("1.0", tk.END+"-1c")
@@ -72,6 +72,7 @@ def printSymbolTable(gui, compiler):
         if (len(symbolTableOutput) > 0):
             with open(compiler.getSymbolTableFile(), 'w') as f:
                 f.write(symbolTableOutput)
+            print("\nSymbol Table:\n")
             print(symbolTableOutput)
 
 class TextLineNumbers(tk.Canvas):
