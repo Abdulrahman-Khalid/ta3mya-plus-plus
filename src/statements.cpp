@@ -502,8 +502,13 @@ LefStatement::LefStatement(Statement* init, Expression* condition,
 }
 
 CompileResult LefStatement::compile(CompileContext& compile_context) const {
-    _init->compile(compile_context);
-    _talmaStmt->compile(compile_context);
+    // Create a block to encapsulate the initialization & loop in a scope
+    auto node = new ProgramNode();
+    auto block = new BlockStatement(node);
+    block->appendStatement(_init);
+    block->appendStatement(_talmaStmt);
+    // Compile the block
+    block->compile(compile_context);
     return {};
 }
 
