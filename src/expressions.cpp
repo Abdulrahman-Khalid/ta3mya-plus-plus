@@ -1,8 +1,7 @@
 #include "expressions.h"
 
 Optional<Result> LiteralExpression::compile(CompileContext& compile_context) const {
-    // TODO
-    return {};
+    return literal;
 }
 
 string LiteralExpression::toString() const {

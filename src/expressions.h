@@ -7,11 +7,12 @@ using std::string;
 class Expression : public Node {};
 
 class LiteralExpression : public Expression {
-public:
     string literal;
     Type type;
+public:
     inline LiteralExpression(string literal, Type type) : 
         literal(literal), type(type) { }
+
     virtual Optional<Result> compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
