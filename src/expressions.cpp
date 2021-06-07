@@ -53,7 +53,7 @@ CompileResult TarqeemInstanceExpression::compile(CompileContext &compile_context
 
     // doesn't exist
     if (got == compile_context.enumsMap.end()) {
-        compile_context.errorRegistry.undeclaredSymbol(_instance, _lineNumber);
+        compile_context.errorRegistry.invalidEnumInstance(_instance, _lineNumber);
         return {};
     }
 
