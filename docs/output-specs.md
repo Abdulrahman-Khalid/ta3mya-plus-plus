@@ -49,14 +49,14 @@ You can jump to previosly declared label, or a label that is declared later in t
 
 | Quadruple  | Description                  |
 |------------|------------------------------|
-| CPY x z    | z = copy(x)                  |
-| INT x z    | z = int(x)                   |
-| ADD x y z  | z = x + y                    |
-| MUL x y z  | z = x * y                    |
-| DIV x y z  | z = x / y                    |
-| MOD x y z  | z = x % y                    |
-| NEG x z    | z = -x                       |
-| POW x y z  | z = pow(x, y)                |
+| CPY  x z   | z = copy(x)                  |
+| INT  x z   | z = int(x)                   |
+| ADD  x y z | z = x + y                    |
+| MUL  x y z | z = x * y                    |
+| DIV  x y z | z = x / y                    |
+| MOD  x y z | z = x % y                    |
+| NEG  x z   | z = -x                       |
+| POW  x y z | z = pow(x, y)                |
 | REAL x z   | z = real(x)                  |
 | RADD x y z | z = x + y     (real numbers) |
 | RMUL x y z | z = x * y     (real numbers) |
@@ -65,11 +65,11 @@ You can jump to previosly declared label, or a label that is declared later in t
 | RNEG x z   | z = -x        (real numbers) |
 | RPOW x y z | z = pow(x, y) (real numbers) |
 | RTN        | return                       |
-| JMP b      | goto b                       |
+| JMP  b     | goto b                       |
 | JMPZ x b   | if x == 0 { goto b }         |
-| GT  x y z  | z = x >  y? 1:0              |
-| LT  x y z  | z = x >  y? 1:0              |
-| GTE x y z  | z = x >= y? 1:0              |
-| LTE x y z  | z = x >= y? 1:0              |
-| AND x y z  | z = x & y                    |
-| OR x y z   | z = x \| y                   |
+| GT   x y z | z = x >  y? 1:0              |
+| LT   x y z | z = x >  y? 1:0              |
+| GTE  x y z | z = x >= y? 1:0              |
+| LTE  x y z | z = x >= y? 1:0              |
+| AND  x y z | z = x & y                    |
+| OR   x y z | z = x \| y                   |

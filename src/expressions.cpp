@@ -9,7 +9,7 @@ string LiteralExpression::toString() const {
 }
 
 Optional<Result> SymbolExpression::compile(CompileContext& compile_context) const {
-    // TODO
+    // error if symbol doesn't exist
     return {};
 }
 
