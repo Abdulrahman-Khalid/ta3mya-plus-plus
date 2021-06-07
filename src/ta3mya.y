@@ -87,8 +87,6 @@ ProgramNode * prgnodeptr = nullptr;
 %type <expr_val> call_dallah
 
 %type <type_val>  type
-%type <oper_val>  binary_operator
-%type <oper_val>  bool_comparator bool_compinator
 
 %type <tarqeemlist_val> tarqeem_list
 %type <stmt_val>        ta3reef_tarqeem
@@ -163,23 +161,30 @@ exp:
   | call_dallah                            { $$ = $1;                                     SAVE_LINE($$); }         
   ;
 
-binary_operator: T_PLUS | T_NEG | T_MULT | T_DIV | T_MODULO | T_EXPONENT;
 binary_exp: 
-  exp binary_operator exp { $$ = new BinaryExpression($1, $2, $3); }
+  exp T_EXPONENT exp         { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_PLUS exp           { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_NEG exp            { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_MULT exp           { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_DIV exp            { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_MODULO exp         { $$ = new BinaryExpression($1, $2, $3); }
   ;
 
-bool_compinator: T_WE | T_AW;
-bool_comparator: T_DOESNT_EQUAL | T_EQUALS | T_GREATER | T_GREATER_EQUAL | T_LESS | T_LESS_EQUAL;
 bool_exp:
-  bool_exp bool_compinator bool_exp         { $$ = new BinaryExpression($1, $2, $3); }
-  | exp bool_comparator exp                 { $$ = new BinaryExpression($1, $2, $3); }
-  | T_ROUND_BR_BGN bool_exp T_ROUND_BR_END  { $$ = $2;                               }
+  exp T_WE exp               { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_AW exp             { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_DOESNT_EQUAL exp   { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_EQUALS exp         { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_GREATER exp        { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_GREATER_EQUAL exp  { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_LESS exp           { $$ = new BinaryExpression($1, $2, $3); }
+  | exp T_LESS_EQUAL exp     { $$ = new BinaryExpression($1, $2, $3); }
   ;
 
 unary_exp: 
-  T_NEG exp %prec T_NEG     { $$ = new NegExpression($2); }
-  | T_MSH exp               { $$ = new MshExpression($2); }
-  | T_PLUS exp %prec T_PLUS { $$ = $2; }
+  T_MSH exp                  { $$ = new MshExpression($2); }
+  | T_NEG  exp %prec T_NEG   { $$ = new NegExpression($2); }
+  | T_PLUS exp %prec T_PLUS  { $$ = $2; }
   ;
 
 cast_exp:
