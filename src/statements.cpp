@@ -239,7 +239,8 @@ LefStatement::LefStatement(Statement* init, Expression* condition,
 }
 
 CompileResult LefStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    _init->compile(compile_context);
+    _talmaStmt->compile(compile_context);
     return {};
 }
 
