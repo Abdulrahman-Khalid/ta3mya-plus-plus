@@ -2,7 +2,9 @@
 #include "operator.h"
 
 CompileResult BlockStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    compile_context.scopeTracker.push();
+    _programNode->compile(compile_context);
+    compile_context.scopeTracker.pop();
     return {};
 }
 
