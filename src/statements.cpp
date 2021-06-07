@@ -298,9 +298,9 @@ string AssignmentStatement::toString() const {
 }
 
 CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context) const {
-    // error if symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
         return {};
     }
@@ -331,9 +331,9 @@ string Ta3reefMota8ierStatement::toString() const {
 }
 
 CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
-    // error if symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_symbol, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_symbol, _lineNumber);
         return {};
     }
@@ -372,9 +372,9 @@ string Ta3reefThabetStatement::toString() const {
 }
 
 CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
-    // error if function symbol already exists
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
         return {};
     }
@@ -457,10 +457,9 @@ string Ta3reefDallahStatement::toString() const {
 }
 
 CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
+    // error if symbol already exists in the same scope
     auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
-
-    // check if symbol already exists
-    if (s != nullptr) {
+    if (s != nullptr && s->scope == compile_context.scopeTracker.get()) {
         compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
         return {};
     }
