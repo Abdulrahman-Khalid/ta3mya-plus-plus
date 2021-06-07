@@ -25,6 +25,6 @@ public:
     void nonDataSymbol(string symbol, string otherType, int line_number = 0);
     void unusedSymbol(string symbol);
 
-    inline bool empty() { return errors.empty(); }
-    inline void displayErrors() { for(auto error : errors) error.display(); }
+    inline bool empty() const { return errors.empty(); }
+    inline void displayErrors() const { for(auto error : errors) error.display(); }
 };

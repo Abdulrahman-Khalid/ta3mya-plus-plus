@@ -65,6 +65,7 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
         // Get condition
         auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
+        if (!conditionResult.out.has_value()) compile_context.abort();
         // Get label of current JZ
         auto currentJZLabel = nextJZLabel;
         // If this is the last conditional and no _8eroBlock exists then JZ to doneLabel
