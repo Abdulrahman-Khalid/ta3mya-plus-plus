@@ -80,11 +80,10 @@ CompileResult NegExpression::compile(CompileContext &compile_context) const
         return {};
     }
 
-    // TODO: Expected Type ?
     if (!isNumerical(expResult.type.value()))
     {
         compile_context.errorRegistry.invalidExpressionType(
-            Type::INT, expResult.type.value(), _lineNumber);
+            {Type::INT, Type::REAL} , expResult.type.value(), _lineNumber);
         return {};
     }
 
