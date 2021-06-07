@@ -21,6 +21,10 @@ CompileResult ProgramNode::compile(CompileContext& compile_context) const {
     return {};
 }
 
+void ProgramNode::addBedayahCall() {
+    _stmts.push_back(new BasyStatement(new CallDallahExpression("bedayah", CallDallahArgs()), true));
+}
+
 string ProgramNode::toString() const {
     string out = "ProgramNode{stmts: [";
     for (auto i = 0; i < _stmts.size(); i++) {
@@ -36,6 +40,18 @@ string ProgramNode::toString() const {
 CompileResult BasyStatement::compile(CompileContext& compile_context) const {
     auto expResult = _toBasy->compile(compile_context);
     if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
+
+    if (_basyBedayah) {
+        compile_context.quadruplesTable.push_back(Quadruple{
+            opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: "$0"
+        });
+
+        compile_context.quadruplesTable.push_back(Quadruple{
+            opcode: Opcode::RTN
+        });
+
         return {};
     }
 
@@ -157,7 +173,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     /*
     LOOP:
     B
-    JNZ C LOOP
+    JZ C LOOP
     */
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
@@ -172,9 +188,9 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     if (!conditionResult.out.has_value()) {
         return {};
     }
-    // Add JNZ
+    // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::JNZ, arg1: conditionResult.out.value(), arg2: loopLabel
+        opcode: Opcode::JZ, arg1: conditionResult.out.value(), arg2: loopLabel
     });
     compile_context.tempVarsRegistry.put(conditionResult.out.value());
 
@@ -254,7 +270,6 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
         return {};
     }
 
-    // TODO: Handle different enum types
     if (dataSymbol->type != expResult.type.value()) {
         compile_context.errorRegistry.invalidExpressionType(dataSymbol->type, expResult.type.value(), _lineNumber);
         return {};
@@ -328,7 +343,6 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
         return {};
     }
 
-    // TODO: Handle different enum types
     if (symbol->type != expResult.type.value()) {
         compile_context.errorRegistry.invalidExpressionType(symbol->type, expResult.type.value(), _lineNumber);
         return {};
@@ -434,7 +448,29 @@ string Ta3reefDallahStatement::toString() const {
 }
 
 CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
-    // TODO
+    auto s = compile_context.symbolTable.get(_name, compile_context.scopeTracker.get());
+
+    // check if symbol already exists
+    if (s != nullptr) {
+        compile_context.errorRegistry.redeclaredSymbol(_name, _lineNumber);
+        return {};
+    }
+
+    // add it
+    s = new Symbol {
+        name: _name,
+        scope: compile_context.scopeTracker.get(),
+        symbolType: SymbolType::TARQEEM,
+    };
+    compile_context.symbolTable.add(s);
+
+    // add its enums
+    for (int i = 0; i < _list.size(); i++) {
+        auto key = _name + "::" + _list[i];
+        auto value = std::to_string(i);
+        compile_context.enumsMap.insert({key, value});
+    }
+
     return {};
 }
 

@@ -4,7 +4,7 @@
 using std::string;
 
 enum class Type: uint8_t {
-    INT, REAL, ENUM, BOOLEAN
+    INT, REAL, BOOLEAN
 };
 
 using std::string;
@@ -22,8 +22,4 @@ inline bool isNumericalType(Type type) {
 
 inline bool isBooleanType(Type type) {
     return type == Type::BOOLEAN;
-}
-
-inline bool isEnumType(Type type) {
-    return type == Type::ENUM;
 }

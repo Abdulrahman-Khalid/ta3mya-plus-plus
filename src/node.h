@@ -21,6 +21,10 @@ public:
 	}
 };
 
+typedef std::string EnumInstance;
+typedef std::string EnumValue;
+template<typename K, typename V> using Map = std::unordered_map<K, V>;
+
 struct CompileContext {
 	ScopeTracker scopeTracker;
 	SymbolTable  symbolTable;
@@ -29,6 +33,7 @@ struct CompileContext {
 	ErrorRegistry errorRegistry;
 	LabelsCreator labelsCreator;
 	stack<FuncSymbol*> functionDefinitions;
+	Map<EnumInstance, EnumValue> enumsMap;
 	
 	inline Program toProgram() const {
 		Program p;

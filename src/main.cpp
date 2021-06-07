@@ -18,7 +18,7 @@ inline void printProgram(const Program& p) {
 		std::cout << line << std::endl;
 	}
 	if (p.size() > 0) {
-		std::cout<<endl;
+		std::cout << endl;
 	}
 }
 
@@ -59,11 +59,12 @@ int main(int argc, char **argv) {
 	DEBUG("finished parsing, will compile");
 	DEBUG(prgnodeptr->toString());
 
+	prgnodeptr->addBedayahCall();
 	prgnodeptr->compile(compile_context);
 
 	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
 		compile_context.errorRegistry.displayErrors();
-		return yyparse_return;
+		return yyparse_return == 0? 1:yyparse_return;
 	}
 
 	DEBUG("finished compile, will print assembly");
