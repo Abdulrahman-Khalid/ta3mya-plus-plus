@@ -85,9 +85,9 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     B3
     JMP DONE
 
-    L3: NOP
+    L3:
     B4  (if it exists)
-    DONE: NOP
+    DONE:
     */
     string doneLabel = compile_context.labelsCreator.next();
     Optional<string> nextJZLabel;
@@ -124,13 +124,13 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     // Add 8ero label & block if it exists
     if (_8eroBlock) {
         compile_context.quadruplesTable.push_back(Quadruple{
-            opcode: Opcode::NOP, label: nextJZLabel
+            opcode: Opcode::LABEL, label: nextJZLabel
         });
         _8eroBlock->compile(compile_context);
     }
     // Add done label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: doneLabel
+        opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
 }
@@ -155,7 +155,7 @@ void HaletStatement::attachSymbol(SymbolExpression* symbol) {
 
 CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const {
     /*
-    LOOP: NOP
+    LOOP:
     B
     JNZ C LOOP
     */
@@ -163,7 +163,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     auto loopLabel = compile_context.labelsCreator.next();
     // Add LOOP label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: loopLabel
+        opcode: Opcode::LABEL, label: loopLabel
     });
     // Add block
     _block->compile(compile_context);
@@ -191,7 +191,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     LOOP: JZ C DONE
     B
     JMP LOOP
-    DONE: NOP
+    DONE:
     */
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
@@ -216,7 +216,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     });
     // Add DONE label
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: doneLabel
+        opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
 }
@@ -381,9 +381,9 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
 
     /*
     JMP AFTER_DEF
-    BODY_LABEL: NOP
+    BODY_LABEL:
         B
-    AFTER_DEF: NOP
+    AFTER_DEF:
     */
     std::string afterDefLabel = compile_context.labelsCreator.next();
     compile_context.quadruplesTable.push_back(Quadruple{
@@ -393,7 +393,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     compile_context.functionDefinitions.push(funcSymbol);
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: funcSymbol->bodyLabel
+        opcode: Opcode::LABEL, label: funcSymbol->bodyLabel
     });
     
     auto blockScope = _block->compile(compile_context).scope;
@@ -403,7 +403,7 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     }
 
     compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::NOP, label: afterDefLabel
+        opcode: Opcode::LABEL, label: afterDefLabel
     });
 
     compile_context.functionDefinitions.pop();
