@@ -288,6 +288,10 @@ CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context)
     symbol->symbolType = SymbolType::DATA;
     symbol->isVar = true;
     symbol->type = _type;
+    if(_argDecl) {
+        // Arg declarations are always initialized by calls
+        symbol->isInitialized = true;
+    }
     compile_context.symbolTable.add(symbol);
 
     // Assign the symbol if an assignment exists
