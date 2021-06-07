@@ -37,6 +37,7 @@ public:
     inline BlockStatement(ProgramNode *programNode) : _programNode(programNode) {}
 
     virtual CompileResult compile(CompileContext &compile_context) const override;
+    CompileResult compileAsInFunc(CompileContext &compile_context) const;
     virtual string toString() const override;
 
     inline void appendStatement(Statement *stmt)
