@@ -2,21 +2,42 @@ import utils
 import tkinter as tk
 import os
 import sys
-import subprocess
-
-if os.name == 'nt':
-    compilerExe = "./ta3myac.exe"
-else:
-    compilerExe = "./ta3myac"
-
-def compile_code(content, debugFilePath):
-    # lines = content.split("\n")
-    p = subprocess.Popen(compilerExe, stdin=content, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return
+from subprocess import Popen, PIPE
 
 def compileOnly(gui, compiler):
+    console = gui.getConsoleArea()
+    console.config(state=tk.NORMAL)
+    console.delete("1.0", "end")
+    console.config(state=tk.DISABLED)
+
     content = gui.getTextArea().get("1.0", tk.END+"-1c")
-    return compile_code(content, compiler.getDebugFile())
+    with Popen(compiler.getCompilerExe(), stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True) as process:
+        process.stdin.write(str.encode(content))
+        assemblyOutput = process.communicate()[0].decode("utf-8")
+        error = process.communicate()[1].decode("utf-8")
+        lines = error.splitlines()
+        debugList = []
+        errorList = []
+        for line in lines:
+            if (line.lower().startswith("error")):
+                errorList.append(line)
+            else:
+                debugList.append(line)
+        consoleOut = ""
+        if (len(errorList) > 0):
+            consoleOut = utils.ERR_MSG + '\n\n' + '\n'.join(errorList)
+        else:
+            consoleOut = "Compiled Successfully\n"
+        print(consoleOut)
+        debugOut = '\n'.join(debugList)
+        if (len(debugOut) > 0):
+            with open(compiler.getDebugFile(), 'w') as f:
+                f.write(debugOut)
+        if (len(assemblyOutput) > 0):
+            with open(compiler.getProgFile(), 'w') as f:
+                f.write(assemblyOutput)
+            print("\nCompiled Assembly:\n")
+            print(assemblyOutput)
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
@@ -122,8 +143,8 @@ class GUI(tk.Frame):
         menu.add_cascade(label="Compile", menu=runMenu)
         runMenu.add_command(label="compile",
                             command=lambda: compileOnly(self, self.compiler))
-        runMenu.add_command(label="Choose Debug directory",
-                            command=lambda: utils.chooseDebugDirectory(self.compiler))
+        runMenu.add_command(label="Choose Compilation Directory",
+                            command=lambda: utils.chooseProgDirectory(self.compiler))
         ramMenu = tk.Menu(menu)
         helpMenu = tk.Menu(menu)
         menu.add_cascade(label="Help", menu=helpMenu)
@@ -151,14 +172,30 @@ class GUI(tk.Frame):
 class Compiler:
     def __init__(self):
         self.debugFile = "./debug.txt"
+        self.progFile = "./program.asm"
+        if os.name == 'nt':
+            self.compilerExe = "../src/ta3myac.exe"
+        else:
+            self.compilerExe = "../src/ta3myac"
 
     def setDebugFile(self, debugFile):
         if(self.debugFile):
             self.debugFile.close()
         self.debugFile = debugFile
 
+    def setProgFile(self, progFile):
+        if(self.progFile):
+            self.progFile.close()
+        self.progFile = progFile
+
     def getDebugFile(self):
         return self.debugFile
+
+    def getProgFile(self):
+        return self.progFile
+
+    def getCompilerExe(self):
+        return self.compilerExe
 
 
 
