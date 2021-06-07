@@ -62,11 +62,11 @@ CompileResult BinaryExpression::compile(CompileContext &compile_context) const
 {
     auto lhsResult = _lhs->compile(compile_context);
     if (!lhsResult.out.has_value() || !lhsResult.type.has_value())
-        compile_context.abort();
+        return {};
 
     auto rhsResult = _rhs->compile(compile_context);
     if (!rhsResult.out.has_value() || !rhsResult.type.has_value())
-        compile_context.abort();
+        return {};
 
     if (lhsResult.type.value() != rhsResult.type.value())
     {
@@ -111,14 +111,15 @@ string BinaryExpression::toString() const
 CompileResult NegExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     // TODO: Expected Type ?
     if (!isNumericalType(expResult.type.value()))
     {
         compile_context.errorRegistry.invalidExpressionType(
-            Type::INT, expResult.type.value(), _lineNumber);
+            {Type::INT, Type::REAL} , expResult.type.value(), _lineNumber);
         return {};
     }
 
@@ -141,8 +142,9 @@ string NegExpression::toString() const
 CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if (!isNumericalType(expResult.type.value()))
     {
@@ -168,8 +170,9 @@ string ToSa7e7Expression::toString() const
 CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if (!isNumericalType(expResult.type.value()))
     {
@@ -197,8 +200,9 @@ string To7a2i2iExpression::toString() const
 CompileResult MshExpression::compile(CompileContext &compile_context) const
 {
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value())
-        compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     if (expResult.type.value() != Type::BOOLEAN)
     {

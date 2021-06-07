@@ -94,7 +94,9 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
         // Get condition
         auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
-        if (!conditionResult.out.has_value()) compile_context.abort();
+        if (!conditionResult.out.has_value()) {
+            return {};
+        }
         // Get label of current JZ
         auto currentJZLabel = nextJZLabel;
         // If this is the last conditional and no _8eroBlock exists then JZ to DONE
@@ -166,7 +168,9 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     _block->compile(compile_context);
     // Get condition
     auto conditionResult = _condition->compile(compile_context);
-    if (!conditionResult.out.has_value()) compile_context.abort();
+    if (!conditionResult.out.has_value()) {
+        return {};
+    }
     // Add JNZ
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::JNZ, arg1: conditionResult.out.value(), arg2: loopLabel
@@ -194,7 +198,9 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     auto doneLabel = compile_context.labelsCreator.next();
     // Get condition
     auto conditionResult = _condition->compile(compile_context);
-    if (!conditionResult.out.has_value()) compile_context.abort();
+    if (!conditionResult.out.has_value()) {
+        return {};
+    }
     // Add JZ
     compile_context.quadruplesTable.push_back(Quadruple{
         opcode: Opcode::JZ, arg1: conditionResult.out.value(),
@@ -243,7 +249,9 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
     }
 
     auto expResult = _exp->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value()) compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     // TODO: Handle different enum types
     if (dataSymbol->type != expResult.type.value()) {
@@ -311,7 +319,9 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
     compile_context.symbolTable.add(symbol);
 
     auto expResult = _init->compile(compile_context);
-    if (!expResult.out.has_value() || !expResult.type.has_value()) compile_context.abort();
+    if (!expResult.out.has_value() || !expResult.type.has_value()) {
+        return {};
+    }
 
     // TODO: Handle different enum types
     if (symbol->type != expResult.type.value()) {

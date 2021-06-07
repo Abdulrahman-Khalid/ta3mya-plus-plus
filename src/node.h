@@ -30,11 +30,6 @@ struct CompileContext {
 	LabelsCreator labelsCreator;
 	stack<FuncSymbol*> functionDefinitions;
 	
-	inline void abort() const {
-		errorRegistry.displayErrors();
-		exit(1);
-	}
-
 	inline Program toProgram() const {
 		Program p;
 		for (const auto& quadrauple : quadruplesTable) {

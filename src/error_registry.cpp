@@ -44,6 +44,17 @@ void ErrorRegistry::invalidExpressionType(Type expected, Type actual, int line_n
     errors.push_back({ prefix + msg });
 }
 
+void ErrorRegistry::invalidExpressionType(vector<Type> expected, Type actual, int line_number) {
+    assert(expected.size() > 0);
+    string prefix = generatePrefix(line_number);
+    string msg = "Invalid expression type, expected to be " + typeToString(expected[0]);
+    for(int i = 1; i < expected.size(); i++) {
+        msg += ", or " + typeToString(expected[i]);
+    }
+    msg += ", but was found to be " + typeToString(actual);
+    errors.push_back({ prefix + msg });
+}
+
 void ErrorRegistry::unusedSymbol(string symbol) {
     string prefix = generatePrefix();
     string msg = "\"" + symbol + "\" defined but not used";
