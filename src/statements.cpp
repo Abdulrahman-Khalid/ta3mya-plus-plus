@@ -90,7 +90,10 @@ CompileResult ProgramNode::compile(CompileContext& compile_context) const {
         CallBedayahStatement().compile(compile_context);
     }
     bool endsWithBasy = !_stmts.empty() && dynamic_cast<BasyStatement*>(_stmts.back()) != nullptr;
-    return { endsWithBasy: endsWithBasy };
+
+    CompileResult r;
+    r.endsWithBasy = endsWithBasy;
+    return r;
 }
 
 string ProgramNode::toString() const {
