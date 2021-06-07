@@ -1,6 +1,6 @@
 #include "statements.h"
 
-Result BlockStatement::compile(CompileContext& compile_context) const {
+CompileResult BlockStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -9,7 +9,7 @@ string BlockStatement::toString() const {
     return "BlockStatement{program: " + _programNode->toString() + "}";
 }
 
-Result ProgramNode::compile(CompileContext& compile_context) const {
+CompileResult ProgramNode::compile(CompileContext& compile_context) const {
     for (const auto& stmt : _stmts) {
         stmt->compile(compile_context);
     }
@@ -28,7 +28,7 @@ string ProgramNode::toString() const {
     return out + "]}";
 }
 
-Result BasyStatement::compile(CompileContext& compile_context) const {
+CompileResult BasyStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -37,7 +37,7 @@ string BasyStatement::toString() const {
     return "BasyStatement{exp: " + _toBasy->toString() + "}";
 }
 
-Result LwStatement::compile(CompileContext& compile_context) const {
+CompileResult LwStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -60,7 +60,7 @@ void HaletStatement::attachSymbol(SymbolExpression* symbol) {
     }
 }
 
-Result LwGroupStatement::compile(CompileContext& compile_context) const {
+CompileResult LwGroupStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -74,7 +74,7 @@ string LwGroupStatement::toString() const {
     }
 }
 
-Result KarrarL7dStatement::compile(CompileContext& compile_context) const {
+CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -84,7 +84,7 @@ string TalmaStatement::toString() const {
             + " , block: " + _block->toString() + "}";
 }
 
-Result TalmaStatement::compile(CompileContext& compile_context) const {
+CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -94,7 +94,7 @@ string KarrarL7dStatement::toString() const {
             + " , block: " + _block->toString() + "}";
 }
 
-Result Ta3reefMota8ierStatement::compile(CompileContext& compile_context) const {
+CompileResult Ta3reefMota8ierStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -104,7 +104,7 @@ string Ta3reefMota8ierStatement::toString() const {
     return _init ? out + ", init_exp: " + _init->toString() + "}" : out + "}";
 }
 
-Result Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
+CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -114,7 +114,7 @@ string Ta3reefThabetStatement::toString() const {
         + ", init_exp: " + _init->toString() + "}";
 }
 
-Result Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
+CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -133,7 +133,7 @@ string Ta3reefDallahStatement::toString() const {
         + ", args_declaration: [" + argsStr + "], block: " + _block->toString();
 }
 
-Result Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
+CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -151,7 +151,7 @@ string Ta3reefTarqeemStatement::toString() const {
     return "Ta3reefTarqeemStatement{name: " + _name + ", list: [" + listString +"]}";
 }
 
-Result AssignmentStatement::compile(CompileContext& compile_context) const {
+CompileResult AssignmentStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -166,7 +166,7 @@ LefStatement::LefStatement(Statement* init, Expression* condition,
     _talmaStmt = new TalmaStatement(condition, block);
 }
 
-Result LefStatement::compile(CompileContext& compile_context) const {
+CompileResult LefStatement::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }

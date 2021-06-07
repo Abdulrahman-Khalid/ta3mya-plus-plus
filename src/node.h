@@ -9,7 +9,6 @@
 #include "tmpvars.h"
 #include "error_registry.h"
 #include "optional.h"
-#include "result.h"
 
 class LabelsCreator {
 	int _i = 0;
@@ -38,11 +37,17 @@ struct CompileContext {
 	}
 };
 
+struct CompileResult {
+    // out is the name of the variable the holds the expression result
+    // it could be a literal to be used directly
+    Optional<std::string> out;
+};
+
 class Node {
 protected:
 	int _lineNumber;
 public:
-	virtual Result compile(CompileContext& compile_context) const = 0;
+	virtual CompileResult compile(CompileContext& compile_context) const = 0;
 
 	// toString returns a string representation
 	// of the object for debugging

@@ -1,14 +1,14 @@
 #include "expressions.h"
 
-Result LiteralExpression::compile(CompileContext& compile_context) const {
-    return Result {out: literal };
+CompileResult LiteralExpression::compile(CompileContext& compile_context) const {
+    return CompileResult {out: literal };
 }
 
 string LiteralExpression::toString() const {
     return "LiteralExpression: ("+ typeToString(type) + ") " + this->literal;
 }
 
-Result SymbolExpression::compile(CompileContext& compile_context) const {
+CompileResult SymbolExpression::compile(CompileContext& compile_context) const {
     // error if symbol doesn't exist
     return {};
 }
@@ -17,7 +17,7 @@ string SymbolExpression::toString() const {
     return "Symbol: " + this->symbol;
 }
 
-Result TarqeemInstanceExpression::compile(CompileContext& compile_context) const {
+CompileResult TarqeemInstanceExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -26,7 +26,7 @@ string TarqeemInstanceExpression::toString() const {
     return "TarqeemInstance: " + _instance;
 }
 
-Result BinaryExpression::compile(CompileContext& compile_context) const {
+CompileResult BinaryExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -39,7 +39,7 @@ string BinaryExpression::toString() const {
     return s ;
 }
 
-Result NegExpression::compile(CompileContext& compile_context) const {
+CompileResult NegExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -50,7 +50,7 @@ string NegExpression::toString() const {
     return s;
 }
 
-Result ToSa7e7Expression::compile(CompileContext& compile_context) const {
+CompileResult ToSa7e7Expression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -61,7 +61,7 @@ string ToSa7e7Expression::toString() const {
     return s;
 }
 
-Result To7a2i2iExpression::compile(CompileContext& compile_context) const {
+CompileResult To7a2i2iExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -72,7 +72,7 @@ string To7a2i2iExpression::toString() const {
     return s;
 }
 
-Result MshExpression::compile(CompileContext& compile_context) const {
+CompileResult MshExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
@@ -83,7 +83,7 @@ string MshExpression::toString() const {
     return s;
 }
 
-Result CallDallahExpression::compile(CompileContext& compile_context) const {
+CompileResult CallDallahExpression::compile(CompileContext& compile_context) const {
     // TODO
     return {};
 }
