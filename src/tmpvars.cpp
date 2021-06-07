@@ -39,6 +39,6 @@ void TempVarsRegistry::put(const std::string& s) {
         assert(_vars.find(i) != _vars.end() && "trying to put an alread put variable");
         _vars.erase(i);
     } else {
-        assert(false && "invalid input:");
+        //assert(false && "invalid input:");
     }
 }

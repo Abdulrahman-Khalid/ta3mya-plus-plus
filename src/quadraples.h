@@ -9,13 +9,13 @@
 enum class Opcode: uint8_t {
     CPY = 0, INT, ADD, MUL, DIV, MOD, NEG, POW, REAL, 
     RADD, RMUL, RDIV, RMOD, RNEG, RPOW, CALL, RTN, JMP, 
-    JZ, JNZ, GT, LT, GTE, LTE, AND, OR, NOP,
+    JZ, JNZ, GT, LT, GTE, LTE, AND, OR, NOT, NOP,
 };
 
 const std::string _opcodeToString[] = {
     "CPY", "INT", "ADD", "MUL", "DIV", "MOD", "NEG", "POW", "REAL", 
     "RADD", "RMUL", "RDIV", "RMOD", "RNEG", "RPOW", "CALL", "RTN", "JMP", 
-    "JZ", "JNZ", "GT", "LT", "GTE", "LTE", "AND", "OR", "NOP",
+    "JZ", "JNZ", "GT", "LT", "GTE", "LTE", "AND", "OR", "NOT", "NOP",
 };
 inline std::string opcodeToString(Opcode opcode) {
     return _opcodeToString[int(opcode)];

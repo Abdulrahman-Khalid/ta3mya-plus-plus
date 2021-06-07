@@ -51,18 +51,18 @@ public:
 
 class NegExpression : public Expression {
 public:
-    Expression* toBeNegated;
+    Expression* _exp;
     inline NegExpression(Expression*  toBeNegated) : 
-        toBeNegated(toBeNegated) { }
+        _exp(_exp) { }
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
 
 class MshExpression : public Expression {
 public:
-    Expression* toBeNegated;
+    Expression* _exp;
     inline MshExpression(Expression*  toBeNegated) : 
-        toBeNegated(toBeNegated) { }
+        _exp(_exp) { }
     virtual CompileResult compile(CompileContext& compile_context) const override;
     virtual string toString() const override;
 };
