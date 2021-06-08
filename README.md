@@ -11,9 +11,10 @@ See [methal.ta3](./docs/methal.ta3) for all language features.
 - gnu-make
 - bison
 - flex
+- python 3.8.5 (for gui)
 
 ```sh
-$ sudo apt update && sudo apt install -y g++ make bison flex
+$ sudo apt update && sudo apt install -y g++ make bison flex python3
 ```
 
 # Build Compiler
