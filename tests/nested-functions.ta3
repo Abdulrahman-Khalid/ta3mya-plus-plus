@@ -1,0 +1,13 @@
+sa7e7 sum(sa7e7 x, sa7e7 y) {
+  7a2i2i sum(7a2i2i a, 7a2i2i y) {
+    sa7e7 x() {}
+    basy a + y
+  }
+  basy sa7e7(sum(7a2i2i(x), 7a2i2i(y)))
+}
+
+sa7e7 bedayah() {
+  sa7e7 a = sum(10, 20)
+  a = sum(a, a)
+  basy 0
+}
