@@ -28,7 +28,7 @@ template<typename K, typename V> using Map = std::unordered_map<K, V>;
 struct CompileContext {
 	ScopeTracker scopeTracker;
 	SymbolTable  symbolTable;
-	QuadruplesTable codeQuadruplesTable, defQuadruplesTable;
+	Map<int, QuadruplesTable> quadruplesTables;
 	TempVarsRegistry tempVarsRegistry;
 	ErrorRegistry errorRegistry;
 	WarningRegistry warningRegistry;
@@ -37,19 +37,13 @@ struct CompileContext {
 	Map<EnumInstance, EnumValue> enumsMap;
 
 	inline void prependQuadruple(Quadruple q) {
-		if (functionDefinitions.empty()) {
-			codeQuadruplesTable.insert(codeQuadruplesTable.begin(), q);
-		} else {
-			defQuadruplesTable.insert(defQuadruplesTable.begin(), q);
-		}
+		QuadruplesTable& qt = quadruplesTables[functionDefinitions.size()];
+		qt.insert(qt.begin(), q);
 	}
 
 	inline void addQuadruple(Quadruple q) {
-		if (functionDefinitions.empty()) {
-			codeQuadruplesTable.push_back(q);
-		} else {
-			defQuadruplesTable.push_back(q);
-		}
+		QuadruplesTable& qt = quadruplesTables[functionDefinitions.size()];
+		qt.push_back(q);
 	}
 	
 	inline Program toProgram() const {
@@ -58,19 +52,14 @@ struct CompileContext {
 		p.push_back(symbolTable.getSections());
 		p.push_back("; code segment");
 		
-		for (const auto& quadruple : codeQuadruplesTable) {
-			p.push_back(quadruple.toString());
+		for (const auto& qt : quadruplesTables) {
+			for (const auto& q: qt.second) {
+				if(q.opcode == Opcode::PROC)
+					p.push_back("");
+				p.push_back(q.toString());
+			}
 		}
 
-		p.push_back("\n; definitions segment");
-		bool firstProc = true;
-		for (const auto& quadruple : defQuadruplesTable) {
-			if(quadruple.opcode == Opcode::PROC) {
-				if(firstProc) firstProc = false;
-				else p.push_back("");
-			}
-			p.push_back(quadruple.toString());
-		}
 		return p;
 	}
 };
