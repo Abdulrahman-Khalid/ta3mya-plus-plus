@@ -18,17 +18,27 @@ def compileOnly(gui, compiler):
         lines = error.splitlines()
         debugList = []
         errorList = []
+        warningList = []
         for line in lines:
-            if (line.lower().startswith("error")):
+            lowerLine = line.lower()
+            if (lowerLine.startswith("error")):
                 errorList.append(line)
+            elif (lowerLine.startswith("warning")):
+                warningList.append(line)
             else:
                 debugList.append(line)
-        consoleOut = ""
+        consoleOut = []
         if (len(errorList) > 0):
-            consoleOut = utils.ERR_MSG + '\n\n' + '\n'.join(errorList)
+            consoleOut.append(utils.ERR_MSG + '\n\n')
+            if (len(warningList) > 0):
+                consoleOut.append('\n'.join(warningList) + '\n\n')
+            consoleOut.append('\n'.join(errorList))
         else:
-            consoleOut = "Compiled Successfully\n"
-        print(consoleOut)
+            consoleOut.append("Compiled Successfully\n\n\n")
+            if (len(warningList) > 0):
+                consoleOut.append('\n'.join(warningList) + '\n\n')
+        for out in consoleOut:
+            print(out)
         debugOut = '\n'.join(debugList)
         if (len(debugOut) > 0):
             with open(compiler.getDebugFile(), 'w') as f:
@@ -54,17 +64,27 @@ def printSymbolTable(gui, compiler):
         lines = error.splitlines()
         debugList = []
         errorList = []
+        warningList = []
         for line in lines:
-            if (line.lower().startswith("error")):
+            lowerLine = line.lower()
+            if (lowerLine.startswith("error")):
                 errorList.append(line)
+            elif (lowerLine.startswith("warning")):
+                warningList.append(line)
             else:
                 debugList.append(line)
-        consoleOut = ""
+        consoleOut = []
         if (len(errorList) > 0):
-            consoleOut = utils.ERR_MSG + '\n\n' + '\n'.join(errorList)
+            consoleOut.append(utils.ERR_MSG + '\n\n')
+            if (len(warningList) > 0):
+                consoleOut.append('\n'.join(warningList) + '\n\n')
+            consoleOut.append('\n'.join(errorList))
         else:
-            consoleOut = "Compiled Successfully\n"
-        print(consoleOut)
+            consoleOut.append(utils.SUCCESS+'\n\n\n')
+            if (len(warningList) > 0):
+                consoleOut.append('\n'.join(warningList) + '\n\n')
+        for out in consoleOut:
+            print(out)
         debugOut = '\n'.join(debugList)
         if (len(debugOut) > 0):
             with open(compiler.getDebugFile(), 'w') as f:
@@ -150,8 +170,12 @@ class GUI(tk.Frame):
                                background="black", foreground="green", font=("Helvetica", "12"))
         self.console.tag_config('error', foreground="red",
                                 font=("Helvetica", "12", "bold"))
+        self.console.tag_config('warning', foreground="orange",
+                                font=("Helvetica", "12", "bold"))
         self.console.tag_config(
-            'normal', foreground="green", font=("Helvetica", "12"))
+            'normal', foreground="white", font=("Helvetica", "12"))
+        self.console.tag_config(
+            'success', foreground="green", font=("Helvetica", "12"))
         self.linenumbersConsole = TextLineNumbers(self, width=20)
         self.linenumbersConsole.attach(self.console)
 

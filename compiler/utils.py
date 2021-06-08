@@ -2,25 +2,25 @@ from tkinter import filedialog, messagebox
 import tkinter as tk
 import os
 
+SUCCESS = "Compiled Successfully"
 ERR_MSG = "Compilation Failed"
+WARN_MSG = "Warning"
 
 class PrintLogger():  # create file like object
     def __init__(self, textbox):  # pass reference to text widget
         self.textbox = textbox  # keep ref
-        self.isError = False
 
     def write(self, text):
         self.textbox.delete("1.0", tk.END)
         self.textbox.config(state=tk.NORMAL)
-        if(text.startswith(ERR_MSG)):
-            self.isError = True
+        if(text.startswith(SUCCESS)):
+            self.textbox.insert(tk.END, text, "success")
+        elif(text.startswith(ERR_MSG)):
             self.textbox.insert(tk.END, text, "error")
+        elif(text.startswith(WARN_MSG)):
+            self.textbox.insert(tk.END, text, "warning")
         else:
-            if(self.isError):
-                self.textbox.insert(tk.END, text, "error")
-            else:
-                self.textbox.insert(tk.END, text, "normal")
-            self.isError = False
+            self.textbox.insert(tk.END, text, "normal")
         self.textbox.config(state=tk.DISABLED)
         # could also scroll to end of textbox here to make sure always visible
 
