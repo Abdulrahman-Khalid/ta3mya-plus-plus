@@ -15,4 +15,6 @@ using namespace std;
 #include "type.h"
 #include "node.h"
 
-#define DEBUG(i) cerr << "DEBUG: " << (i) << endl
+extern bool disableDebug;
+
+#define DEBUG(i) do { if (!disableDebug) { cerr << "DEBUG: " << (i) << endl; } } while(0)

@@ -8,9 +8,10 @@ extern FILE* yyin;
 extern ProgramNode* prgnodeptr;
 
 CompileContext compile_context;
+bool disableDebug = false;
 
 inline void usage(char* p) {
-    std::cerr << "Usage: " << p << " [/path/to/file.ta3]" << std::endl;
+    std::cerr << "Usage: " << p << " [--only-symbol-table] [/path/to/file.ta3]" << std::endl;
 }
 
 inline void printProgram(const Program& p) {
@@ -20,18 +21,27 @@ inline void printProgram(const Program& p) {
 }
 
 int main(int argc, char **argv) {
+	bool onlyPrintSymTable = false;
+
 	if (argc == 1) {
 		yyin = stdin;
-	} else if (argc == 2) {
-		const auto s = std::string(argv[1]);
-		if (s == "-h" || s == "--help") {
-			usage(argv[0]);
-			return 0;
-		} else {
-			yyin = fopen(argv[1], "r");
-			if (yyin == NULL) {
-				std::cerr << "Invalid file path: " << argv[1] << std::endl;
-				return 1;
+	} else if (argc == 3 || argc == 2) {
+		while (argc > 1) {
+			const auto s = std::string(argv[argc-1]);
+			argc--;
+
+			if (s == "-h" || s == "--help") {
+				usage(argv[0]);
+				return 0;
+			} else if (s == "--only-symbol-table") {
+				onlyPrintSymTable = true;
+				disableDebug = true;
+			} else {
+				yyin = fopen(s.c_str(), "r");
+				if (yyin == NULL) {
+					std::cerr << "Invalid file path: " << s << std::endl;
+					return 1;
+				}
 			}
 		}
 	} else {
@@ -60,16 +70,16 @@ int main(int argc, char **argv) {
 	compile_context.symbolTable.checkUnusedDataSymbols(compile_context.warningRegistry);
 
 	if (yyparse_return != 0 || !compile_context.errorRegistry.empty()) {
-		compile_context.errorRegistry.displayErrors();
+		if (!onlyPrintSymTable) { compile_context.errorRegistry.displayErrors(); }
 		return yyparse_return == 0? 1:yyparse_return;
 	}
 
-	compile_context.warningRegistry.displayWarnings();
+	if (!onlyPrintSymTable) { compile_context.warningRegistry.displayWarnings(); }
 
-	DEBUG("finished compile, will print symbolTable");
 	cerr << compile_context.symbolTable;
+	if (onlyPrintSymTable) { return 0; }
 
-	DEBUG("finished printing symbolTable, will print assembly");
+	DEBUG("finished compiling, will print assembly");
 	printProgram(compile_context.toProgram());
 
 	DEBUG("finished printing assembly");
