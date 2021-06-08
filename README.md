@@ -36,6 +36,20 @@ $ cd compiler
 $ python run.py
 ```
 
+# TVM
+`Ta3myah Virtual Machine`(TM) is a runtime for `Ta3myahAssembly`(TM).
+For now it prints all storage after executing all commands.
+
+To execute [methal.ta3](./docs/methal.ta3):
+```sh
+$ ./src/ta3myac ./docs/methal.ta3 | ./ta3mya
+```
+
+For more info:
+```sh
+$ ./src/ta3mya --help
+```
+
 ### File Menu
 ![](./compiler/screenshots/FileMenu.png) 
 

@@ -1,0 +1,206 @@
+#!/bin/env python3
+'''\
+Usage: ta3mya [-h|--help] [/path/to/file.ta3.output]
+Runtime for ta3mya, runs ta3myac output.
+If no args given, will read from stdin.\
+'''
+
+import sys
+from typing import NamedTuple, Union
+
+if len(sys.argv) == 1:
+    file = sys.stdin
+elif len(sys.argv) == 2:
+    if sys.argv[1] in ['-h', '--help']:
+        print(__doc__, file=sys.stderr)
+        exit(0)
+    else:
+        file = open(sys.argv[1])
+else:
+    print(__doc__, file=sys.stderr)
+    exit(1)
+
+opcodes = {
+    'CPY', 'INT', 'ADD', 'SUB', 'MUL', 'DIV', 'MOD', 'NEG',
+    'POW', 'REAL', 'RADD', 'RSUB', 'RMUL', 'RDIV', 'RMOD',
+    'RNEG', 'RPOW', 'CALL', 'RTN', 'JMP', 'JZ', 'JNZ', 'EQ',
+    'NEQ', 'GT', 'LT', 'GTE', 'LTE', 'AND', 'OR', 'NOT', 'END',
+    'NOP',  # for labels
+}
+
+
+class Storage(NamedTuple):
+    value: Union[int, float]
+    isVar: bool
+    initialized: bool
+
+
+program = []
+stack = []
+labels = dict()
+storage = dict([(r, Storage(0, True, False))
+                for r in [f'${i}' for i in range(8)]])
+start = -1
+
+for line in file:
+    line = line.rstrip('\n')
+    line = line.strip()
+
+    if len(line) == 0 or line[0] == ';':
+        continue
+
+    if line == 'CALL :bedayah':
+        start = len(program)
+
+    parts = line.split()
+    if parts[0] == r'%var':
+        storage[parts[1]] = Storage(0, True, False)
+    elif parts[0] == r'%const':
+        storage[parts[1]] = Storage(0, False, False)
+    elif parts[0] in opcodes:
+        program.append(parts)
+    elif parts[0] == 'PROC':
+        program.append(['NOP'])
+        labels[parts[1].rstrip(':')] = len(program)-1
+    else:  # label
+        program.append(['NOP'])
+        labels[parts[0].rstrip(':')] = len(program)-1
+
+
+def read(s) -> Union[int, float]:
+    if s in storage:
+        return storage[s].value
+    if '.' in s:
+        return float(s)
+    return int(s)
+
+
+def write(s, value):
+    st = storage[s]
+    if not st.isVar and st.initialized:
+        print('trying to rewrite const storage', file=sys.stderr)
+        exit(1)
+    storage[s] = Storage(value, st.isVar, True)
+
+
+if start == -1:
+    print('no call to bedayah!', file=sys.stderr)
+    exit(1)
+
+end = False
+pc = start
+while not end:
+    instr = program[pc]
+    pc += 1
+
+    # ignore labels
+    if instr[0] == 'NOP':
+        pass
+    # Zero Args
+    elif instr[0] == 'END':
+        end = True
+    elif instr[0] == 'RTN':
+        pc = stack.pop()
+    # One Arg
+    elif instr[0] == 'CALL':
+        stack.append(pc)
+        pc = labels[instr[1]]
+    elif instr[0] == 'JMP':
+        pc = labels[instr[1]]
+    # 1 Arg and a Label
+    elif instr[0] == 'JZ':
+        x = read(instr[1])
+        if x == 0:
+            pc = labels[instr[2]]
+    elif instr[0] == 'JNZ':
+        x = read(instr[1])
+        if x != 0:
+            pc = labels[instr[2]]
+    # 1 Arg and a Result
+    elif instr[0] == 'CPY':
+        write(instr[2], read(instr[1]))
+    elif instr[0] == 'INT':
+        write(instr[2], int(read(instr[1])))
+    elif instr[0] in ['NEG', 'RNEG']:
+        write(instr[2], -read(instr[1]))
+    elif instr[0] == 'REAL':
+        write(instr[2], float(read(instr[1])))
+    elif instr[0] == 'NOT':
+        x = read(instr[1])
+        if x == 0:
+            x = 1
+        else:
+            x = 0
+        write(instr[2], x)
+    # 2 Args and a Result
+    elif instr[0] in ['POW', 'RPOW']:
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x ** y)
+    elif instr[0] in ['ADD', 'RADD']:
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x + y)
+    elif instr[0] in ['SUB', 'RSUB']:
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x - y)
+    elif instr[0] in ['MUL', 'RMUL']:
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x * y)
+    elif instr[0] == 'DIV':
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x // y)
+    elif instr[0] == 'RDIV':
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x / y)
+    elif instr[0] in ['MOD', 'RMOD']:
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x % y)
+    elif instr[0] == 'EQ':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 1 if x == y else 0
+        write(instr[3], res)
+    elif instr[0] == 'NEQ':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 0 if x == y else 1
+        write(instr[3], res)
+    elif instr[0] == 'GT':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 1 if x > y else 0
+        write(instr[3], res)
+    elif instr[0] == 'LT':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 1 if x < y else 0
+        write(instr[3], res)
+    elif instr[0] == 'GTE':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 1 if x >= y else 0
+        write(instr[3], res)
+    elif instr[0] == 'LTE':
+        x = read(instr[1])
+        y = read(instr[2])
+        res = 1 if x <= y else 0
+        write(instr[3], res)
+    elif instr[0] == 'AND':
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x & y)
+    elif instr[0] == 'OR':
+        x = read(instr[1])
+        y = read(instr[2])
+        write(instr[3], x | y)
+
+for k, v in storage.items():
+    print(k, '=', v.value)
+
+exit(storage['$0'].value)
