@@ -165,27 +165,34 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     DONE:
     */
     string doneLabel = compile_context.labelsCreator.next();
-    Optional<string> nextJZLabel;
+    Optional<string> nextConditionlabel, currentConditionLabel;
     // Create conditionals quadruples
     for(int i = 0; i < _conditionalBlocks.size(); i++) {
+        // Get label of current condition
+        currentConditionLabel = nextConditionlabel;
+        // If this is the last conditional and no _8eroBlock exists then JZ to DONE
+        if (i == _conditionalBlocks.size() - 1 && !_8eroBlock) {
+            nextConditionlabel = doneLabel;
+        } else {
+            // Otherwise, create the label of the next condition
+            nextConditionlabel = compile_context.labelsCreator.next();
+        }
+        // First condition doesn't need to be labeled
+        if (i != 0) {
+             compile_context.addQuadruple(Quadruple{
+                opcode: Opcode::LABEL, label: currentConditionLabel
+            });
+        }
+       
         // Add condition
         auto conditionResult = _conditionalBlocks[i].condition->compile(compile_context);
         if (!conditionResult.out.has_value()) {
             return {};
         }
-        // Get label of current JZ
-        auto currentJZLabel = nextJZLabel;
-        // If this is the last conditional and no _8eroBlock exists then JZ to DONE
-        if (i == _conditionalBlocks.size() - 1 && !_8eroBlock) {
-            nextJZLabel = doneLabel;
-        } else {
-            // Otherwise, create the label of the next conditional to JZ to
-            nextJZLabel = compile_context.labelsCreator.next();
-        }
         // Add JZ
         compile_context.addQuadruple(Quadruple{ 
             opcode: Opcode::JZ, arg1: conditionResult.out.value(),
-            arg2: nextJZLabel.value(), label: currentJZLabel
+            arg2: nextConditionlabel.value()
         });
         compile_context.tempVarsRegistry.put(conditionResult.out.value());
 
@@ -199,7 +206,7 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
     // Add 8ero label & block if it exists
     if (_8eroBlock) {
         compile_context.addQuadruple(Quadruple{
-            opcode: Opcode::LABEL, label: nextJZLabel
+            opcode: Opcode::LABEL, label: nextConditionlabel
         });
         _8eroBlock->compile(compile_context);
     }
