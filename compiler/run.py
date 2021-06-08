@@ -145,9 +145,9 @@ class GUI(tk.Frame):
         fileMenu = tk.Menu(menu)
         menu.add_cascade(label="File", menu=fileMenu)
         fileMenu.add_command(
-            label="New", command=lambda: utils.newFile(self.text))
+            label="New", command=lambda: utils.newFile(self.text, self.console))
         fileMenu.add_command(
-            label="Open", command=lambda: utils.openFile(root, self.text))
+            label="Open", command=lambda: utils.openFile(root, self.text, self.console))
         fileMenu.add_command(
             label="Save", command=lambda: utils.saveFile(self.text))
         fileMenu.add_separator()

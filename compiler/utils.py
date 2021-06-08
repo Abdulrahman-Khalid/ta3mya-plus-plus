@@ -12,7 +12,6 @@ class PrintLogger():  # create file like object
         self.textbox = textbox  # keep ref
 
     def write(self, text):
-        self.textbox.delete("1.0", tk.END)
         self.textbox.config(state=tk.NORMAL)
         if(text.startswith(SUCCESS)):
             self.textbox.insert(tk.END, text, "success")
@@ -39,7 +38,10 @@ def saveFile(text):
     return False
 
 
-def newFile(text):
+def newFile(text, console):
+    console.config(state=tk.NORMAL)
+    console.delete("1.0", tk.END)
+    console.config(state=tk.DISABLED)
     if (len(text.get("1.0", tk.END+"-1c")) > 0):
         if(messagebox.askyesno("Save File", "Do you want to save your file before making new one?")):
             if(saveFile(text)):
@@ -48,12 +50,16 @@ def newFile(text):
             text.delete("1.0", tk.END)
 
 
-def openFile(root, text):
+def openFile(root, text, console):
     openLocation = filedialog.askopenfile(initialdir="./", title="Select file", filetypes=(( ("Program Files", ".ta3"), ("all files", "*.*") )) )
-    root.title(os.path.basename(openLocation.name) + " _ Ta3mya Compiler")
     if(openLocation):
+        root.title(os.path.basename(openLocation.name) + " _ Ta3mya Compiler")
         text.delete('1.0', tk.END)
         text.insert('1.0', openLocation.read())
+        console.config(state=tk.NORMAL)
+        console.delete("1.0", tk.END)
+        console.config(state=tk.DISABLED)
+
 
 def exitRoot(root):
     if messagebox.askyesno("Exit", "Are you sure you want to exit ?"):
@@ -67,13 +73,13 @@ def showAbout():
 
 def showHelp():
     messagebox.showinfo(
-        "Help", "1. Write or open your program in ta3mya++\n2.Click compile")
+        "Help", "1. Write or open your program in ta3mya++ language\n2. Click compile")
 
-def chooseProgDirectory(assemblerObj):
+def chooseProgDirectory(compilerObj):
     progLocation = tk.filedialog.askdirectory(
-        initialdir="./", title="Select Compilation directory")
+        initialdir="./", title="Select Compilation Directory")
 
     if(progLocation):
-        assemblerObj.setDebugFile(progLocation+"/Debug.txt")
-        assemblerObj.setProgFile(progLocation+"/Program.asm")
-        assemblerObj.setSymbolTableFile(progLocation+"/SymbolTable.txt")
+        compilerObj.setDebugFile(progLocation+"/Debug.txt")
+        compilerObj.setProgFile(progLocation+"/Program.asm")
+        compilerObj.setSymbolTableFile(progLocation+"/SymbolTable.txt")
