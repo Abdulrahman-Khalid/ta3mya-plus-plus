@@ -131,7 +131,7 @@ ostream& operator<<(ostream& os, const FuncSymbol& s) {
       os << s.args[i];
     }
   }
-  os << "], returnType: "<<typeToString(s.returnType)<<", returnSymbol: "<<s.returnSymbol<<"}";
+  os << "], returnType: "<<typeToString(s.returnType)<<", returnSymbol: "<<*static_cast<DataSymbol*>(s.returnSymbol)<<"}";
   return os;
 }
 
