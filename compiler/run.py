@@ -218,18 +218,12 @@ class Compiler:
             self.compilerExe = "../src/ta3myac"
 
     def setDebugFile(self, debugFile):
-        if(self.debugFile):
-            self.debugFile.close()
         self.debugFile = debugFile
 
     def setProgFile(self, progFile):
-        if(self.progFile):
-            self.progFile.close()
         self.progFile = progFile
 
     def setSymbolTableFile(self, symbolTableFile):
-        if(self.symbolTableFile):
-            self.symbolTableFile.close()
         self.symbolTableFile = symbolTableFile
 
     def getDebugFile(self):
