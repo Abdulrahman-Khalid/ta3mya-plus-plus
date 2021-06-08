@@ -45,9 +45,10 @@ To execute [methal.ta3](./docs/methal.ta3):
 $ ./src/ta3myac ./docs/methal.ta3 | ./src/ta3mya
 ```
 
-For more info:
+To execute `Ta3myahAssembly™` file directly:
 ```sh
-$ ./src/ta3mya --help
+$ ./src/ta3myac ./docs/methal.ta3 >methal.ta3sm
+$ ./src/ta3mya ./methal.ta3sm
 ```
 
 ### File Menu
