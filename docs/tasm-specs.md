@@ -1,4 +1,4 @@
-# Ta3mya Final Output Specs
+# Ta3myaAssembly `TASM` Specs
 This files documents the specs of the final output of the compiler.
 
 Every quadruple should be on its own line.
@@ -6,7 +6,7 @@ Spacing doesn't matter.
 Empty lines don't matter.
 
 ## Comments
-Use `;` for comments that should be ignored by assembler, like:
+Use `;` for comments that should be ignored by vm, like:
 ```
 ; the following puts 5 in memory address v
 CPY 5 V
@@ -25,13 +25,13 @@ To declare a constant, use `%const`:
 %const y 6
 ```
 
-You can't store any values at constants, but you can read them.
+You can't store any values at constants, except for initialization, but you can read them.
 
 ## Registers
 ### `$0` to `$7`
 The machine has 8 64bit registers.
 
-The exit code of a program should be stored in $0.
+The exit code of a program should be stored in `$0`.
 
 ## Labels
 Labels are places you can jump to.

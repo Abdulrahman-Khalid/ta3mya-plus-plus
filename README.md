@@ -4,7 +4,7 @@ ta3mya plus plus is an implementation of a programming language using the Lex an
 It's the first egyptian arabic programming language.
 
 # Language
-See [methal.ta3](./docs/methal.ta3) for all language features.
+See [methal.ta](./docs/methal.ta) for all language features.
 
 # Requirements
 - g++
@@ -26,7 +26,7 @@ $ cd src && make
 # Compile
 ## Terminal way
 ```sh
-$ ./ta3myac path/to/file.ta3
+$ ./ta3myac path/to/file.ta
 ```
 ## Graphical way
 ```sh
@@ -40,15 +40,15 @@ $ python run.py
 `Ta3myah Virtual Machine™` is a runtime for `Ta3myahAssembly™`.
 For now it prints all storage after executing all commands.
 
-To execute [methal.ta3](./docs/methal.ta3):
+To execute [methal.ta](./docs/methal.ta):
 ```sh
-$ ./src/ta3myac ./docs/methal.ta3 | ./src/ta3mya
+$ ./src/ta3myac ./docs/methal.ta | ./src/ta3mya
 ```
 
 To execute `Ta3myahAssembly™` file directly:
 ```sh
-$ ./src/ta3myac ./docs/methal.ta3 >methal.ta3sm
-$ ./src/ta3mya ./methal.ta3sm
+$ ./src/ta3myac ./docs/methal.ta >methal.tasm
+$ ./src/ta3mya ./methal.tasm
 ```
 
 ### File Menu

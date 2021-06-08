@@ -30,7 +30,7 @@ class PrintLogger():  # create file like object
 
 def saveFile(text):
     t = text.get("1.0", tk.END+"-1c")
-    savelocation = filedialog.asksaveasfile(initialdir="./", title="Select file", filetypes=((("Program Files", ".ta3"),("all files", "*.*"))))
+    savelocation = filedialog.asksaveasfile(initialdir="./", title="Select file", filetypes=((("Program Files", ".ta"),("all files", "*.*"))))
     if (savelocation):
         savelocation.write(t)
         savelocation.close()
@@ -51,7 +51,7 @@ def newFile(text, console):
 
 
 def openFile(root, text, console):
-    openLocation = filedialog.askopenfile(initialdir="./", title="Select file", filetypes=(( ("Program Files", ".ta3"), ("all files", "*.*") )) )
+    openLocation = filedialog.askopenfile(initialdir="./", title="Select file", filetypes=(( ("Program Files", ".ta"), ("all files", "*.*") )) )
     if(openLocation):
         root.title(os.path.basename(openLocation.name) + " _ Ta3mya Compiler")
         text.delete('1.0', tk.END)

@@ -1,6 +1,6 @@
 #!/bin/env python3
 '''\
-Usage: ta3mya [-h|--help] [/path/to/file.ta3sm]
+Usage: ta3mya [-h|--help] [/path/to/file.tasm]
 Runtime for ta3mya, runs ta3myac output.
 If no args given, will read from stdin.\
 '''

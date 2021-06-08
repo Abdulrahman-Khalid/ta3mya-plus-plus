@@ -2,5 +2,5 @@
 compiler/__pycache__/
 /compiler/*.asm
 /compiler/*.txt
-*.ta3sm
-*.ta3.symtable
+*.tasm
+*.ta.symtable

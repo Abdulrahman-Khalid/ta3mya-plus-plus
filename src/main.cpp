@@ -11,7 +11,7 @@ CompileContext compile_context;
 bool disableDebug = false;
 
 inline void usage(char* p) {
-    std::cerr << "Usage: " << p << " [--only-symbol-table] [/path/to/file.ta3]" << std::endl;
+    std::cerr << "Usage: " << p << " [--only-symbol-table] [/path/to/file.ta]" << std::endl;
 }
 
 inline void printProgram(const Program& p) {
