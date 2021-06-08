@@ -51,7 +51,6 @@ struct FuncSymbol : public Symbol {
     vector<DataSymbol*> args;
     Type returnType;
     Symbol* returnSymbol;
-    std::string bodyLabel;
 };
 
 class SymbolTable {

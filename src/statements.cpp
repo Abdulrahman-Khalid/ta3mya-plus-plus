@@ -14,7 +14,7 @@ CompileResult BlockStatement::compileAsInFunc(CompileContext &compile_context) c
     auto result = compile(compile_context);
     // If this block is function body and it does not end with basy, add RTN
     if (!*(result.endsWithBasy)) {
-        compile_context.quadruplesTable.push_back(Quadruple{
+        compile_context.addQuadruple(Quadruple{
         opcode: Opcode::RTN
     });
     }
@@ -50,17 +50,15 @@ CompileResult CallBedayahStatement::compile(CompileContext& compile_context) con
 
     FuncSymbol* bd = static_cast<FuncSymbol*>(s);
 
-    // RTN
-    compile_context.quadruplesTable.insert(
-        compile_context.quadruplesTable.begin(),
+    // END
+    compile_context.prependQuadruple(
         Quadruple {
             opcode: Opcode::END,
         }
     );
 
     // CPY :_bedayah_RET $0
-    compile_context.quadruplesTable.insert(
-        compile_context.quadruplesTable.begin(),
+    compile_context.prependQuadruple(
         Quadruple {
             opcode: Opcode::CPY,
             arg1: bd->returnSymbol->name,
@@ -70,11 +68,10 @@ CompileResult CallBedayahStatement::compile(CompileContext& compile_context) con
     );
 
     // CALL <label>
-    compile_context.quadruplesTable.insert(
-        compile_context.quadruplesTable.begin(),
+    compile_context.prependQuadruple(
         Quadruple {
             opcode: Opcode::CALL,
-            arg1: bd->bodyLabel,
+            arg1: bd->toString(),
         }
     );
 
@@ -122,11 +119,11 @@ CompileResult BasyStatement::compile(CompileContext& compile_context) const {
         return {};
     }
 
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: funcSymbol->returnSymbol->toString()
     });
 
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::RTN
     });
 
@@ -183,7 +180,7 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
             nextJZLabel = compile_context.labelsCreator.next();
         }
         // Add JZ
-        compile_context.quadruplesTable.push_back(Quadruple{ 
+        compile_context.addQuadruple(Quadruple{ 
             opcode: Opcode::JZ, arg1: conditionResult.out.value(),
             arg2: nextJZLabel.value(), label: currentJZLabel
         });
@@ -192,19 +189,19 @@ CompileResult LwStatement::compile(CompileContext& compile_context) const {
         // Add block
         _conditionalBlocks[i].block->compile(compile_context);
         // Add JMP
-        compile_context.quadruplesTable.push_back(Quadruple{ 
+        compile_context.addQuadruple(Quadruple{ 
             opcode: Opcode::JMP, arg1: doneLabel
         });
     }    
     // Add 8ero label & block if it exists
     if (_8eroBlock) {
-        compile_context.quadruplesTable.push_back(Quadruple{
+        compile_context.addQuadruple(Quadruple{
             opcode: Opcode::LABEL, label: nextJZLabel
         });
         _8eroBlock->compile(compile_context);
     }
     // Add done label
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
@@ -238,7 +235,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
     // Add LOOP label
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::LABEL, label: loopLabel
     });
     // Add block
@@ -249,7 +246,7 @@ CompileResult KarrarL7dStatement::compile(CompileContext& compile_context) const
         return {};
     }
     // Add JZ
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::JZ, arg1: conditionResult.out.value(), arg2: loopLabel
     });
     compile_context.tempVarsRegistry.put(conditionResult.out.value());
@@ -274,7 +271,7 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
     // Create LOOP label
     auto loopLabel = compile_context.labelsCreator.next();
     // Add LOOP label
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::LABEL, label: loopLabel
     });
     // Create DONE label
@@ -285,18 +282,18 @@ CompileResult TalmaStatement::compile(CompileContext& compile_context) const {
         return {};
     }
     // Add JZ
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::JZ, arg1: conditionResult.out.value(), arg2: doneLabel
     });
     compile_context.tempVarsRegistry.put(conditionResult.out.value());
     // Add block
     _block->compile(compile_context);
     // Add JMP
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::JMP, arg1: loopLabel
     });
     // Add DONE label
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::LABEL, label: doneLabel
     });
     return {};
@@ -340,7 +337,7 @@ CompileResult AssignmentStatement::compile(CompileContext& compile_context) cons
         return {};
     }
 
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: s->toString()
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
@@ -415,7 +412,7 @@ CompileResult Ta3reefThabetStatement::compile(CompileContext& compile_context) c
         return {};
     }
 
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode: Opcode::CPY, arg1: expResult.out.value(), arg2: symbol->toString()
     });
     compile_context.tempVarsRegistry.put(expResult.out.value());
@@ -448,7 +445,6 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     funcSymbol->scope = compile_context.scopeTracker.get();
     funcSymbol->symbolType = SymbolType::FUNC;
     funcSymbol->returnType = _type;
-    funcSymbol->bodyLabel = compile_context.labelsCreator.next();
 
     DataSymbol* returnSymbol = new DataSymbol();
     returnSymbol->name = "$RET_" + _name;
@@ -463,20 +459,13 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     compile_context.symbolTable.add(funcSymbol);
 
     /*
-    JMP AFTER_DEF
-    BODY_LABEL:
+    PROC F:
         B
-    AFTER_DEF:
     */
-    std::string afterDefLabel = compile_context.labelsCreator.next();
-    compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::JMP, arg1: afterDefLabel
-    });
-
     compile_context.functionDefinitions.push(funcSymbol);
 
-    compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::LABEL, label: funcSymbol->bodyLabel
+    compile_context.addQuadruple(Quadruple{
+        opcode: Opcode::PROC, arg1: funcSymbol->toString()
     });
     
     auto blockScope = _block->compileAsInFunc(compile_context).scope;
@@ -484,10 +473,6 @@ CompileResult Ta3reefDallahStatement::compile(CompileContext& compile_context) c
     if(!blockScope.has_value()) {
         return {};
     }
-
-    compile_context.quadruplesTable.push_back(Quadruple{
-        opcode: Opcode::LABEL, label: afterDefLabel
-    });
 
     compile_context.functionDefinitions.pop();
 

@@ -90,7 +90,7 @@ CompileResult BinaryExpression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : operatorToOpcode(_op),
         arg1 : lhsResult.out.value(),
         arg2 : rhsResult.out.value(),
@@ -128,7 +128,7 @@ CompileResult NegExpression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : Opcode::NEG,
         arg1 : expResult.out.value(),
         arg2 : tmpVar
@@ -151,7 +151,7 @@ CompileResult ToSa7e7Expression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : Opcode::INT,
         arg1 : expResult.out.value(),
         arg2 : tmpVar
@@ -174,7 +174,7 @@ CompileResult To7a2i2iExpression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : Opcode::REAL,
         arg1 : expResult.out.value(),
         arg2 : tmpVar
@@ -204,7 +204,7 @@ CompileResult MshExpression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : Opcode::NOT,
         arg1 : expResult.out.value(),
         arg2 : tmpVar
@@ -255,7 +255,7 @@ CompileResult CallDallahExpression::compile(CompileContext &compile_context) con
             return {};
         }
 
-        compile_context.quadruplesTable.push_back(Quadruple{
+        compile_context.addQuadruple(Quadruple{
             opcode : Opcode::CPY,
             arg1 : expResult.out.value(),
             arg2 : argSymbol->toString()
@@ -264,9 +264,9 @@ CompileResult CallDallahExpression::compile(CompileContext &compile_context) con
     }
 
     // Add CALL to jump to function body
-    compile_context.quadruplesTable.push_back(Quadruple{
+    compile_context.addQuadruple(Quadruple{
         opcode : Opcode::CALL,
-        arg1 : funcSymbol->bodyLabel,
+        arg1 : funcSymbol->toString(),
     });
 
     return CompileResult{out : funcSymbol->returnSymbol->toString(), type : funcSymbol->returnType};
