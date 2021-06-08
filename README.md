@@ -50,6 +50,3 @@ $ python run.py
 
 ### Failure
 ![](./compiler/screenshots/Failure.png) 
-### Symbol Table
-<!-- TODO -->
-<!-- ![](./compiler/screenshots/SymbolTable.png)  -->
