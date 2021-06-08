@@ -49,30 +49,49 @@ For example, this is valid: `MUL 1 0 V` but this is not `CPY x 0` as you can't p
 `b` denotes a label, see [Labels](#labels).
 You can jump to previosly declared label, or a label that is declared later in the same file.
 
+### Zero Args
+| Opcode | Description      |
+|--------|------------------|
+| RTN    | goto stack.pop() |
+| END    | ends the program |
+
+### One Arg
+| Opcode | Label | Description             |
+|--------|-------|-------------------------|
+| CALL   | b     | stack.push(pos); goto b |
+| JMP    | b     | goto b                  |
+
+### 1 Arg and a Label
+| Opcode | Arg1 | Label | Description          |
+|--------|------|-------|----------------------|
+| JZ     | x    | b     | if x == 0 { goto b } |
+| JNZ    | x    | b     | if x != 0 { goto b } |
+
+### 1 Arg and a Result
+| Opcode | Arg1 | Result | Description                  |
+|--------|------|--------|------------------------------|
+| CPY    | x    | z      | z = copy(x)                  |
+| INT    | x    | z      | z = int(x)                   |
+| NEG    | x    | z      | z = -x                       |
+| REAL   | x    | z      | z = real(x)                  |
+| RNEG   | x    | z      | z = -x        (real numbers) |
+| NOT    | x    | z      | z = !x                       |
+
+### 2 Args and a Result
 | Opcode | Arg1 | Arg2 | Result | Description                  |
 |--------|------|------|--------|------------------------------|
-| CPY    | x    | z    |        | z = copy(x)                  |
-| INT    | x    | z    |        | z = int(x)                   |
+| POW    | x    | y    | z      | z = pow(x, y)                |
 | ADD    | x    | y    | z      | z = x + y                    |
 | SUB    | x    | y    | z      | z = x - y                    |
 | MUL    | x    | y    | z      | z = x * y                    |
 | DIV    | x    | y    | z      | z = x / y                    |
 | MOD    | x    | y    | z      | z = x % y                    |
-| NEG    | x    | z    |        | z = -x                       |
-| POW    | x    | y    | z      | z = pow(x, y)                |
-| REAL   | x    | z    |        | z = real(x)                  |
 | RADD   | x    | y    | z      | z = x + y     (real numbers) |
 | RSUB   | x    | y    | z      | z = x - y     (real numbers) |
 | RMUL   | x    | y    | z      | z = x * y     (real numbers) |
 | RDIV   | x    | y    | z      | z = x / y     (real numbers) |
 | RMOD   | x    | y    | z      | z = x % y     (real numbers) |
-| RNEG   | x    | z    |        | z = -x        (real numbers) |
 | RPOW   | x    | y    | z      | z = pow(x, y) (real numbers) |
-| CALL   | b    |      |        | stack.push(pos); goto b      |
-| RTN    |      |      |        | goto stack.pop()             |
-| JMP    | b    |      |        | goto b                       |
-| JZ     | x    | b    |        | if x == 0 { goto b }         |
-| JNZ    | x    | b    |        | if x != 0 { goto b }         |
 | EQ     | x    | y    | z      | z = x == y? 1:0              |
 | NEQ    | x    | y    | z      | z = x != y? 1:0              |
 | GT     | x    | y    | z      | z = x >  y? 1:0              |
@@ -81,5 +100,3 @@ You can jump to previosly declared label, or a label that is declared later in t
 | LTE    | x    | y    | z      | z = x >= y? 1:0              |
 | AND    | x    | y    | z      | z = x & y                    |
 | OR     | x    | y    | z      | z = x \| y                   |
-| NOT    | x    | z    |        | z = !x                       |
-| END    |      |      |        | ends the program             |
