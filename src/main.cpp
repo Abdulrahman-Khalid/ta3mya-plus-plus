@@ -66,8 +66,10 @@ int main(int argc, char **argv) {
 
 	compile_context.warningRegistry.displayWarnings();
 
-	DEBUG("finished compile, will print assembly");
+	DEBUG("finished compile, will print symbolTable");
+	cerr << compile_context.symbolTable;
 
+	DEBUG("finished printing symbolTable, will print assembly");
 	printProgram(compile_context.toProgram());
 
 	DEBUG("finished printing assembly");

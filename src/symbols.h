@@ -53,11 +53,18 @@ struct FuncSymbol : public Symbol {
     Symbol* returnSymbol;
 };
 
+struct TarqeemSymbol : public Symbol {
+    std::vector<std::string> list;
+};
+
 class SymbolTable {
 private:
     std::unordered_map<string, vector<Symbol*> > Symbol_Table;
 
     std::vector<DataSymbol*> _getAllDataSymbols() const;
+    std::vector<DataSymbol*> _getNonDataSymbols() const;
+
+    friend ostream& operator<<(ostream& os, const SymbolTable& dt);
 public:
     // get returns a pointer to symbol given its name and its scope
     // if not available return null

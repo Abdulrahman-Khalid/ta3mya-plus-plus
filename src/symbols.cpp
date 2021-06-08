@@ -63,6 +63,20 @@ std::vector<DataSymbol*> SymbolTable::_getAllDataSymbols() const {
   return v;
 }
 
+std::vector<DataSymbol*> SymbolTable::_getNonDataSymbols() const {
+  auto v = std::vector<DataSymbol*>();
+
+  for (const auto& pair : Symbol_Table) {
+    for (const auto& s : pair.second) {
+      if (s->symbolType != SymbolType::DATA) {
+        v.push_back(static_cast<DataSymbol*>(s));
+      }
+    }
+  }
+
+  return v;
+}
+
 std::string SymbolTable::getSections() const {
   std::string varSec;
   std::string constSec;
@@ -94,4 +108,67 @@ void SymbolTable::checkUnusedDataSymbols(WarningRegistry& w) {
       w.unusedSymbol(ds->name, ds->declarationLineNumber);
     }
   }
+}
+#include "heading.h"
+ostream& operator<<(ostream& os, const Symbol& s) {
+  os << "name: "<< s.name << ", scope: " << s.scope.toString() << ", symbolType: " << symbolTypeToString(s.symbolType);
+  return os;
+}
+
+ostream& operator<<(ostream& os, const DataSymbol& s) {
+  auto ss = static_cast<Symbol const*>(&s);
+  os << std::boolalpha << "DataSymbol{"<< *ss<<", isVar: "<<s.isVar<<", isUsed: "<< s.isUsed << ", isInitialized: " << s.isInitialized << ", declarationLineNumber: "<<s.declarationLineNumber<<", type: "<<typeToString(s.type)<<"}";
+  return os;
+}
+
+ostream& operator<<(ostream& os, const FuncSymbol& s) {
+  auto ss = static_cast<Symbol const*>(&s);
+  os << std::boolalpha << "FuncSymbol{"<<*ss<<", args: [";
+  for (int i = 0; i < s.args.size(); i++) {
+    if (i+1 < s.args.size()) {
+      os << s.args[i] << ",";
+    } else {
+      os << s.args[i];
+    }
+  }
+  os << "], returnType: "<<typeToString(s.returnType)<<", returnSymbol: "<<s.returnSymbol<<"}";
+  return os;
+}
+
+ostream& operator<<(ostream& os, const TarqeemSymbol& s) {
+  auto ss = static_cast<Symbol const*>(&s);
+
+  os << "TarqeemSymbol{"<<*ss<<", list: [";
+  for (int i = 0; i < s.list.size(); i++) {
+    if (i+1 < s.list.size()) {
+      os << s.list[i] << ",";
+    } else {
+      os << s.list[i];
+    }
+  }
+  os << "]}";
+
+  return os;
+}
+
+ostream& operator<<(ostream& os, const SymbolTable& st) {
+  for (const auto& pair : st.Symbol_Table) {
+    for (const auto& s : pair.second) {
+      switch (s->symbolType) {
+      case SymbolType::DATA:
+        os << *static_cast<DataSymbol*>(s);
+        break;
+      case SymbolType::FUNC:
+        os << *static_cast<FuncSymbol*>(s);
+        break;
+      case SymbolType::TARQEEM:
+        os << *static_cast<TarqeemSymbol*>(s);
+        break;
+      }
+
+      os << endl;
+    }
+  }
+
+  return os;
 }

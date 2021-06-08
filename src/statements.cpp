@@ -513,11 +513,11 @@ CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) 
     }
 
     // add it
-    s = new Symbol {
-        name: _name,
-        scope: compile_context.scopeTracker.get(),
-        symbolType: SymbolType::TARQEEM,
-    };
+    TarqeemSymbol* ss = new TarqeemSymbol;
+    ss->name = _name;
+    ss->scope = compile_context.scopeTracker.get();
+    ss->symbolType = SymbolType::TARQEEM;
+    ss->list = _list;
     compile_context.symbolTable.add(s);
 
     // add its enums
