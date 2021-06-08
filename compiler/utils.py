@@ -4,6 +4,7 @@ import os
 
 SUCCESS = "Compiled Successfully"
 ERR_MSG = "Compilation Failed"
+ERR_MSG_LINE = "Error"
 WARN_MSG = "Warning"
 
 class PrintLogger():  # create file like object
@@ -15,7 +16,7 @@ class PrintLogger():  # create file like object
         self.textbox.config(state=tk.NORMAL)
         if(text.startswith(SUCCESS)):
             self.textbox.insert(tk.END, text, "success")
-        elif(text.startswith(ERR_MSG)):
+        elif(text.startswith(ERR_MSG) or text.startswith(ERR_MSG_LINE)):
             self.textbox.insert(tk.END, text, "error")
         elif(text.startswith(WARN_MSG)):
             self.textbox.insert(tk.END, text, "warning")
