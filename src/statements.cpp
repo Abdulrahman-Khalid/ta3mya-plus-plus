@@ -61,7 +61,7 @@ CompileResult CallBedayahStatement::compile(CompileContext& compile_context) con
     compile_context.prependQuadruple(
         Quadruple {
             opcode: Opcode::CPY,
-            arg1: bd->returnSymbol->name,
+            arg1: bd->returnSymbol->toString(),
             arg2: "",
             result: "$0",
         }
