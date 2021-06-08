@@ -90,8 +90,10 @@ CompileResult BinaryExpression::compile(CompileContext &compile_context) const
     }
 
     auto tmpVar = compile_context.tempVarsRegistry.get();
+    Type expressionType = isComparator(_op) || isCombiner(_op) ? Type::BOOLEAN : lhsResult.type.value();
+
     compile_context.addQuadruple(Quadruple{
-        opcode : operatorToOpcode(_op),
+        opcode : operatorToOpcode(_op, expressionType),
         arg1 : lhsResult.out.value(),
         arg2 : rhsResult.out.value(),
         result : tmpVar
@@ -100,7 +102,6 @@ CompileResult BinaryExpression::compile(CompileContext &compile_context) const
     compile_context.tempVarsRegistry.put(lhsResult.out.value());
     compile_context.tempVarsRegistry.put(rhsResult.out.value());
 
-    Type expressionType = isComparator(_op) || isCombiner(_op) ? Type::BOOLEAN : lhsResult.type.value();
     return CompileResult{out : tmpVar, type : expressionType};
 }
 

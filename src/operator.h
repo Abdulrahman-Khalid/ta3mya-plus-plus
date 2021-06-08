@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+
 #include "quadruples.h"
+#include "type.h"
 
 using std::vector;
 
@@ -69,12 +71,20 @@ inline bool isCombiner(Operator op)
     return std::find(Combiners.begin(), Combiners.end(), op) != Combiners.end();
 }
 
-const vector<Opcode> orderedOpcodes = {Opcode::ADD, Opcode::SUB, Opcode::MUL,
+const Opcode orderedIntOpcodes[] = {Opcode::ADD, Opcode::SUB, Opcode::MUL,
                                        Opcode::DIV, Opcode::MOD, Opcode::POW,
                                        Opcode::AND, Opcode::OR, Opcode::NEQ, Opcode::EQ,
                                        Opcode::GT, Opcode::GTE, Opcode::LT, Opcode::LTE};
 
-inline Opcode operatorToOpcode(Operator op)
+const Opcode orderedRealOpcodes[] = {Opcode::RADD, Opcode::RSUB, Opcode::RMUL,
+                                       Opcode::RDIV, Opcode::RMOD, Opcode::RPOW,
+                                       Opcode::AND, Opcode::OR, Opcode::NEQ, Opcode::EQ,
+                                       Opcode::GT, Opcode::GTE, Opcode::LT, Opcode::LTE};
+
+inline Opcode operatorToOpcode(Operator op, Type type)
 {
-    return orderedOpcodes[int(op)];
+    if (type == Type::INT) {
+        return orderedIntOpcodes[int(op)];
+    }
+    return  orderedRealOpcodes[int(op)];
 }
