@@ -49,52 +49,6 @@ def compileOnly(gui, compiler):
             print("\nCompiled Assembly:\n")
             print(assemblyOutput)
 
-def printSymbolTable(gui, compiler):
-    console = gui.getConsoleArea()
-    console.config(state=tk.NORMAL)
-    console.delete("1.0", tk.END)
-    console.config(state=tk.DISABLED)
-
-    content = gui.getTextArea().get("1.0", tk.END+"-1c")
-    cmd = compiler.getCompilerExe() + " --symbol-table"
-    with Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True) as process:
-        process.stdin.write(str.encode(content))
-        symbolTableOutput = process.communicate()[0].decode("utf-8")
-        error = process.communicate()[1].decode("utf-8")
-        lines = error.splitlines()
-        debugList = []
-        errorList = []
-        warningList = []
-        for line in lines:
-            lowerLine = line.lower()
-            if (lowerLine.startswith("error")):
-                errorList.append(line)
-            elif (lowerLine.startswith("warning")):
-                warningList.append(line)
-            else:
-                debugList.append(line)
-        consoleOut = []
-        if (len(errorList) > 0):
-            consoleOut.append(utils.ERR_MSG + '\n\n')
-            if (len(warningList) > 0):
-                consoleOut.append('\n'.join(warningList) + '\n\n')
-            consoleOut.append('\n'.join(errorList))
-        else:
-            consoleOut.append(utils.SUCCESS+'\n\n\n')
-            if (len(warningList) > 0):
-                consoleOut.append('\n'.join(warningList) + '\n\n')
-        for out in consoleOut:
-            print(out)
-        debugOut = '\n'.join(debugList)
-        if (len(debugOut) > 0):
-            with open(compiler.getDebugFile(), 'w') as f:
-                f.write(debugOut)
-        if (len(symbolTableOutput) > 0):
-            with open(compiler.getSymbolTableFile(), 'w') as f:
-                f.write(symbolTableOutput)
-            print("\nSymbol Table:\n")
-            print(symbolTableOutput)
-
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs)
@@ -203,8 +157,6 @@ class GUI(tk.Frame):
         menu.add_cascade(label="Compile", menu=runMenu)
         runMenu.add_command(label="Compile",
                             command=lambda: compileOnly(self, self.compiler))
-        runMenu.add_command(label="Symbol Table",
-                            command=lambda: printSymbolTable(self, self.compiler))
         runMenu.add_command(label="Choose Compilation Directory",
                             command=lambda: utils.chooseProgDirectory(self.compiler))
         ramMenu = tk.Menu(menu)
