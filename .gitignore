@@ -4,3 +4,4 @@ compiler/__pycache__/
 /compiler/*.txt
 *.tasm
 *.ta.symtable
+*.ta.stderr
