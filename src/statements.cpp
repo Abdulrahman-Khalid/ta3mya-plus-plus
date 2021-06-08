@@ -50,15 +50,16 @@ CompileResult CallBedayahStatement::compile(CompileContext& compile_context) con
 
     FuncSymbol* bd = static_cast<FuncSymbol*>(s);
 
-    // END
-    compile_context.prependQuadruple(
+    // CALL <label>
+    compile_context.addQuadruple(
         Quadruple {
-            opcode: Opcode::END,
+            opcode: Opcode::CALL,
+            arg1: bd->toString(),
         }
     );
 
     // CPY :_bedayah_RET $0
-    compile_context.prependQuadruple(
+    compile_context.addQuadruple(
         Quadruple {
             opcode: Opcode::CPY,
             arg1: bd->returnSymbol->toString(),
@@ -67,11 +68,10 @@ CompileResult CallBedayahStatement::compile(CompileContext& compile_context) con
         }
     );
 
-    // CALL <label>
-    compile_context.prependQuadruple(
+    // END
+    compile_context.addQuadruple(
         Quadruple {
-            opcode: Opcode::CALL,
-            arg1: bd->toString(),
+            opcode: Opcode::END,
         }
     );
 
