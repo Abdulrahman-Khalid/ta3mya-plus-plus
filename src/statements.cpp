@@ -518,7 +518,7 @@ CompileResult Ta3reefTarqeemStatement::compile(CompileContext& compile_context) 
     ss->scope = compile_context.scopeTracker.get();
     ss->symbolType = SymbolType::TARQEEM;
     ss->list = _list;
-    compile_context.symbolTable.add(s);
+    compile_context.symbolTable.add(ss);
 
     // add its enums
     for (int i = 0; i < _list.size(); i++) {
