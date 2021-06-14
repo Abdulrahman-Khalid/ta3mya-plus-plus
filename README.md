@@ -52,16 +52,16 @@ $ ./src/ta3mya ./methal.tasm
 ```
 
 ### File Menu
-![](./compiler/screenshots/FileMenu.png) 
+![](./gui/screenshots/FileMenu.png) 
 
 ### Compile Menu
-![](./compiler/screenshots/CompileMenu.png) 
+![](./gui/screenshots/CompileMenu.png) 
 
 ### Help Menu
-![](./compiler/screenshots/HelpMenu.png) 
+![](./gui/screenshots/HelpMenu.png) 
 
 ### Success
-![](./compiler/screenshots/Success.png) 
+![](./gui/screenshots/Success.png) 
 
 ### Failure
-![](./compiler/screenshots/Failure.png) 
+![](./gui/screenshots/Failure.png) 

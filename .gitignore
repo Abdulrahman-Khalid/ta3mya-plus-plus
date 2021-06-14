@@ -1,7 +1,7 @@
 .vscode
-compiler/__pycache__/
-/compiler/*.asm
-/compiler/*.txt
+gui/__pycache__/
+/gui/*.asm
+/gui/*.txt
 *.tasm
 *.ta.symtable
 *.ta.stderr
