@@ -1,4 +1,4 @@
-# ta3mya-plus-plus
+# :falafel: ta3mya-plus-plus :falafel:
 ta3mya plus plus is an implementation of a programming language using the Lex and Yacc compiler generating package.
 
 It's the first egyptian arabic programming language.
